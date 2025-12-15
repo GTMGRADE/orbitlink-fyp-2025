@@ -18,6 +18,15 @@ Initial setup (for collaborators)
 - Install dependencies:
 	- `pip install -r requirements.txt`
 
+
+-- Basic commands for any changes unless no conflicts 
+``
+   1 git status
+   2 git add .
+   3 git commit -m "md changes"
+   4 git push
+``
+
 This file lists common Git and GitHub commands useful when working with this repository.
 
 **Clone repository:**
