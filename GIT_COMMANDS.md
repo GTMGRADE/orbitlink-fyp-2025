@@ -1,9 +1,27 @@
 # Git & GitHub Quick Reference
 
+Initial setup (for collaborators)
+- Clone the repository:
+	- `git clone https://github.com/GTMGRADE/orbitlink-fyp-2025`
+- Enter the project directory:
+	- `cd orbitlink-fyp-2025`
+- Fetch all remote branches and tags:
+	- `git fetch --all --prune`
+-- Check out the `development` branch from the remote (collaborators should work in `development`):
+	- `git switch -c development origin/development`
+	- OR (older git): `git checkout -b development origin/development`
+-- Work on a feature branch off `development`:
+	- `git switch -c feature/xyz development`
+- Create and activate a virtual environment (Windows example):
+	- `python -m venv .venv`
+	- `.venv\Scripts\activate`
+- Install dependencies:
+	- `pip install -r requirements.txt`
+
 This file lists common Git and GitHub commands useful when working with this repository.
 
 **Clone repository:**
-- `git clone <repo-url>`
+- `git clone https://github.com/GTMGRADE/orbitlink-fyp-2025`
 
 **Check status / log:**
 - `git status`
@@ -28,10 +46,10 @@ This file lists common Git and GitHub commands useful when working with this rep
 
 **Working with remotes:**
 - `git remote -v` : show remotes
-- `git remote add origin <repo-url>`
+- `git remote add origin https://github.com/GTMGRADE/orbitlink-fyp-2025`
 
 **Merging & rebasing:**
-- `git.merge <branch>` : merge into current branch
+- `git merge <branch>` : merge into current branch
 - `git rebase <branch>` : reapply commits on top of branch
 
 **Stash:**
@@ -53,10 +71,10 @@ This file lists common Git and GitHub commands useful when working with this rep
 - `git push origin v1.0` : push tag
 
 **Pull request workflow (basic):**
-- Create a branch: `git switch -c feature/xyz`
+- Create a branch off `development`: `git switch -c feature/xyz development`
 - Work and commit locally
 - Push branch: `git push -u origin feature/xyz`
-- Open a Pull Request on GitHub from `feature/xyz` into `main` (or `master`)
+- Open a Pull Request on GitHub from `feature/xyz` into `development`
 
 **Resolving merge conflicts (high level):**
 - After `git pull` or `git merge`, open conflicted files and resolve markers
