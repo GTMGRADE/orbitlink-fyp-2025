@@ -10,8 +10,8 @@ Initial setup (for collaborators)
 -- Check out the `development` branch from the remote (collaborators should work in `development`):
 	- `git switch -c development origin/development`
 	- OR (older git): `git checkout -b development origin/development`
--- Work on a feature branch off `development`:
-	- `git switch -c feature/xyz development`
+
+	 
 - Create and activate a virtual environment (Windows example):
 	- `python -m venv .venv`
 	- `.venv\Scripts\activate`
