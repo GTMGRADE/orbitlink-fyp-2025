@@ -34,6 +34,12 @@ def get_current_user():
     return None
 
 
+def get_user_by_email(email: str):
+    if email == demo_user.email:
+        return demo_user
+    return None
+
+
 # ---------- LOG IN + REMEMBER ME ----------
 @app.get("/login")
 def login_get():
@@ -85,13 +91,15 @@ def reset_password_get():
 def reset_password_post():
     """Handles password reset form submission."""
     email = request.form.get("email")
-    if email == demo_user.email:
-        message = "A password reset link has been sent to your email."
+    user = get_user_by_email(email)
+
+    if user:
+        session["user_id"] = user.id
         logger.info(f"Password reset requested for email: {email}")
-    else:
-        message = "If this email exists, a reset link has been sent."
-        logger.warning(f"Password reset requested for non-existent email: {email}")
-    return render_template("reset_password.html", message=message)
+        return redirect(url_for("profile", message="Password reset link sent."))
+
+    logger.warning(f"Password reset requested for non-existent email: {email}")
+    return render_template("reset_password.html", message="If this email exists, a reset link has been sent.")
 
 
 # ---------- CHANGE USERNAME ----------

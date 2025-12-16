@@ -10,53 +10,55 @@
     />
     <style>
       * {
-        .actions-list {
-          list-style: none;
-          margin: 0 auto 1.5rem auto;
-          max-width: 360px;
-          padding: 0;
-        }
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        .actions-list li {
-          margin-bottom: 0.75rem;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #0f1c3d;
+        color: #fff;
+        min-height: 100vh;
+      }
 
-        .action-btn {
-          display: inline-block;
-          width: 100%;
-          padding: 0.95rem 1.25rem;
-          background-color: #12224a; /* slightly lighter navy for contrast */
-          color: #ffffff;
-          text-decoration: none;
-          border-radius: 12px;
-          border: none;
-          font-weight: 800;
-          font-size: 1.05rem;
-          letter-spacing: 0.2px;
-          transition: all 0.2s;
-          text-align: center;
-        }
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: transparent;
+      }
 
-        .action-btn:hover {
-          background-color: #1a2f62;
-          transform: translateY(-1px);
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.28);
-        }
+      .logo {
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: #ffffff;
+        font-weight: 600;
         padding: 0.5rem 1rem;
         border-radius: 6px;
-        transition: all 0.3s;
+        transition: all 0.2s;
         background-color: rgba(255, 255, 255, 0.12);
-        margin-right: 10px;
       }
 
       .nav-links a:hover {
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.25);
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
       }
 
       .container {
-        background-color: #ff8c42; /* Orange card */
+        background-color: #ff8c42;
         margin: 3rem auto;
         border-radius: 20px;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
@@ -70,13 +72,14 @@
         margin-bottom: 1rem;
         font-size: 1rem;
         text-align: left;
+        letter-spacing: 1px;
       }
 
       .avatar {
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: #192a6b; /* navy circle */
+        background: linear-gradient(135deg, #142754, #1f3a7c);
         margin: 0.5rem auto 0.75rem auto;
         display: flex;
         align-items: center;
@@ -90,11 +93,13 @@
         color: #0f1c3d;
         font-weight: 800;
         letter-spacing: 0.5px;
-        margin-bottom: 1.25rem;
+        margin-bottom: 0.5rem;
       }
 
-      .profile-info {
-        display: none; /* hidden per mock */
+      .user-type-label {
+        color: #0f1c3d;
+        font-weight: 700;
+        margin-bottom: 1rem;
       }
 
       .message {
@@ -121,7 +126,7 @@
         display: inline-block;
         width: 100%;
         padding: 0.95rem 1.25rem;
-        background-color: #12224a; /* slightly lighter navy for contrast */
+        background-color: #12224a;
         color: #ffffff;
         text-decoration: none;
         border-radius: 12px;
@@ -134,7 +139,7 @@
       }
 
       .action-btn:hover {
-        background-color: #142754;
+        background-color: #1a2f62;
         transform: translateY(-1px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.28);
       }
@@ -166,8 +171,6 @@
         background-color: #142754;
       }
 
-      /* Danger zone removed per request */
-
       footer {
         margin-top: 4rem;
         padding: 2rem 5%;
@@ -188,17 +191,7 @@
         }
 
         .logo {
-          font-size: 1.8rem;
-          margin-left: 0;
-        }
-
-        .nav-links {
-          gap: 1rem;
-        }
-
-        .nav-links a {
-          padding: 0.5rem 1rem;
-          margin-right: 0;
+          font-size: 1.4rem;
         }
 
         .container {
@@ -223,6 +216,9 @@
 
       <div class="avatar">👤</div>
       <div class="username-title">{{ user.username | upper }}</div>
+      <div class="user-type-label">
+        Type: {{ user_type|default('business')|capitalize }}
+      </div>
 
       {% if message %}
       <div class="message">{{ message }}</div>

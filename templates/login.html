@@ -240,6 +240,28 @@
       {% endif %}
 
       <form method="post" action="{{ url_for('user.login_post') }}">
+        <div class="form-group">
+          <label
+            for="user_type"
+            style="color: #0d1b2a; font-weight: 700; margin-bottom: 0.5rem"
+            >Login as</label
+          >
+          <select
+            id="user_type"
+            name="user_type"
+            style="
+              width: 100%;
+              padding: 0.8rem;
+              border-radius: 6px;
+              border: 1px solid rgba(0, 0, 0, 0.2);
+              font-size: 1rem;
+            "
+          >
+            <option value="business">Business User</option>
+            <option value="influencer">Influencer User</option>
+          </select>
+        </div>
+
         <div class="form-group input-with-icon">
           <span class="icon">📧</span>
           <input

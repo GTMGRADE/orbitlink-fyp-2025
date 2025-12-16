@@ -45,18 +45,18 @@
 
       .nav-links a {
         text-decoration: none;
-        color: #ffffff;
+        color: rgb(0, 0, 0);
         font-weight: 600;
-        padding: 0.5rem 1rem;
+        padding: 0.7rem 1.5rem;
         border-radius: 6px;
         transition: all 0.3s;
-        background-color: rgba(255, 255, 255, 0.12);
+        background-color: #ff3333;
         margin-right: 10px;
       }
 
       .nav-links a:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
+        background-color: #cc0000;
+        transform: translateY(-3px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
 
@@ -206,7 +206,7 @@
     <nav class="navbar">
       <div class="logo">OrbitLink</div>
       <div class="nav-links">
-        <a href="{{ url_for('landing.landing_page') }}">Home</a>
+        <a href="{{ url_for('user.logout') }}">Log Out</a>
         <a href="{{ url_for('user.profile') }}">Profile</a>
       </div>
     </nav>
