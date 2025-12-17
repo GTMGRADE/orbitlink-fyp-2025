@@ -533,9 +533,12 @@
     <nav class="navbar">
         <div class="logo">OrbitLink</div>
         <div class="nav-links">
-            <a href="{{ url_for('landing.landing_page') }}" class="active">Home</a>
+            <!-- <a href="{{ url_for('landing.landing_page') }}" class="active">Home</a> -->
+            <!-- <a href="#reviews">Reviews</a> -->
             <a href="{{ url_for('reviews.show_reviews') }}">Reviews</a>
-            <a href="#signup">Sign Up/Log In</a>
+            <!-- <a href="#signup">Sign Up</a> -->
+            <a href="{{ url_for('register.register_page') }}">Sign Up</a>
+            <a href="#login">Log In</a>
         </div>
     </nav>
 
@@ -625,7 +628,8 @@
                 </div>
                 
                 <!-- Single "Start Free Trial" Button -->
-                <a href="#signup" class="compact-trial-btn">Start Free Trial</a>
+                <!-- <a href="#signup" class="compact-trial-btn">Start Free Trial</a> -->
+                <a href="{{ url_for('register.register_page') }}" class="compact-trial-btn">Start Free Trial</a>
             </div>
         </div>
     </section>
