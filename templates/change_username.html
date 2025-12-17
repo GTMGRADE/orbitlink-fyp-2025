@@ -18,16 +18,18 @@
       body {
         font-family: Arial, sans-serif;
         line-height: 1.6;
-        background-color: #0f1c3d; /* Deep navy */
-        color: white;
+        background-color: #14294a;
+        color: #ffffff;
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
       .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1.2rem 3% 0.2rem 3%;
+        padding: 0.8rem 3%;
         background-color: transparent;
       }
 
@@ -61,45 +63,43 @@
       }
 
       .container {
-        background-color: #ff8c42; /* Orange card */
-        margin: 3rem auto;
-        border-radius: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+        background-color: #f24822;
+        margin: 2.5rem auto;
+        border-radius: 14px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
         max-width: 520px;
-        padding: 2.5rem 2.25rem;
+        padding: 2.2rem 2.2rem 2.6rem;
       }
 
       .container h1 {
-        color: #0f1c3d;
-        margin-bottom: 1.75rem;
-        font-size: 1.9rem;
+        color: #ffffff;
+        margin-bottom: 1.3rem;
+        font-size: 2rem;
         text-align: center;
+        font-weight: 700;
       }
 
       .current-username {
-        background-color: rgba(255, 255, 255, 0.25);
+        background-color: rgba(255, 255, 255, 0.18);
         padding: 1rem;
-        border-radius: 12px;
-        margin-bottom: 1.5rem;
-        color: #0f1c3d;
-      }
-
-      .current-username p {
-        margin: 0;
+        border-radius: 10px;
+        margin-bottom: 1.4rem;
+        color: #0d1b2a;
       }
 
       .current-username label {
-        font-weight: 600;
-        color: #f24822;
+        font-weight: 700;
+        color: #0d1b2a;
+        margin-right: 0.4rem;
       }
 
       .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.3rem;
       }
 
       .form-group label {
         display: block;
-        color: #0f1c3d;
+        color: #0d1b2a;
         font-weight: 700;
         margin-bottom: 0.6rem;
       }
@@ -108,42 +108,45 @@
         width: 100%;
         padding: 0.85rem 0.85rem;
         border: 1px solid rgba(0, 0, 0, 0.15);
-        border-radius: 12px;
+        border-radius: 10px;
         font-size: 1rem;
         transition: border 0.3s, box-shadow 0.2s;
+        background-color: #ffffff;
       }
 
       .form-group input[type="text"]:focus {
         outline: none;
-        border-color: #0f1c3d;
-        box-shadow: 0 0 0 3px rgba(15, 28, 61, 0.12);
+        border-color: #f24822;
+        box-shadow: 0 0 5px rgba(242, 72, 34, 0.3);
       }
 
       .btn {
         display: inline-block;
-        width: 100%;
-        padding: 0.9rem 2.5rem;
-        background-color: #0f1c3d; /* Navy button */
+        width: 70%;
+        padding: 0.9rem 1.2rem;
+        background-color: #152b4a;
         color: #ffffff;
         text-decoration: none;
         border-radius: 999px;
         border: none;
         cursor: pointer;
         font-size: 1.05rem;
-        font-weight: bold;
+        font-weight: 700;
         transition: all 0.2s;
         text-align: center;
+        margin: 0.6rem auto 0;
+        display: block;
       }
 
       .btn:hover {
-        background-color: #142754;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.28);
+        background-color: #b73416;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
       }
 
       .back-link {
         text-align: center;
-        margin-top: 1.5rem;
+        margin-top: 1.3rem;
       }
 
       .back-link a {
@@ -162,9 +165,9 @@
       }
 
       footer {
-        margin-top: 4rem;
-        padding: 2rem 5%;
-        background-color: rgba(0, 0, 0, 0.2);
+        margin-top: auto;
+        padding: 1.3rem 5%;
+        background-color: rgba(0, 0, 0, 0.15);
         text-align: center;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
       }
@@ -202,7 +205,6 @@
     </style>
   </head>
   <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
       <div class="logo">OrbitLink</div>
       <div class="nav-links">
@@ -211,29 +213,51 @@
       </div>
     </nav>
 
-    <!-- Change Username Form Container -->
     <div class="container">
       <h1>Change Username</h1>
 
+      {% if error %}
+      <div
+        class="current-username"
+        style="
+          background-color: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+        "
+      >
+        {{ error }}
+      </div>
+      {% endif %}
+
       <div class="current-username">
-        <p><label>Current username:</label> {{ current_username }}</p>
+        <label>Current username:</label>
+        <span>{{ current_username }}</span>
       </div>
 
       <form method="post" action="{{ url_for('user.change_username_post') }}">
         <div class="form-group">
           <label for="new_username">New Username</label>
-          <input type="text" id="new_username" name="new_username" required />
+          <input
+            type="text"
+            id="new_username"
+            name="new_username"
+            placeholder="Enter New Username"
+            required
+          />
         </div>
 
         <button type="submit" class="btn">Save</button>
       </form>
 
-      <div class="back-link">
+      <div
+        class="back-link"
+        style="display: flex; gap: 0.8rem; justify-content: center"
+      >
         <a href="{{ url_for('user.profile') }}">Back to profile</a>
+        <a href="{{ url_for('projects.projects_dashboard') }}">Home</a>
       </div>
     </div>
 
-    <!-- Footer -->
     <footer>
       <p>© 2024 OrbitLink Analytics Platform. All rights reserved.</p>
       <p>Contact: support@orbitlink.com</p>
