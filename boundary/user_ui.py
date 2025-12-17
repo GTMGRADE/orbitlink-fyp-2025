@@ -23,12 +23,12 @@ def login_get():
 
 @user_bp.post("/login")
 def login_post():
-    user_type = request.form.get("user_type", "business")
     username = request.form.get("username", "")
     password = request.form.get("password", "")
     remember_me_flag = request.form.get("remember_me") is not None
 
-    login_result = user_controller.authenticate(user_type, username, password, remember_me_flag)
+    # Auto-detect user type based on entered username/email
+    login_result = user_controller.authenticate_auto(username, password, remember_me_flag)
 
     if login_result["status"] == "success":
         user = login_result.get("user")
@@ -38,7 +38,7 @@ def login_post():
         logger.info(
             "User %s (%s) logged in successfully (remember_me=%s)",
             username,
-            user_type,
+            session.get("user_type"),
             session.permanent,
         )
         return redirect(url_for("projects.projects_dashboard"))

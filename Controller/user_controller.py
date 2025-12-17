@@ -21,15 +21,15 @@ class UserController:
         self.users: Dict[str, RegisteredUser] = {
             "business": RegisteredUser(
                 id=1,
-                username="regbusiness",
+                username="bizreg",
                 email="business@example.com",
                 password_hash="bizpass",
             ),
             "influencer": RegisteredUser(
                 id=2,
-                username="reginfluencer",
+                username="infreg",
                 email="influencer@example.com",
-                password_hash="influencerpass",
+                password_hash="infpass",
             ),
         }
 
@@ -43,6 +43,31 @@ class UserController:
                 "user_type": user_type,
                 "remember": remember_me,
             }
+        return {"status": "failure", "message": "Invalid username or password."}
+
+    def resolve_user_type_by_username(self, username: str) -> Optional[str]:
+        for utype, user in self.users.items():
+            if user.username == username:
+                return utype
+        return None
+
+    def authenticate_auto(self, username: str, password: str, remember_me: bool) -> dict:
+        """Authenticate without an explicit user type.
+
+        Tries to resolve by username first; if not found and input looks like
+        an email, resolves by email. Returns the same shape as authenticate().
+        """
+        # Try direct username match
+        utype = self.resolve_user_type_by_username(username)
+        if utype:
+            return self.authenticate(utype, username, password, remember_me)
+
+        # Try email match if input looks like an email address
+        if "@" in username:
+            utype_email, user = self.get_user_by_email(username)
+            if user is not None:
+                return self.authenticate(utype_email or "", user.username, password, remember_me)
+
         return {"status": "failure", "message": "Invalid username or password."}
 
     def get_user(self, user_type: Optional[str], user_id: Optional[int]) -> Optional[RegisteredUser]:

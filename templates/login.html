@@ -132,6 +132,8 @@
         margin: 0.6rem 0 1.2rem;
       }
 
+      /* user type selector removed; type is auto-detected */
+
       .btn {
         display: inline-block;
         width: 60%;
@@ -241,12 +243,12 @@
 
       <form method="post" action="{{ url_for('user.login_post') }}">
         <div class="form-group input-with-icon">
-          <span class="icon">📧</span>
+          <span class="icon">👤</span>
           <input
             type="text"
             id="username"
             name="username"
-            placeholder="Enter Email Address"
+            placeholder="Enter Username"
             required
           />
         </div>

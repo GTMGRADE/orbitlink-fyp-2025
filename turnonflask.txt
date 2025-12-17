@@ -1,0 +1,6 @@
+cd /d e:\Users\User\Downloads\FYP\codingPortion
+python app.py
+
+log in as Business (bizreg/bizpass) and Influencer (infreg/infpass)
+After logging in, you can change the username or password
+For password reset, use john@example.com as the email
