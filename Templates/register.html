@@ -107,6 +107,134 @@
             margin: 0 auto;
         }
         
+        /* PROFESSIONAL FLASH MESSAGES */
+        .flash-messages {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            animation: slideDown 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes slideDown {
+            from { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(-100px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0); 
+            }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0); 
+            }
+            to { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(-100px); 
+            }
+        }
+        
+        .alert {
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.5s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        /* Success Message - Professional Green */
+        .alert-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-left: 5px solid #047857;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+        
+        .alert-success::before {
+            content: '✓';
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        /* Error Message - Professional Red */
+        .alert-error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border-left: 5px solid #b91c1c;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+        }
+        
+        .alert-error::before {
+            content: '⚠';
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        /* Optional: Add a subtle pulse animation for success */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .alert-success {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Add a subtle shine effect */
+        .alert::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.7s;
+        }
+        
+        .alert:hover::after {
+            left: 100%;
+        }
+        
         /* "Get Started Now" positioned at top */
         .form-title {
             font-size: 1.5rem;
@@ -258,32 +386,6 @@
             text-decoration: underline;
         }
         
-        /* Flash Messages */
-        .flash-messages {
-            margin-bottom: 1rem;
-        }
-        
-        .alert {
-            padding: 0.6rem;
-            border-radius: 5px;
-            margin-bottom: 0.6rem;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.75rem;
-        }
-        
-        .alert-success {
-            background-color: rgba(39, 202, 63, 0.2);
-            border: 1px solid #27ca3f;
-            color: #27ca3f;
-        }
-        
-        .alert-error {
-            background-color: rgba(255, 51, 51, 0.2);
-            border: 1px solid #ff3333;
-            color: #ff3333;
-        }
-        
         /* Responsive Design */
         @media (max-width: 1024px) {
             .register-container {
@@ -306,6 +408,11 @@
             
             .form-container {
                 max-width: 340px;
+            }
+            
+            .flash-messages {
+                top: 90px;
+                width: 95%;
             }
         }
         
@@ -366,6 +473,23 @@
             .form-group {
                 margin-bottom: 0.9rem;
             }
+            
+            .flash-messages {
+                top: 80px;
+                width: 90%;
+            }
+            
+            .alert {
+                padding: 1.2rem 1.5rem;
+                font-size: 1rem;
+                gap: 10px;
+            }
+            
+            .alert::before {
+                width: 35px;
+                height: 35px;
+                font-size: 1.3rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -415,6 +539,23 @@
             .login-link {
                 font-size: 0.75rem;
             }
+            
+            .flash-messages {
+                top: 70px;
+                width: 95%;
+            }
+            
+            .alert {
+                padding: 1rem 1.2rem;
+                font-size: 0.95rem;
+                gap: 8px;
+            }
+            
+            .alert::before {
+                width: 30px;
+                height: 30px;
+                font-size: 1.1rem;
+            }
         }
         
         @media (max-height: 700px) {
@@ -429,6 +570,10 @@
             
             .register-hero, .register-form-section {
                 padding: 1.5rem;
+            }
+            
+            .flash-messages {
+                top: 80px;
             }
         }
         
@@ -453,6 +598,17 @@
         <a href="{{ url_for('landing.landing_page') }}" class="back-button">Back to Home</a>
     </nav>
 
+    <!-- Flash Messages - NOW CENTERED AT TOP -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages" id="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <!-- Main Container -->
     <div class="register-container">
         <!-- Left Red Section -->
@@ -465,22 +621,11 @@
         <!-- Right Blue Section -->
         <div class="register-form-section">
             <div class="form-container">
-                <!-- Flash Messages -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="flash-messages">
-                            {% for category, message in messages %}
-                                <div class="alert alert-{{ category }}">{{ message }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-                
                 <!-- "Get Started Now" at the top -->
                 <h2 class="form-title">Get Started Now</h2>
                 
                 <div class="form-wrapper">
-                    <form method="POST" action="{{ url_for('register.register_page') }}">
+                    <form method="POST" action="{{ url_for('register.register_page') }}" id="register-form">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" class="form-control" placeholder="Enter a valid email address" required>
@@ -523,5 +668,39 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-fade flash messages after 2 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.getElementById('flash-messages');
+            
+            if (flashMessages) {
+                setTimeout(function() {
+                    flashMessages.style.animation = 'slideUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+                    
+                    // Remove from DOM after animation
+                    setTimeout(function() {
+                        flashMessages.remove();
+                    }, 500);
+                }, 2000); // 2 seconds
+            }
+            
+            // Clear form on successful registration
+            const successAlert = document.querySelector('.alert-success');
+            if (successAlert) {
+                // Reset form fields
+                const form = document.getElementById('register-form');
+                if (form) {
+                    form.reset();
+                }
+                
+                // Also clear any radio button selections
+                const radioButtons = document.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    radio.checked = false;
+                });
+            }
+        });
+    </script>
 </body>
 </html>
