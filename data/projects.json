@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Project Name 1",
+    "description": "Demo project",
+    "last_opened": "2025-12-19",
+    "archived": false
+  },
+  {
+    "id": 2,
+    "name": "Project Name 2",
+    "description": "Another project",
+    "last_opened": "2025-12-19",
+    "archived": false
+  },
+  {
+    "id": 3,
+    "name": "Project Name 3",
+    "description": "Sample notes",
+    "last_opened": "2025-12-19",
+    "archived": false
+  }
+]
