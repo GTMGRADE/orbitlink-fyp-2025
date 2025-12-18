@@ -170,13 +170,13 @@
           <a href="{{ url_for('projects.projects_dashboard') }}" class="active"
             >Dashboard</a
           >
-          <a href="#">Projects</a>
-          <a href="#">Analysis</a>
+          <a href="{{ url_for('projects.projects_dashboard') }}">Projects</a>
+          <a href="{{ url_for('projects.project_sna') }}">Analysis</a>
           <a href="#">Support</a>
           <a href="#">Setting</a>
           {% if session.get('user_type') == 'business' %}
-          <a href="#">Detect Community/Clusters</a>
-          <a href="#">Real-time Data Monitoring</a>
+          <a href="{{ url_for('projects.detect_communities') }}">Detect Community/Clusters</a>
+          <a href="{{ url_for('projects.data_monitoring') }}">Real-time Data Monitoring</a>
           {% endif %}
         </nav>
       </aside>

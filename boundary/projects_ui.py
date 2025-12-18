@@ -56,3 +56,45 @@ def projects_archive(pid: int):
 def projects_delete(pid: int):
     projects_controller.delete(pid)
     return redirect(url_for("projects.projects_dashboard"))
+
+
+@projects_bp.get("/projects/api-keys")
+def api_keys():
+    logger.info("API Keys page accessed")
+    return render_template("api_keys.html")
+
+
+@projects_bp.get("/projects/sna")
+def project_sna():
+    logger.info("Project SNA page accessed")
+    return render_template("project_sna.html")
+
+
+@projects_bp.get("/projects/sentiment-analysis")
+def sentiment_analysis():
+    logger.info("Sentiment Analysis page accessed")
+    return render_template("sentiment_analysis.html")
+
+
+@projects_bp.get("/projects/detect-communities")
+def detect_communities():
+    logger.info("Detect Communities page accessed")
+    return render_template("detect_communities.html")
+
+
+@projects_bp.get("/projects/data-monitoring")
+def data_monitoring():
+    logger.info("Data Monitoring page accessed")
+    return render_template("data_monitoring.html")
+
+
+@projects_bp.get("/projects/historical-analysis")
+def historical_analysis():
+    logger.info("Historical Analysis page accessed")
+    return render_template("historical_analysis.html")
+
+
+@projects_bp.get("/projects/identify-influencers")
+def identify_influencers():
+    logger.info("Identify Influencers page accessed")
+    return render_template("identify_influencers.html")
