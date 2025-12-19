@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrbitLink - Social Network Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #1E3167;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 3% 0.2rem 3%;
+            background-color: #1E3167;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        /* REDUCED GAP BETWEEN NAVIGATION BUTTONS */
+        .nav-links {
+            display: flex;
+            gap: 1rem; /* REDUCED from 2.5rem to 1rem */
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+            background-color: #ff3333;
+            margin-right: 5px; /* REDUCED from 10px to 5px */
+        }
+        
+        .nav-links a:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .nav-links a.active {
+            background-color: #cc0000;
+        }
+        
+        .hero-container {
+            background-color: white;
+            margin: 1.5rem 3%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+        }
+        
+        .hero-section {
+            display: flex;
+            padding: 0;
+            align-items: stretch;
+            min-height: 525px;
+        }
+        
+        .hero-content {
+            flex: 1;
+            padding: 3.5rem 3.5rem;
+            background-color: #F24822;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: rgb(0, 0, 0);
+            line-height: 1.1;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            color: rgb(0, 0, 0);
+            line-height: 1.6;
+        }
+        
+        .hero-image {
+            flex: 1;
+            background-color: #F24822;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background-color: #b73416;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            align-self: flex-start;
+        }
+        
+        .btn:hover {
+            background-color: #831e1e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* SIMPLE FEATURES SECTION */
+        .section-title {
+            text-align: center;
+            margin: 0.2rem 0 2.5rem 0;
+            font-size: 2.2rem;
+            color: white;
+            padding-top: 0;
+        }
+        
+        .features-grid-simple {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            padding: 0 3%;
+        }
+        
+        .feature-simple {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-simple:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        
+        .feature-icon-simple {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .feature-simple h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .feature-simple p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* COMPACT SINGLE PLAN SECTION */
+        .compact-plan-section {
+            margin: 3rem 3% 0 3%; /* Reduced margin */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            max-height: 700px; /* Added max-height constraint */
+        }
+        
+        .compact-plan-header {
+            background-color: #F24822;
+            padding: 2rem 2.5rem 1.5rem 2.5rem; /* Reduced padding */
+            color: rgb(0, 0, 0);
+        }
+        
+        .compact-plan-header h2 {
+            font-size: 2.2rem; /* Slightly smaller */
+            margin-bottom: 0.8rem;
+            text-align: left;
+        }
+        
+        .compact-plan-header p {
+            font-size: 1.1rem; /* Smaller font */
+            opacity: 0.9;
+            max-width: 800px;
+            line-height: 1.4;
+        }
+        
+        .compact-plan-content {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2rem 2.5rem; /* Reduced padding */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem; /* Reduced gap */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-height: 450px; /* Limit height */
+        }
+        
+        .compact-price-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* Reduced gap */
+        }
+        
+        .compact-price-option {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 1.5rem; /* Reduced padding */
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            min-height: 175px; /* Set fixed height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease; /* ADD THIS LINE for smooth hover */
+        }
+
+        .compact-price-option:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px); /* ADD THIS LINE for lift effect */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* ADD THIS LINE for shadow */
+            border-color: rgba(255, 255, 255, 0.25); /* ADD THIS LINE for border highlight */
+        }
+        
+        .compact-price-option h3 {
+            font-size: 1.3rem; /* Smaller */
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .compact-price-amount {
+            font-size: 2.5rem; /* Smaller */
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.3rem;
+            line-height: 1;
+        }
+        
+        .compact-price-period {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem; /* Smaller */
+        }
+        
+        .compact-plan-features {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto; /* Add scroll if needed */
+            max-height: 280px; /* Limit height */
+        }
+        
+        .compact-plan-features li {
+            margin-bottom: 0.8rem; /* Reduced spacing */
+            padding-left: 1.8rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4; /* Tighter line height */
+            font-size: 0.95rem; /* Slightly smaller font */
+        }
+        
+        .compact-plan-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ca3f;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .compact-plan-cta {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .compact-plan-included {
+            margin-bottom: 1.5rem; /* Reduced margin */
+            flex-grow: 1;
+        }
+        
+        .compact-plan-included h3 {
+            font-size: 1.3rem; /* Smaller */
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .compact-trial-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem; /* Reduced padding */
+            text-align: center;
+            background-color: #ff3333;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem; /* Slightly smaller */
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: auto;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .compact-trial-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* ========== UPDATED CONTACT SECTION ========== */
+        .contact-section {
+            margin: 3rem 0 0 0; /* Remove side margins */
+            background-color: #282828; /* Dark gray background */
+            border-radius: 0; /* Remove border radius */
+            padding: 3rem 3% 2rem 3%; /* Added padding instead of margins */
+            width: 100%; /* Full width */
+        }
+        
+        .contact-intro {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .contact-intro h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+        
+        .contact-intro p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        /* Contact Form Styling */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group-contact {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group-contact label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .form-control-contact {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control-contact:focus {
+            outline: none;
+            border-color: #ff3333;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-control-contact::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        textarea.form-control-contact {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            padding: 0.9rem 2.5rem;
+            background-color: #ff3333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-start;
+            margin-top: 0.5rem;
+        }
+        
+        .submit-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Contact Info Styling */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff3333 0%, #cc0000 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .contact-details h4 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .contact-details p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Flash message for contact form */
+        .contact-flash {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .contact-flash.success {
+            background-color: rgba(39, 202, 63, 0.2);
+            border: 1px solid #27ca3f;
+            color: #27ca3f;
+            display: block;
+        }
+        
+        .contact-flash.error {
+            background-color: rgba(255, 51, 51, 0.2);
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            display: block;
+        }
+        
+        /* UPDATED FOOTER - Darker color */
+        footer {
+            margin-top: 0; /* Remove margin since contact section is now the footer */
+            padding: 1.5rem 3%;
+            background-color: #1E1E1E; /* Darker footer color */
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+        }
+        
+        .image-placeholder h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .image-placeholder p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content-spacer {
+            height: 50px;
+            width: 100%;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-section {
+                min-height: 450px;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.3rem;
+            }
+            
+            .compact-plan-content {
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+            
+            .compact-price-amount {
+                font-size: 2.2rem;
+            }
+            
+            .compact-plan-features li {
+                font-size: 0.9rem;
+                margin-bottom: 0.7rem;
+            }
+            
+            .contact-content {
+                gap: 2rem;
+            }
+            
+            .contact-intro h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 5%;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+                margin-left: 0;
+            }
+            
+            /* MOBILE: Further reduce gap for smaller screens */
+            .nav-links {
+                gap: 0.5rem; /* REDUCED from 1rem to 0.5rem for mobile */
+            }
+            
+            .nav-links a {
+                padding: 0.5rem 0.8rem; /* REDUCED padding */
+                margin-right: 0;
+                font-size: 0.9rem; /* Slightly smaller font for mobile */
+            }
+            
+            .hero-container {
+                margin: 1.5rem 5%;
+            }
+            
+            .hero-section {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .hero-content, .hero-image {
+                padding: 2rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                margin: 2rem 0 2rem 0;
+                font-size: 1.8rem;
+            }
+            
+            .features-grid-simple {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 5%;
+            }
+            
+            .feature-simple {
+                padding: 1.5rem;
+            }
+            
+            .compact-plan-section {
+                margin: 2.5rem 5% 0 5%;
+                max-height: none;
+            }
+            
+            .compact-plan-header {
+                padding: 1.5rem;
+            }
+            
+            .compact-plan-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .compact-plan-header p {
+                font-size: 1rem;
+            }
+            
+            .compact-plan-content {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+                gap: 1.5rem;
+                max-height: none;
+            }
+            
+            .compact-price-option {
+                padding: 1.2rem;
+                min-height: 100px;
+            }
+            
+            .compact-price-amount {
+                font-size: 2rem;
+            }
+            
+            .compact-trial-btn {
+                padding: 0.9rem;
+                font-size: 1rem;
+                min-height: 45px;
+            }
+            
+            /* Contact section mobile */
+            .contact-section {
+                padding: 2.5rem 5%;
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .contact-intro {
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+            }
+            
+            .contact-intro h2 {
+                font-size: 1.8rem;
+            }
+            
+            .contact-methods {
+                gap: 1.5rem;
+            }
+            
+            .contact-method {
+                gap: 1.2rem;
+            }
+            
+            .contact-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
+            footer {
+                padding: 1.5rem 5%;
+            }
+            
+            .content-spacer {
+                height: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .contact-intro h2 {
+                font-size: 1.6rem;
+            }
+            
+            .contact-intro p {
+                font-size: 0.95rem;
+            }
+            
+            .form-control-contact {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .submit-btn {
+                padding: 0.8rem 2rem;
+                font-size: 0.95rem;
+            }
+            
+            .contact-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .contact-details h4 {
+                font-size: 1.1rem;
+            }
+            
+            .contact-details p {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">OrbitLink</div>
+        <div class="nav-links">
+            <a href="{{ url_for('reviews.show_reviews') }}">Reviews</a>
+            <a href="{{ url_for('register.register_page') }}">Sign Up</a>
+            <a href="{{ url_for('user.login_get') }}">Log In</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-container">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Analyze Social Networks with Smart Analytics</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <a href="#signup" class="btn">Learn More</a>
+            </div>
+            <div class="hero-image">
+                <div class="image-placeholder">
+                    <h3>Analytics Dashboard Preview</h3>
+                    <p>Interactive visualization of network insights</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Small spacer -->
+    <div class="content-spacer"></div>
+
+    <!-- SIMPLE Features Section -->
+    <h2 class="section-title">Key Features</h2>
+    <div class="features-grid-simple">
+        <div class="feature-simple">
+            <div class="feature-icon-simple">📊</div>
+            <h3>Sentiment Analysis</h3>
+            <p>Analyze opinions and track sentiment shifts over time to understand public perception</p>
+        </div>
+        <div class="feature-simple">
+            <div class="feature-icon-simple">👑</div>
+            <h3>Influencer Detection</h3>
+            <p>Identify key influencers and high-impact accounts driving conversations in your network</p>
+        </div>
+        <div class="feature-simple">
+            <div class="feature-icon-simple">🔄</div>
+            <h3>Community Clustering</h3>
+            <p>Detect subgroups and analyze information flows between different community segments</p>
+        </div>
+        <div class="feature-simple">
+            <div class="feature-icon-simple">⚡</div>
+            <h3>Real-time Monitoring</h3>
+            <p>Track emergent events with live dashboards and instant alert notifications</p>
+        </div>
+    </div>
+
+    <!-- COMPACT PLAN SECTION -->
+    <section class="compact-plan-section">
+        <!-- Red Header -->
+        <div class="compact-plan-header">
+            <h2>Membership Plans</h2>
+            <p>Full access. Free for 30 days. Sign up and explore all features. Continue with a subscription to keep using the platform.</p>
+        </div>
+        
+        <!-- Compact Plan Content -->
+        <div class="compact-plan-content">
+            <!-- Left Column: Price Options -->
+            <div class="compact-price-options">
+                <div class="compact-price-option">
+                    <h3>Free Trial</h3>
+                    <div class="compact-price-amount">$0</div>
+                    <div class="compact-price-period">/member for first month</div>
+                </div>
+                
+                <div class="compact-price-option">
+                    <h3>Paid Subscription</h3>
+                    <div class="compact-price-amount">$49</div>
+                    <div class="compact-price-period">/member/month</div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Features and Button -->
+            <div class="compact-plan-cta">
+                <div class="compact-plan-included">
+                    <h3>What's Included:</h3>
+                    <ul class="compact-plan-features">
+                        <li>Full access to all features for 30 days</li>
+                        <li>Upload your own datasets</li>
+                        <li>Run sentiment analysis, influencer detection</li>
+                        <li>Create network visualizations</li>
+                        <li>Export results (CSV, PNG, PDF)</li>
+                        <li>Everything in Free Trial continues</li>
+                        <li>Data backup & enhanced security</li>
+                    </ul>
+                </div>
+                
+                <!-- Single "Start Free Trial" Button -->
+                <a href="{{ url_for('register.register_page') }}" class="compact-trial-btn">Start Free Trial</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- UPDATED CONTACT SECTION - Now full-width footer-like design -->
+    <section class="contact-section">
+        <!-- Centered Contact Intro -->
+        <div class="contact-intro">
+            <h2>CONTACT US</h2>
+            <p>Any Questions or remarks? Write us a message</p>
+        </div>
+        
+        <!-- Contact Content -->
+        <div class="contact-content">
+            <!-- Left Column: Contact Form -->
+            <div class="contact-form">
+                <div class="contact-flash" id="contact-flash"></div>
+                
+                <form id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group-contact">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" class="form-control-contact" placeholder="Enter a valid email address" required>
+                        </div>
+                        
+                        <div class="form-group-contact">
+                            <label for="contact-name">Name</label>
+                            <input type="text" id="contact-name" class="form-control-contact" placeholder="Enter your Name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-contact">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" class="form-control-contact" placeholder="Your message here..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">SUBMIT</button>
+                </form>
+            </div>
+            
+            <!-- Right Column: Contact Information -->
+            <div class="contact-info">
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>PHONE</h4>
+                            <p>+1 (555) 123-4567</p>
+                            <p>Mon-Fri from 12pm to 6pm</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>EMAIL</h4>
+                            <p>support@orbitlink.com</p>
+                            <p>We reply within 24 hours</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - Now darker color -->
+    <footer>
+        <p>© 2025 OrbitLink Analytics Platform. All rights reserved.</p>
+        <p>Contact: support@orbitlink.com</p>
+    </footer>
+
+    <script>
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('contact-email').value;
+            const name = document.getElementById('contact-name').value;
+            const message = document.getElementById('contact-message').value;
+            const flash = document.getElementById('contact-flash');
+            
+            // Simple validation
+            if (!email || !name || !message) {
+                flash.textContent = 'Please fill in all fields';
+                flash.className = 'contact-flash error';
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                flash.textContent = 'Please enter a valid email address';
+                flash.className = 'contact-flash error';
+                return;
+            }
+            
+            // Show success message (in a real app, this would send data to server)
+            flash.textContent = 'Thank you for your message! We\'ll get back to you soon.';
+            flash.className = 'contact-flash success';
+            
+            // Clear form
+            document.getElementById('contactForm').reset();
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                flash.className = 'contact-flash';
+                flash.style.display = 'none';
+            }, 5000);
+            
+            // Show message
+            flash.style.display = 'block';
+        });
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Update Sign Up link to go to registration page
+        document.querySelector('a[href="#signup"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = "{{ url_for('register.register_page') }}";
+        });
+    </script>
+</body>
+</html>
