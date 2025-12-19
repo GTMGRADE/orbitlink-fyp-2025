@@ -1,6 +1,6 @@
 # controllers/admin_login.py
-from Entity.account_entity import AccountEntity
-from Entity.account_entity import LoginError
+from entity.account_entity import AccountEntity
+from entity.account_entity import LoginError
 
 class AdminLoginController:
     """

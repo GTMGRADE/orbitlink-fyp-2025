@@ -1,5 +1,5 @@
 # controllers/admin_view_user_accounts_controller.py
-from Entity.account_entity import AccountEntity
+from entity.account_entity import AccountEntity
 
 class AdminViewUserAccountsController:
     def handle(self) -> list[dict]:

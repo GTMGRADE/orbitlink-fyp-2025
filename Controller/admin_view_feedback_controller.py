@@ -1,5 +1,5 @@
 # controllers/admin_view_feedback_controller.py
-from Entity.feedback_entity import FeedbackEntity
+from entity.feedback_entity import FeedbackEntity
 
 class AdminViewFeedbackController:
     def handle(self) -> list[dict]:

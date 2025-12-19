@@ -1,5 +1,5 @@
 # controllers/admin_edit_website_content_controller.py
-from Entity.website_content_entity import WebsiteContentEntity
+from entity.website_content_entity import WebsiteContentEntity
 
 class AdminEditWebsiteContentController:
     def handle(self, page_id: int, updated_content: str) -> dict:

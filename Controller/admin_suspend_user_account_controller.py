@@ -1,5 +1,5 @@
 # controllers/admin_suspend_user_account_controller.py
-from Entity.account_entity import AccountEntity
+from entity.account_entity import AccountEntity
 
 class AdminSuspendUserAccountController:
     def handle(self, user_id: int) -> dict:
