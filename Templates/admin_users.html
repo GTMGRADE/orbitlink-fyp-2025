@@ -235,11 +235,12 @@
       <div class="logo">Logo</div>
 
       <nav class="topnav">
-        <a class="topbtn active" href="/admin/users">Users</a>
-        <a class="topbtn" href="/admin/reviews">Reviews</a>
-        <a class="topbtn" href="/admin/edit-website">Edit Website</a>
-        <a class="topbtn" href="/admin/logout">Logout</a>
-      </nav>
+         <a class="topbtn active" href="{{ url_for('admin_ui.admin_users_page') }}">Users</a>
+         <a class="topbtn" href="{{ url_for('admin_ui.admin_reviews_page') }}">Reviews</a>
+         <a class="topbtn" href="{{ url_for('admin_ui.admin_edit_website_page') }}">Edit Website</a>
+         <a class="topbtn" href="{{ url_for('user.logout') }}">Logout</a>
+</nav>
+
     </header>
 
     <main class="content">

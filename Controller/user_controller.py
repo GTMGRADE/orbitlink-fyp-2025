@@ -31,6 +31,12 @@ class UserController:
                 email="influencer@example.com",
                 password_hash="infpass",
             ),
+            "admin": RegisteredUser(
+                id=99,
+                username="admin",
+                email="admin@example.com",
+                password_hash="adminpass",
+            ),
         }
 
     def authenticate(self, user_type: str, username: str, password: str, remember_me: bool) -> dict:

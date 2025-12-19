@@ -2,7 +2,7 @@ import logging
 
 from flask import Blueprint, render_template, request, redirect, url_for, session
 
-from controller.user_controller import user_controller
+from Controller.user_controller import user_controller
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +41,8 @@ def login_post():
             session.get("user_type"),
             session.permanent,
         )
+        if session.get("user_type") == "admin":
+            return redirect(url_for("admin_ui.admin_users_page"))
         return redirect(url_for("projects.projects_dashboard"))
 
     logger.warning("Failed login attempt with username: %s", username)

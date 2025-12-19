@@ -3,11 +3,12 @@ from Controller.admin_view_user_accounts_controller import AdminViewUserAccounts
 from Controller.admin_search_user_accounts_controller import AdminSearchUserAccountsController
 from Controller.admin_suspend_user_account_controller import AdminSuspendUserAccountController
 from Controller.admin_view_feedback_controller import AdminViewFeedbackController
+
 admin_api_bp = Blueprint("admin_api", __name__)
 
+#admin is determined by shared login session user_type
 def require_admin():
-    return session.get("admin_logged_in") is True
-
+    return session.get("user_type") == "admin"
 
 @admin_api_bp.get("/api/admin/users")
 def get_users():
@@ -38,9 +39,11 @@ def toggle_suspend(user_id):
     controller = AdminSuspendUserAccountController()
     result = controller.handle(user_id)
 
-    if result["ok"]:
+    if result.get("ok"):
         return jsonify({"ok": True, "user": result["user"]}), 200
-    return jsonify({"error": result["error"]}), result["code"]
+
+    return jsonify({"error": result.get("error", "Request failed.")}), result.get("code", 400)
+
 
 @admin_api_bp.get("/api/admin/feedback")
 def get_feedback():

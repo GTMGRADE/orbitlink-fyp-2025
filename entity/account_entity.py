@@ -6,7 +6,7 @@ class AccountEntity:
     """
 
     ADMIN_EMAIL = "admin@example.com"
-    ADMIN_PASSWORD = "admin123"
+    ADMIN_PASSWORD = "adminpass"
 
     #Match admin_users page 
     _USERS = [
