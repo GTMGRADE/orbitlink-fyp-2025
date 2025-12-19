@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In - OrbitLink</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        background-color: #14294a; /* deep navy */
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 3%;
+        background-color: transparent;
+      }
+
+      .logo {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        margin-left: 10px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: rgb(0, 0, 0);
+        font-weight: 600;
+        padding: 0.7rem 1.5rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: #ff3333;
+        margin-right: 10px;
+      }
+
+      .nav-links a:hover {
+        background-color: #cc0000;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .container {
+        background-color: #f24822; /* orange card */
+        margin: 2.5rem auto;
+        border-radius: 14px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        max-width: 520px;
+        padding: 2.2rem 2.2rem 2.8rem;
+      }
+
+      .container h1 {
+        color: #ffffff;
+        margin-bottom: 1.8rem;
+        font-size: 2.2rem;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        color: #0d1b2a;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .input-with-icon {
+        position: relative;
+      }
+      .input-with-icon .icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.95rem;
+      }
+      .form-group input[type="text"],
+      .form-group input[type="password"],
+      .form-group input[type="email"] {
+        width: 100%;
+        padding: 0.8rem 0.8rem 0.8rem 2.2rem; /* space for icon */
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border 0.3s;
+        background-color: #ffffff;
+      }
+
+      .form-group input[type="text"]:focus,
+      .form-group input[type="password"]:focus,
+      .form-group input[type="email"]:focus {
+        outline: none;
+        border-color: #f24822;
+        box-shadow: 0 0 5px rgba(242, 72, 34, 0.3);
+      }
+
+      .form-group input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #0d1b2a;
+        margin: 0.6rem 0 1.2rem;
+      }
+
+      /* user type selector removed; type is auto-detected */
+
+      .btn {
+        display: inline-block;
+        width: 60%;
+        padding: 0.8rem 1.2rem;
+        background-color: #152b4a; /* navy button */
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 1.05rem;
+        font-weight: 700;
+        transition: all 0.2s;
+        text-align: center;
+        margin: 0.8rem auto 0;
+        display: block;
+      }
+
+      .btn:hover {
+        background-color: #b73416;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #f5c6cb;
+      }
+
+      .links {
+        text-align: center;
+        margin-top: 1.1rem;
+      }
+
+      .links a {
+        color: #f24822;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .links a:hover {
+        color: #b73416;
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 1rem 5%;
+        background-color: rgba(0, 0, 0, 0.15);
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      footer p {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 1rem 5%;
+        }
+
+        .logo {
+          font-size: 1.8rem;
+          margin-left: 0;
+        }
+
+        .nav-links {
+          gap: 1rem;
+        }
+
+        .nav-links a {
+          padding: 0.5rem 1rem;
+          margin-right: 0;
+        }
+
+        .container {
+          margin: 2rem 5%;
+          padding: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="logo">OrbitLink</div>
+      <div class="nav-links">
+        <a href="{{ url_for('user.logout') }}">Log Out</a>
+        <a href="{{ url_for('user.profile') }}">Profile</a>
+      </div>
+    </nav>
+
+    <!-- Login Form Container -->
+    <div class="container">
+      <h1>Welcome Back!</h1>
+
+      {% if error %}
+      <div class="error">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('user.login_post') }}">
+        <div class="form-group input-with-icon">
+          <span class="icon">👤</span>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter Username"
+            required
+          />
+        </div>
+
+        <div class="form-group input-with-icon">
+          <span class="icon">🔒</span>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+          />
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="remember_me" name="remember_me" />
+          <label for="remember_me">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 0.9rem">
+        <a
+          href="{{ url_for('user.reset_password_get') }}"
+          style="
+            display: inline-block;
+            background: #f5b08a;
+            color: #0f1c3d;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 0.6rem 1rem;
+            text-decoration: none;
+          "
+        >
+          Reset Password
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2024 OrbitLink Analytics Platform. All rights reserved.</p>
+      <p>Contact: support@orbitlink.com</p>
+    </footer>
+  </body>
+</html>
