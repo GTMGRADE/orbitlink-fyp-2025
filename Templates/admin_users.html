@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Users</title>
+
+  <style>
+    :root{
+      --navy:#1d2f61;
+      --navy-deep:#14224a;
+      --orange:#ef4a22;
+
+      /* Top buttons (Image 1 style) */
+      --btn-red:#ff3a3a;
+      --btn-active:#c40000;
+
+      /* User cards */
+      --card:#2f3b5a;
+      --card-border: rgba(255,255,255,.10);
+
+      /* status colors */
+      --pill-active-bg: rgba(100,212,106,.22);
+      --pill-active-bd: rgba(100,212,106,.45);
+
+      --pill-susp-bg: rgba(207,207,207,.18);
+      --pill-susp-bd: rgba(207,207,207,.40);
+
+      /* button colors */
+      --btn-suspend: var(--orange);
+      --btn-unsuspend: #cfcfcf;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; margin:0; }
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--navy-deep);
+      overflow-x:hidden;
+    }
+
+    /* Full screen layout */
+    .app{ min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ===== HEADER ===== */
+    .header{
+      height:90px;
+      background:var(--navy);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 22px;
+      flex:0 0 auto;
+    }
+
+    .logo{
+      width:72px;height:72px;
+      border-radius:50%;
+      background:var(--orange);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight:700;
+    }
+
+    .topnav{
+      display:flex;
+      gap:28px;
+      align-items:center;
+    }
+
+    .topbtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:150px;
+      height:56px;
+      padding:0 22px;
+      border-radius:10px;
+      background:var(--btn-red);
+      color:#111;
+      font-weight:800;
+      font-size:18px;
+      text-decoration:none;
+      box-shadow:0 8px 0 rgba(0,0,0,.22);
+      transition: .15s;
+      border:0;
+    }
+
+    .topbtn:hover{
+      transform: translateY(-2px);
+      box-shadow:0 10px 0 rgba(0,0,0,.22);
+    }
+    .topbtn:active{
+      transform: translateY(1px);
+      box-shadow:0 6px 0 rgba(0,0,0,.22);
+    }
+    .topbtn.active{ background:var(--btn-active); }
+
+    /* ===== CONTENT ===== */
+    .content{
+      flex:1 1 auto;
+      padding: 36px 48px 64px;
+      background: var(--navy-deep);
+    }
+
+    .page-title{
+      text-align:center;
+      font-size: clamp(44px, 4.8vw, 72px);
+      color:#fff;
+      letter-spacing:2px;
+      margin: 10px 0 26px;
+      font-weight:600;
+    }
+
+    .search-wrap{
+      display:flex;
+      justify-content:center;
+      margin-bottom: 34px;
+    }
+    .search{
+      width: min(860px, 92%);
+      height: 70px;
+      border-radius: 30px;
+      border: 2px solid #bdbdbd;
+      background:#fff;
+      padding: 0 26px;
+      font-size:20px;
+      outline:none;
+      box-shadow: 0 8px 0 rgba(0,0,0,.22);
+    }
+
+    /* User cards grid */
+    .grid{
+      width: min(1200px, 96%);
+      margin: 0 auto;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 26px;
+    }
+
+    .user-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px 18px 58px;
+      min-height: 170px;
+      position:relative;
+      color:#fff;
+      box-shadow: 0 10px 0 rgba(0,0,0,.18);
+    }
+
+    .user-name{
+      font-size:20px;
+      font-weight:800;
+      margin: 2px 0 12px;
+    }
+
+    .row{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin: 10px 0;
+      flex-wrap:wrap;
+    }
+
+    .label{
+      font-weight:800;
+      min-width:56px;
+      opacity:.95;
+    }
+
+    /* pill style */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size:14px;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    /* status pill styles */
+    .status-pill.active{
+      background: var(--pill-active-bg);
+      border-color: var(--pill-active-bd);
+    }
+    .status-pill.suspended{
+      background: var(--pill-susp-bg);
+      border-color: var(--pill-susp-bd);
+    }
+
+    .btn-action{
+      position:absolute;
+      right:18px;
+      bottom:16px;
+      height:38px;
+      min-width:110px;
+      padding:0 14px;
+      border-radius:8px;
+      background:var(--btn-suspend);
+      color:#111;
+      font-weight:800;
+      border:0;
+      cursor:pointer;
+      box-shadow:0 6px 0 rgba(0,0,0,.25);
+      transition:.15s;
+    }
+    .btn-action:hover{ transform: translateY(-2px); box-shadow:0 8px 0 rgba(0,0,0,.25); }
+    .btn-action:active{ transform: translateY(1px); box-shadow:0 4px 0 rgba(0,0,0,.25); }
+
+    /* Unsuspend button variant */
+    .btn-action.unsuspend{
+      background: var(--btn-unsuspend);
+      color:#111;
+    }
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .content{ padding: 28px 18px 48px; }
+      .grid{ grid-template-columns: 1fr; }
+      .topnav{ gap:14px; }
+      .topbtn{ min-width:120px; height:52px; font-size:16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo">Logo</div>
+
+      <nav class="topnav">
+        <a class="topbtn active" href="/admin/users">Users</a>
+        <a class="topbtn" href="/admin/reviews">Reviews</a>
+        <a class="topbtn" href="/admin/edit-website">Edit Website</a>
+        <a class="topbtn" href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+
+    <main class="content">
+      <div class="page-title">User&nbsp;&nbsp;Management</div>
+
+      <div class="search-wrap">
+        <input id="searchInput" class="search" type="text" placeholder="Search user..." />
+      </div>
+
+      <section id="userGrid" class="grid">
+        <article class="user-card" data-name="Grace Fu">
+          <div class="user-name">Grace Fu</div>
+
+          <div class="row">
+            <div class="label">Role:</div>
+            <div class="pill">Business User</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Email:</div>
+            <div class="pill">grace123@yahoo.com</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Status:</div>
+            <div class="pill status-pill" data-status>Active</div>
+          </div>
+
+          <button class="btn-action" type="button" data-action="toggle">Suspend</button>
+        </article>
+
+        <article class="user-card" data-name="Denise Phua">
+          <div class="user-name">Denise Phua</div>
+
+          <div class="row">
+            <div class="label">Role:</div>
+            <div class="pill">Influencer User</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Email:</div>
+            <div class="pill">denise456@gmail.com</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Status:</div>
+            <div class="pill status-pill" data-status>Active</div>
+          </div>
+
+          <button class="btn-action" type="button" data-action="toggle">Suspend</button>
+        </article>
+
+        <article class="user-card" data-name="Rachel Ong">
+          <div class="user-name">Rachel Ong</div>
+
+          <div class="row">
+            <div class="label">Role:</div>
+            <div class="pill">Business User</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Email:</div>
+            <div class="pill">rachel789@hotmail.com</div>
+          </div>
+
+          <div class="row">
+            <div class="label">Status:</div>
+            <div class="pill status-pill" data-status>Suspended</div>
+          </div>
+
+          <button class="btn-action" type="button" data-action="toggle">Unsuspend</button>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ===== Search (filters by name) =====
+    const input = document.getElementById("searchInput");
+    const cards = Array.from(document.querySelectorAll("#userGrid .user-card"));
+
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      cards.forEach(card => {
+        const name = (card.dataset.name || "").toLowerCase();
+        card.style.display = name.includes(q) ? "" : "none";
+      });
+    });
+
+    // ===== Helpers for status UI =====
+    function applyStatusUI(card) {
+      const statusPill = card.querySelector("[data-status]");
+      const btn = card.querySelector("button[data-action='toggle']");
+      if (!statusPill || !btn) return;
+
+      const current = statusPill.textContent.trim().toLowerCase();
+
+      // reset classes
+      statusPill.classList.remove("active", "suspended");
+      btn.classList.remove("unsuspend");
+
+      if (current === "suspended") {
+        statusPill.classList.add("suspended");
+        btn.textContent = "Unsuspend";
+        btn.classList.add("unsuspend");
+      } else {
+        statusPill.classList.add("active");
+        btn.textContent = "Suspend";
+      }
+    }
+
+    // Apply on page load (so Rachel shows correct style immediately)
+    cards.forEach(applyStatusUI);
+
+    // ===== Suspend / Unsuspend (front-end functional toggle) =====
+    document.getElementById("userGrid").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action='toggle']");
+      if (!btn) return;
+
+      const card = btn.closest(".user-card");
+      const statusPill = card.querySelector("[data-status]");
+      if (!statusPill) return;
+
+      const current = statusPill.textContent.trim().toLowerCase();
+      statusPill.textContent = (current === "active") ? "Suspended" : "Active";
+
+      applyStatusUI(card);
+    });
+  </script>
+</body>
+</html>
