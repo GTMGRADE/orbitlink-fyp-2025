@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #1E3167;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 3%;
+            background-color: #1E3167;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+            background-color: #ff3333;
+        }
+        
+        .nav-links a:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* Page title now black */
+        .page-title {
+            text-align: center;
+            color: black; /* CHANGED TO BLACK */
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .reviews-container {
+            margin: 0 3%;
+            margin-top: 1rem;
+        }
+        
+        /* Red container for title AND reviews */
+        .reviews-main-container {
+            background-color: #F24822;
+            border-radius: 12px;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .review-card {
+            background-color: #282828;
+            border-radius: 10px;
+            padding: 1.5rem;
+            color: white;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 220px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .stars {
+            margin-bottom: 1rem;
+            color: #FFD700;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+        
+        .review-message {
+            flex-grow: 1;
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+            font-size: 1rem;
+            color: #f0f0f0;
+        }
+        
+        .review-author {
+            text-align: right;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .back-button {
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background-color: #ff3333;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 5%;
+            background-color: rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .reviews-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .reviews-main-container {
+                padding: 2rem 2rem 1.5rem 2rem;
+            }
+            
+            .page-title {
+                font-size: 2.3rem;
+                margin-bottom: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 5%;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+                margin-left: 0;
+            }
+            
+            .nav-links {
+                gap: 0.5rem;
+            }
+            
+            .nav-links a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .reviews-container {
+                margin: 0 5%;
+                margin-top: 0.8rem;
+            }
+            
+            .reviews-main-container {
+                padding: 1.8rem 1.8rem 1.5rem 1.8rem;
+                margin-bottom: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+                margin-bottom: 1.8rem;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .review-card {
+                padding: 1.2rem;
+                min-height: 200px;
+            }
+            
+            .back-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            
+            footer {
+                margin-top: 3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .reviews-main-container {
+                padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .review-card {
+                min-height: 180px;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">OrbitLink</div>
+        <div class="nav-links">
+            <a href="{{ url_for('landing.landing_page') }}">Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Reviews Container -->
+    <div class="reviews-container">
+        <!-- Red container wrapping title AND reviews -->
+        <div class="reviews-main-container">
+            <!-- Page Title INSIDE red container -->
+            <h1 class="page-title">{{ page_title }}</h1>
+            
+            <!-- Reviews Grid -->
+            <div class="reviews-grid">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="stars">{{ review.stars }}</div>
+                    <p class="review-message">{{ review.message }}</p>
+                    <div class="review-author">~ {{ review.username }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Back Button -->
+        <div class="back-button">
+            <a href="{{ url_for('landing.landing_page') }}" class="back-btn">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 OrbitLink Analytics Platform. All rights reserved.</p>
+        <p>Contact: support@orbitlink.com</p>
+    </footer>
+</body>
+</html>
