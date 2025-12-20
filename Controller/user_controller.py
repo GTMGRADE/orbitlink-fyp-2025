@@ -22,10 +22,40 @@ class UserController:
     """Business logic for authentication and account maintenance."""
 
     def __init__(self) -> None:
-        pass  # Remove hardcoded users
+        # Hardcoded admin credentials
+        self.hardcoded_admin = {
+            "id": 0,
+            "username": "admin",
+            "email": "admin@example.com",
+            "password": "admin123",  # Simple password
+            "role": "admin"
+        }
 
     def authenticate(self, username: str, password: str, remember_me: bool) -> dict:
-        """Authenticate user from database"""
+        """Authenticate user - first check hardcoded admin, then database"""
+        
+        # 1. first check: Hardcoded Admin
+        if (username == self.hardcoded_admin["username"] or 
+            username == self.hardcoded_admin["email"]) and \
+            password == self.hardcoded_admin["password"]:
+            
+            user = RegisteredUser(
+                id=self.hardcoded_admin["id"],
+                username=self.hardcoded_admin["username"],
+                email=self.hardcoded_admin["email"],
+                password_hash="",  # Not needed for hardcoded
+                role=self.hardcoded_admin["role"],
+                remember_me=remember_me
+            )
+            print(f"✅ Logged in as HARDCODED ADMIN")
+            return {
+                "status": "success",
+                "user": user,
+                "user_type": "admin",
+                "remember": remember_me,
+            }
+        
+        # 2. second check: Database users
         conn = get_connection()
         if not conn:
             return {"status": "failure", "message": "Database connection error."}
@@ -33,7 +63,7 @@ class UserController:
         try:
             cursor = conn.cursor(dictionary=True)
             
-            # Try to find user by username or email
+            # Trying to find user by username or email
             cursor.execute("""
                 SELECT id, username, email, password, role 
                 FROM users 
@@ -43,7 +73,7 @@ class UserController:
             user_data = cursor.fetchone()
             
             if user_data:
-                # Verify password using User entity's verify_password method
+                # Verifying password using User entity's verify_password method
                 if User.verify_password(user_data['password'], password):
                     user = RegisteredUser(
                         id=user_data['id'],
@@ -70,6 +100,11 @@ class UserController:
             conn.close()
 
     def resolve_user_type_by_username(self, username: str) -> Optional[str]:
+        # Checking hardcoded admin first
+        if username == self.hardcoded_admin["username"] or username == self.hardcoded_admin["email"]:
+            return "admin"
+        
+        # Then check database
         conn = get_connection()
         if not conn:
             return None
@@ -90,13 +125,25 @@ class UserController:
 
     def authenticate_auto(self, username: str, password: str, remember_me: bool) -> dict:
         """Authenticate without an explicit user type."""
-        # Use the same authenticate method
+        # Using the same authenticate method
         return self.authenticate(username, password, remember_me)
 
     def get_user(self, user_type: Optional[str], user_id: Optional[int]) -> Optional[RegisteredUser]:
         if not user_id:
             return None
         
+        # Checking if it's the hardcoded admin (id = 0)
+        if user_id == 0:
+            return RegisteredUser(
+                id=0,
+                username=self.hardcoded_admin["username"],
+                email=self.hardcoded_admin["email"],
+                password_hash="",
+                role="admin",
+                remember_me=False
+            )
+        
+        # Otherwise check database
         conn = get_connection()
         if not conn:
             return None
@@ -138,6 +185,19 @@ class UserController:
             conn.close()
 
     def get_user_by_email(self, email: str) -> Tuple[Optional[str], Optional[RegisteredUser]]:
+        # Checking hardcoded admin first
+        if email == self.hardcoded_admin["email"]:
+            user = RegisteredUser(
+                id=0,
+                username=self.hardcoded_admin["username"],
+                email=self.hardcoded_admin["email"],
+                password_hash="",
+                role="admin",
+                remember_me=False
+            )
+            return "admin", user
+        
+        # Then check database
         conn = get_connection()
         if not conn:
             return None, None
@@ -172,6 +232,10 @@ class UserController:
             conn.close()
 
     def change_username(self, user: RegisteredUser, new_username: str) -> None:
+        # Can't change hardcoded admin username
+        if user.id == 0:
+            return
+        
         conn = get_connection()
         if not conn:
             return
@@ -192,6 +256,10 @@ class UserController:
             conn.close()
 
     def change_password(self, user: RegisteredUser, current_password: str, new_password: str) -> dict:
+        # Can't change hardcoded admin password via UI
+        if user.id == 0:
+            return {"status": "failure", "message": "Cannot change hardcoded admin password."}
+        
         # First verify current password
         if not User.verify_password(user.password_hash, current_password):
             logger.warning("Password change failed for user %s: incorrect current password", user.username)
@@ -211,7 +279,7 @@ class UserController:
             """, (new_hashed_password, user.id))
             conn.commit()
             
-            # Update the user object
+            # Updating the user object
             user.password_hash = new_hashed_password
             logger.info("Password updated for user %s", user.username)
             return {"status": "success"}
@@ -225,6 +293,13 @@ class UserController:
             conn.close()
 
     def reset_password(self, email: str) -> dict:
+        # Can't reset hardcoded admin password
+        if email == self.hardcoded_admin["email"]:
+            return {
+                "status": "failure",
+                "message": "Cannot reset hardcoded admin password.",
+            }
+        
         user_type, user = self.get_user_by_email(email)
         if not user:
             logger.warning("Password reset requested for non-existent email: %s", email)

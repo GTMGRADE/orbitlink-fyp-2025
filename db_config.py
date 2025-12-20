@@ -1,4 +1,3 @@
-
 import mysql.connector
 from mysql.connector import Error
 
@@ -11,19 +10,18 @@ def get_connection():
             database='orbitlink' 
         )
         if connection.is_connected():
-            print("Database connection successful get_connection()")
             return connection
     except Error as e:
         print(f"Error connecting to MySQL: {e}")
         return None
 
 def init_db():
-    """Create database and table if they don't exist"""
+    """Create database and table if they don't exist - SIMPLIFIED"""
     try:
         connection = mysql.connector.connect(
             host='localhost',
             user='root',  
-            password='pass'  , 
+            password='pass', 
             database='orbitlink'  
         )
         
@@ -41,32 +39,9 @@ def init_db():
                     password VARCHAR(255) NOT NULL,
                     role ENUM('influencer', 'business', 'admin') NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    status VARCHAR(20) DEFAULT 'active',
-                    INDEX idx_email (email),
-                    INDEX idx_username (username)
+                    status VARCHAR(20) DEFAULT 'active'
                 )
             """)
-            
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS user_sessions (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    user_id INT NOT NULL,
-                    session_token VARCHAR(255) NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    expires_at TIMESTAMP NULL,
-                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                    INDEX idx_token (session_token)
-                )
-            """)
-            
-            cursor.execute("SELECT id FROM users WHERE email = 'admin@example.com'")
-            if not cursor.fetchone():
-                # Using bcrypt hash for admin password
-                admin_password = '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'  # 'adminpass' hashed
-                cursor.execute("""
-                    INSERT INTO users (email, username, password, role) 
-                    VALUES (%s, %s, %s, %s)
-                """, ('admin@example.com', 'admin', admin_password, 'admin'))
             
             connection.commit()
             print("Database initialized successfully")

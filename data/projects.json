@@ -29,16 +29,9 @@
   },
   {
     "id": 5,
-    "name": "Old Project 2",
+    "name": "New Proj",
     "description": "Another old project",
     "last_opened": "2025-10-20",
-    "archived": false
-  },
-  {
-    "id": 6,
-    "name": "Old Project 3",
-    "description": "October archive",
-    "last_opened": "2025-12-20",
     "archived": false
   }
 ]

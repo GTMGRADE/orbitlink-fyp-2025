@@ -16,7 +16,13 @@ class AccountEntity:
 
     @classmethod
     def authenticate(cls, email: str, password: str) -> "AccountEntity":
-        """Authenticate admin user"""
+        """Authenticate admin user - with hardcoded admin support"""
+        
+        # 1. FIRST CHECK: Hardcoded Admin
+        if email == "admin@example.com" and password == "admin123":
+            return cls(email=email, role="admin")
+        
+        # 2. SECOND CHECK: Database admin
         conn = get_connection()
         if not conn:
             raise LoginError("Database connection error.")
@@ -31,8 +37,7 @@ class AccountEntity:
             user_data = cursor.fetchone()
             
             if user_data:
-                # We should verify password here too
-                # For admin, we can check if the password matches
+                # Verify password
                 cursor.execute("""
                     SELECT password FROM users 
                     WHERE email = %s AND role = 'admin'
@@ -40,7 +45,6 @@ class AccountEntity:
                 password_data = cursor.fetchone()
                 
                 if password_data:
-                    # Import User here to avoid circular import
                     from entity.user import User
                     if User.verify_password(password_data['password'], password):
                         return cls(email=user_data['email'], role=user_data['role'])
