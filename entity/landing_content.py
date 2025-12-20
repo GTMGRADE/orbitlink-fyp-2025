@@ -1,6 +1,3 @@
-# For now, this entity is minimal since we're serving static content
-# Can be expanded later for dynamic content management
-
 class LandingContent:
     @staticmethod
     def get_static_content():

@@ -6,7 +6,6 @@ from controller.admin_view_feedback_controller import AdminViewFeedbackControlle
 
 admin_api_bp = Blueprint("admin_api", __name__)
 
-#admin is determined by shared login session user_type
 def require_admin():
     return session.get("user_type") == "admin"
 

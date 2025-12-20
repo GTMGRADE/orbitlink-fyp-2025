@@ -10,7 +10,7 @@ from boundary.admin_ui_boundary import admin_ui_bp
 
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Needed for flash messages
+app.secret_key = 'your-secret-key-here'  
 
 app.register_blueprint(landing_bp)
 app.register_blueprint(reviews_bp)

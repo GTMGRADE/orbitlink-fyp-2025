@@ -1,6 +1,7 @@
 import logging
 from db_config import get_connection
 from entity.user import User
+import mysql.connector
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +15,9 @@ class RegisterController:
         Returns: (success, message, user_data)
         """
         try:
+            if not self.conn:
+                return False, "Database connection failed", None
+            
             cursor = self.conn.cursor(dictionary=True)
             
             # Check if email already exists
@@ -42,14 +46,19 @@ class RegisterController:
             cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
             user_data = cursor.fetchone()
             
-            logger.info(f"User registered successfully: {username} ({email})")
+            logger.info(f"Registration Controller : User registered successfully: {username} ({email})")
+            print("Registration Controller : User registered successfully") 
             return True, "Registration successful", user_data
             
+        except mysql.connector.Error as e:
+            logger.error(f"Database error registering user: {str(e)}")
+            return False, f"Registration failed: {str(e)}", None
         except Exception as e:
             logger.error(f"Error registering user: {str(e)}")
             return False, f"Registration failed: {str(e)}", None
         finally:
-            cursor.close()
+            if 'cursor' in locals():
+                cursor.close()
     
     def get_register_page_data(self):
         """Get data for the register page"""

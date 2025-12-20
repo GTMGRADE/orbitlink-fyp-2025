@@ -9,7 +9,6 @@ def is_admin_logged_in() -> bool:
     return session.get("user_type") == "admin"
 
 
-# DEBUG: check what session you really have
 @admin_ui_bp.get("/admin/debug-session")
 def admin_debug_session():
     return jsonify(dict(session))
