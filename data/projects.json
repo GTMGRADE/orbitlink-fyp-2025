@@ -10,7 +10,7 @@
     "id": 2,
     "name": "Project Name 2",
     "description": "Another project",
-    "last_opened": "2025-12-19",
+    "last_opened": "2025-12-20",
     "archived": false
   },
   {
@@ -38,7 +38,7 @@
     "id": 6,
     "name": "Old Project 3",
     "description": "October archive",
-    "last_opened": "2025-10-05",
+    "last_opened": "2025-12-20",
     "archived": false
   }
 ]
