@@ -1,14 +1,37 @@
 import mysql.connector
+import os
+from dotenv import load_dotenv
+
 from mysql.connector import Error
+
+load_dotenv()
+
 
 def get_connection():
     try:
+
+        db_host = os.getenv("DB_HOST")
+        db_port = os.getenv("DB_PORT")
+        db_name = os.getenv("DB_NAME")
+        db_user = os.getenv("DB_USER")
+        db_password = os.getenv("DB_PASSWORD")
+
+        print(db_host, db_port, db_name)
+
+        # connection = mysql.connector.connect(
+        #     host='localhost',
+        #     user='root',  
+        #     password='pass', 
+        #     database='orbitlink' 
+        # )
+
         connection = mysql.connector.connect(
-            host='localhost',
-            user='root',  
-            password='pass', 
-            database='orbitlink' 
+           host=db_host,
+           user=db_user,  
+           password=db_password, 
+           database=db_name
         )
+
         if connection.is_connected():
             return connection
     except Error as e:
@@ -18,13 +41,28 @@ def get_connection():
 def init_db():
     """Create database and table if they don't exist - SIMPLIFIED"""
     try:
-        connection = mysql.connector.connect(
-            host='localhost',
-            user='root',  
-            password='pass', 
-            database='orbitlink'  
-        )
+
+        db_host = os.getenv("DB_HOST")
+        db_port = os.getenv("DB_PORT")
+        db_name = os.getenv("DB_NAME")
+        db_user = os.getenv("DB_USER")
+        db_password = os.getenv("DB_PASSWORD")
+
         
+        # connection = mysql.connector.connect(
+        #     host='localhost',
+        #     user='root',  
+        #     password='pass', 
+        #     database='orbitlink'  
+        # )
+        
+        connection = mysql.connector.connect(
+           host=db_host,
+           user=db_user,  
+           password=db_password, 
+           database=db_name
+        )
+
         if connection.is_connected():
             cursor = connection.cursor()
             
