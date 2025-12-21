@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detect Communities/Clusters - Project SNA</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f1c3d;
+        color: #fff;
+        min-height: 100vh;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: 100vh;
+      }
+      .sidebar {
+        background: #f24822;
+        padding: 1rem 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .brand {
+        font-weight: 800;
+        font-size: 1.4rem;
+        margin: 0.5rem 0.4rem;
+      }
+      .create-btn {
+        background: #14294a;
+        color: #fff;
+        border-radius: 16px;
+        padding: 1rem;
+        text-align: center;
+        font-weight: 800;
+      }
+      .create-btn a {
+        color: #fff;
+        text-decoration: none;
+      }
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .menu a {
+        display: block;
+        padding: 0.7rem 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        font-style: italic;
+      }
+      .menu a.active {
+        background: rgba(255, 255, 255, 0.25);
+      }
+      .content {
+        background: #0f1c3d;
+        padding: 2rem;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .title {
+        font-size: 1.8rem;
+        font-weight: 800;
+      }
+      .header-buttons {
+        display: flex;
+        gap: 0.8rem;
+      }
+      .header-buttons a {
+        background: #ff3333;
+        color: #000;
+        border-radius: 6px;
+        padding: 0.7rem 1.5rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+      .header-buttons a:hover {
+        background: #cc0000;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      .container {
+        background: linear-gradient(135deg, #1a3a52 0%, #14294a 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .page-title {
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .main-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .card {
+        background: #1e3a52;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .algorithm-card {
+        background: #1e3a52;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+      }
+      .algorithm-title {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #b0c4de;
+      }
+      .algorithm-name {
+        font-size: 1rem;
+        color: #fff;
+        padding: 0.8rem 1.5rem;
+        border: 2px solid #00bfff;
+        border-radius: 20px;
+        display: inline-block;
+        background: rgba(0, 191, 255, 0.1);
+      }
+      .network-graph {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #b0c4de;
+      }
+      .metric-card {
+        background: #1e3a52;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .metric-label {
+        font-size: 0.9rem;
+        color: #b0c4de;
+        margin-bottom: 0.5rem;
+      }
+      .metric-value {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #ffa500;
+        text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+      }
+      .metric-change {
+        font-size: 0.9rem;
+        color: #00ff00;
+        margin-top: 0.5rem;
+      }
+      .communities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .community-btn {
+        padding: 1rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+        color: #fff;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.85rem;
+      }
+      .community-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      .tip {
+        background: rgba(255, 165, 0, 0.1);
+        padding: 1rem;
+        border-left: 3px solid #ffa500;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #b0c4de;
+        margin-top: 1.5rem;
+      }
+      @media (max-width: 768px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">OrbitLink</div>
+        <div class="create-btn">
+          <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
+        </div>
+        <nav class="menu">
+          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
+          <a href="{{ url_for('projects.project_sna') }}">Analysis</a>
+          <a href="#">Support</a>
+          <a href="#">Setting</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <div class="header">
+          <div class="title">Detect Communities/Clusters</div>
+          <div class="header-buttons">
+            <a href="{{ url_for('projects.project_sna') }}">Back</a>
+          </div>
+        </div>
+
+        <div class="container">
+          <h1 class="page-title">Detect Communities/Clusters</h1>
+
+          <div class="main-grid">
+            <div>
+              <div class="card">
+                <div class="algorithm-card">
+                  <div class="algorithm-title">Algorithm: Decision Trees</div>
+                  <div class="algorithm-name">Decision Trees</div>
+                </div>
+                <div style="margin-top: 1.5rem">
+                  <div
+                    style="
+                      font-size: 0.9rem;
+                      color: #b0c4de;
+                      margin-bottom: 1rem;
+                    "
+                  >
+                    Network Graph(Communities)
+                  </div>
+                  <div class="network-graph">
+                    Network Visualization<br />(Interactive Graph)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="metric-card">
+                <div class="metric-label">Modularity</div>
+                <div class="metric-label">Score</div>
+                <div class="metric-value">0.62</div>
+                <div class="metric-change">+0.07 / last run</div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-label">Communities</div>
+                <div class="metric-value">14</div>
+                <div class="metric-change">+ 2 new</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div
+              style="font-weight: 700; margin-bottom: 1.5rem; font-size: 1.1rem"
+            >
+              Top Communities
+            </div>
+            <div class="communities-grid">
+              <button class="community-btn">Community A | 66...</button>
+              <button class="community-btn">Community B | 50 Nodes</button>
+              <button class="community-btn">Community C | 42...</button>
+              <button class="community-btn">Outliers | 21 Nodes</button>
+            </div>
+          </div>
+
+          <div class="tip">
+            <strong>Tip:</strong> click a cluster to view its influencers,
+            keywords, and cross-community bridges.
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

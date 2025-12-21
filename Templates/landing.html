@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OrbitLink - Social Network Analytics</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -142,7 +144,6 @@
         /* SIMPLE FEATURES SECTION */
         .section-title {
             text-align: center;
-            /* margin: 2.5rem 0 2.5rem 0; */
             margin: 0.2rem 0 2.5rem 0;
             font-size: 2.2rem;
             color: white;
@@ -349,10 +350,188 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         
+        /* ========== UPDATED CONTACT SECTION ========== */
+        .contact-section {
+            margin: 3rem 0 0 0; /* Remove side margins */
+            background-color: #282828; /* Dark gray background */
+            border-radius: 0; /* Remove border radius */
+            padding: 3rem 3% 2rem 3%; /* Added padding instead of margins */
+            width: 100%; /* Full width */
+        }
+        
+        .contact-intro {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .contact-intro h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: white;
+        }
+        
+        .contact-intro p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        /* Contact Form Styling */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group-contact {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group-contact label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .form-control-contact {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control-contact:focus {
+            outline: none;
+            border-color: #ff3333;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-control-contact::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        textarea.form-control-contact {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            padding: 0.9rem 2.5rem;
+            background-color: #ff3333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-start;
+            margin-top: 0.5rem;
+        }
+        
+        .submit-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Contact Info Styling */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff3333 0%, #cc0000 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .contact-details h4 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .contact-details p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Flash message for contact form */
+        .contact-flash {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .contact-flash.success {
+            background-color: rgba(39, 202, 63, 0.2);
+            border: 1px solid #27ca3f;
+            color: #27ca3f;
+            display: block;
+        }
+        
+        .contact-flash.error {
+            background-color: rgba(255, 51, 51, 0.2);
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            display: block;
+        }
+        
+        /* UPDATED FOOTER - Darker color */
         footer {
-            margin-top: 3rem; /* Reduced margin */
-            padding: 1.5rem 5%; /* Reduced padding */
-            background-color: rgba(0, 0, 0, 0.2);
+            margin-top: 0; /* Remove margin since contact section is now the footer */
+            padding: 1.5rem 3%;
+            background-color: #1E1E1E; /* Darker footer color */
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -392,6 +571,7 @@
             width: 100%;
         }
         
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .hero-section {
                 min-height: 450px;
@@ -413,6 +593,14 @@
             .compact-plan-features li {
                 font-size: 0.9rem;
                 margin-bottom: 0.7rem;
+            }
+            
+            .contact-content {
+                gap: 2rem;
+            }
+            
+            .contact-intro h2 {
+                font-size: 2rem;
             }
         }
         
@@ -517,13 +705,84 @@
                 min-height: 45px;
             }
             
+            /* Contact section mobile */
+            .contact-section {
+                padding: 2.5rem 5%;
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .contact-intro {
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+            }
+            
+            .contact-intro h2 {
+                font-size: 1.8rem;
+            }
+            
+            .contact-methods {
+                gap: 1.5rem;
+            }
+            
+            .contact-method {
+                gap: 1.2rem;
+            }
+            
+            .contact-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
             footer {
-                margin-top: 2.5rem;
                 padding: 1.5rem 5%;
             }
             
             .content-spacer {
                 height: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .contact-intro h2 {
+                font-size: 1.6rem;
+            }
+            
+            .contact-intro p {
+                font-size: 0.95rem;
+            }
+            
+            .form-control-contact {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .submit-btn {
+                padding: 0.8rem 2rem;
+                font-size: 0.95rem;
+            }
+            
+            .contact-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .contact-details h4 {
+                font-size: 1.1rem;
+            }
+            
+            .contact-details p {
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -533,9 +792,9 @@
     <nav class="navbar">
         <div class="logo">OrbitLink</div>
         <div class="nav-links">
-            <a href="{{ url_for('landing.landing_page') }}" class="active">Home</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#signup">Sign Up/Log In</a>
+            <a href="{{ url_for('reviews.show_reviews') }}">Reviews</a>
+            <a href="{{ url_for('register.register_page') }}">Sign Up</a>
+            <a href="{{ url_for('user.login_get') }}">Log In</a>
         </div>
     </nav>
 
@@ -625,15 +884,147 @@
                 </div>
                 
                 <!-- Single "Start Free Trial" Button -->
-                <a href="#signup" class="compact-trial-btn">Start Free Trial</a>
+                <a href="{{ url_for('register.register_page') }}" class="compact-trial-btn">Start Free Trial</a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- UPDATED CONTACT SECTION - Now full-width footer-like design -->
+    <section class="contact-section">
+        <!-- Centered Contact Intro -->
+        <div class="contact-intro">
+            <h2>CONTACT US</h2>
+            <p>Any Questions or remarks? Write us a message</p>
+        </div>
+        
+        <!-- Contact Content -->
+        <div class="contact-content">
+            <!-- Left Column: Contact Form -->
+            <div class="contact-form">
+                <div class="contact-flash" id="contact-flash"></div>
+                
+                <form id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group-contact">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" class="form-control-contact" placeholder="Enter a valid email address" required>
+                        </div>
+                        
+                        <div class="form-group-contact">
+                            <label for="contact-name">Name</label>
+                            <input type="text" id="contact-name" class="form-control-contact" placeholder="Enter your Name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-contact">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" class="form-control-contact" placeholder="Your message here..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">SUBMIT</button>
+                </form>
+            </div>
+            
+            <!-- Right Column: Contact Information -->
+            <div class="contact-info">
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>PHONE</h4>
+                            <p>+1 (555) 123-4567</p>
+                            <p>Mon-Fri from 12pm to 6pm</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>EMAIL</h4>
+                            <p>support@orbitlink.com</p>
+                            <p>We reply within 24 hours</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - Now darker color -->
     <footer>
-        <p>© 2024 OrbitLink Analytics Platform. All rights reserved.</p>
+        <p>© 2025 OrbitLink Analytics Platform. All rights reserved.</p>
         <p>Contact: support@orbitlink.com</p>
     </footer>
+
+    <script>
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('contact-email').value;
+            const name = document.getElementById('contact-name').value;
+            const message = document.getElementById('contact-message').value;
+            const flash = document.getElementById('contact-flash');
+            
+            // Simple validation
+            if (!email || !name || !message) {
+                flash.textContent = 'Please fill in all fields';
+                flash.className = 'contact-flash error';
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                flash.textContent = 'Please enter a valid email address';
+                flash.className = 'contact-flash error';
+                return;
+            }
+            
+            // Show success message (in a real app, this would send data to server)
+            flash.textContent = 'Thank you for your message! We\'ll get back to you soon.';
+            flash.className = 'contact-flash success';
+            
+            // Clear form
+            document.getElementById('contactForm').reset();
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                flash.className = 'contact-flash';
+                flash.style.display = 'none';
+            }, 5000);
+            
+            // Show message
+            flash.style.display = 'block';
+        });
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Update Sign Up link to go to registration page
+        document.querySelector('a[href="#signup"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = "{{ url_for('register.register_page') }}";
+        });
+    </script>
 </body>
 </html>
