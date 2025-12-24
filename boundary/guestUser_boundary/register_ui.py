@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 import logging
-from controller.register_controller import RegisterController
+from controller.guestUser_controller.register_controller import RegisterController
 
 logger = logging.getLogger(__name__)
 

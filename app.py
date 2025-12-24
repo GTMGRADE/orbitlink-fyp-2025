@@ -1,12 +1,12 @@
 from flask import Flask
-from boundary.landing_ui import landing_bp
-from boundary.reviews_ui import reviews_bp
-from boundary.register_ui import register_bp
+from boundary.guestUser_boundary.landing_ui import landing_bp
+from boundary.guestUser_boundary.reviews_ui import reviews_bp
+from boundary.guestUser_boundary.register_ui import register_bp
 
-from boundary.user_ui import user_bp
-from boundary.projects_ui import projects_bp
-from boundary.admin_api_boundary import admin_api_bp
-from boundary.admin_ui_boundary import admin_ui_bp
+from boundary.registeredUser_boundary.user_ui import user_bp
+from boundary.registeredUser_boundary.projects_ui import projects_bp
+from boundary.admin_boundary.admin_api_boundary import admin_api_bp
+from boundary.admin_boundary.admin_ui_boundary import admin_ui_bp
 import logging
 import sys 
 
@@ -33,6 +33,7 @@ logging.basicConfig(
 
 
 if __name__ == '__main__':
+    print(" * Running on http://127.0.0.1:5000")
     app.run(debug=True)
 
     logging.info("Application started")
