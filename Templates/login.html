@@ -6,7 +6,7 @@
     <title>Log In - OrbitLink</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
       * {
@@ -18,177 +18,296 @@
       body {
         font-family: Arial, sans-serif;
         line-height: 1.6;
-        background-color: #14294a; /* deep navy */
+        background-color: #1E3167;
         color: white;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
       }
 
+      /* Navigation Bar - EXACTLY LIKE REGISTER PAGE */
       .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.8rem 3%;
-        background-color: transparent;
+        padding: 1rem 3% 0.5rem 3%;
+        background-color: #1E3167;
+        flex-shrink: 0;
       }
 
       .logo {
         font-size: 2rem;
         font-weight: bold;
         color: white;
+        text-decoration: none;
         margin-left: 10px;
       }
 
-      .nav-links {
-        display: flex;
-        gap: 2.5rem;
-      }
-
-      .nav-links a {
+      .back-button {
         text-decoration: none;
-        color: rgb(0, 0, 0);
+        color: white;
         font-weight: 600;
-        padding: 0.7rem 1.5rem;
+        padding: 0.5rem 1.2rem;
         border-radius: 6px;
         transition: all 0.3s;
         background-color: #ff3333;
-        margin-right: 10px;
+        margin-right: 5px;
+        font-size: 0.9rem;
       }
 
-      .nav-links a:hover {
+      .back-button:hover {
         background-color: #cc0000;
-        transform: translateY(-3px);
+        transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
 
-      .container {
-        background-color: #f24822; /* orange card */
-        margin: 2.5rem auto;
-        border-radius: 14px;
+      /* Main Container - EXACT PROPORTIONS AS REGISTER PAGE */
+      .login-container {
+        display: flex;
+        max-height: 75vh;
+        min-height: 500px;
+        margin: 1rem 3% 4rem 3%; /* 1rem top, 4rem bottom - same as register page */
+        border-radius: 15px;
+        overflow: hidden;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-        max-width: 520px;
-        padding: 2.2rem 2.2rem 2.8rem;
+        flex-shrink: 0;
       }
 
-      .container h1 {
-        color: #ffffff;
-        margin-bottom: 1.8rem;
+      /* Left Red Section - EXACT PROPORTIONS */
+      .login-hero {
+        flex: 1;
+        background-color: #f24822;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+
+      .hero-content {
+        max-width: 400px;
+        text-align: left;
+      }
+
+      .hero-content h1 {
         font-size: 2.2rem;
-        text-align: center;
-        font-weight: 700;
+        font-weight: bold;
+        color: black;
+        line-height: 1.1;
+        text-align: left;
+        margin: 0;
       }
 
-      .form-group {
+      .hero-content p {
+        font-size: 1.1rem;
+        color: rgba(0, 0, 0, 0.8);
+        line-height: 1.5;
+        margin-top: 1rem;
+        text-align: left;
+      }
+
+      /* Right Blue Section - EXACT PROPORTIONS */
+      .login-form-section {
+        flex: 1;
+        background-color: #18264b;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+        overflow: hidden;
+      }
+
+      .form-container {
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+      }
+
+      .form-title {
+        font-size: 1.5rem;
+        color: white;
         margin-bottom: 1.5rem;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      /* Form Styling - MATCHING REGISTER PAGE EXACTLY */
+      .form-group {
+        margin-bottom: 1rem;
       }
 
       .form-group label {
         display: block;
-        color: #0d1b2a;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 0.35rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
       }
 
       .input-with-icon {
         position: relative;
       }
+
       .input-with-icon .icon {
         position: absolute;
         left: 12px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.7);
       }
-      .form-group input[type="text"],
-      .form-group input[type="password"],
-      .form-group input[type="email"] {
+
+      .form-control {
         width: 100%;
-        padding: 0.8rem 0.8rem 0.8rem 2.2rem; /* space for icon */
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        border-radius: 6px;
-        font-size: 1rem;
-        transition: border 0.3s;
-        background-color: #ffffff;
+        padding: 0.65rem 0.9rem 0.65rem 2.5rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        color: white;
+        font-size: 0.85rem;
+        transition: all 0.3s;
       }
 
-      .form-group input[type="text"]:focus,
-      .form-group input[type="password"]:focus,
-      .form-group input[type="email"]:focus {
+      .form-control:focus {
         outline: none;
-        border-color: #f24822;
-        box-shadow: 0 0 5px rgba(242, 72, 34, 0.3);
+        border-color: #ff3333;
+        background-color: rgba(255, 255, 255, 0.15);
       }
 
-      .form-group input[type="checkbox"] {
-        margin-right: 0.5rem;
+      .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.8rem;
       }
 
       .checkbox-row {
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #0d1b2a;
-        margin: 0.6rem 0 1.2rem;
+        margin: 0.8rem 0 1.2rem 0;
       }
 
-      /* user type selector removed; type is auto-detected */
-
-      .btn {
-        display: inline-block;
-        width: 60%;
-        padding: 0.8rem 1.2rem;
-        background-color: #152b4a; /* navy button */
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 20px;
-        border: none;
-        cursor: pointer;
-        font-size: 1.05rem;
-        font-weight: 700;
-        transition: all 0.2s;
-        text-align: center;
-        margin: 0.8rem auto 0;
-        display: block;
+      .checkbox-row input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: #ff3333;
       }
 
-      .btn:hover {
-        background-color: #b73416;
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-      }
-
-      .error {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 1rem;
-        border-radius: 6px;
-        margin-bottom: 1.5rem;
-        border: 1px solid #f5c6cb;
-      }
-
-      .links {
-        text-align: center;
-        margin-top: 1.1rem;
-      }
-
-      .links a {
-        color: #f24822;
-        text-decoration: none;
+      .checkbox-row label {
+        color: rgba(255, 255, 255, 0.9);
         font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+
+      /* Login Button - MATCHING REGISTER BUTTON */
+      .login-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #ff3333;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .login-btn:hover {
+        background-color: #cc0000;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Error Message - PROFESSIONAL STYLING */
+      .error {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 1rem 1.2rem;
+        border-radius: 8px;
+        margin-bottom: 1.2rem;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-left: 5px solid #b91c1c;
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .error::before {
+        content: "⚠";
+        font-size: 1.1rem;
+        background: rgba(255, 255, 255, 0.2);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* Reset Password Link - STYLISH BUTTON */
+      .reset-link {
+        text-align: center;
+        margin-top: 0.8rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .reset-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.6rem 1.2rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
         transition: all 0.3s;
       }
 
-      .links a:hover {
-        color: #b73416;
+      .reset-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
       }
 
+      /* Register Link */
+      .register-link {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.8rem;
+        padding-top: 0.7rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 0.5rem;
+      }
+
+      .register-link a {
+        color: #ff3333;
+        text-decoration: none;
+        font-weight: 600;
+        margin-left: 0.4rem;
+        font-size: 0.8rem;
+      }
+
+      .register-link a:hover {
+        text-decoration: underline;
+      }
+
+      /* Footer - EXACTLY LIKE REGISTER PAGE (Darker, no contact section) */
       footer {
-        margin-top: auto;
-        padding: 1rem 5%;
-        background-color: rgba(0, 0, 0, 0.15);
+        padding: 1.5rem 3%;
+        background-color: #1e1e1e;
         text-align: center;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+        margin-top: auto;
       }
 
       footer p {
@@ -197,102 +316,274 @@
         font-size: 1rem;
       }
 
+      /* Main content wrapper */
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Responsive Design - MATCHING REGISTER PAGE */
+      @media (max-width: 1024px) {
+        .login-container {
+          max-height: 80vh;
+          min-height: 450px;
+          margin: 1rem 3% 4rem 3%; /* 1rem top, 4rem bottom */
+        }
+
+        .hero-content h1 {
+          font-size: 1.9rem;
+        }
+
+        .hero-content p {
+          font-size: 1rem;
+        }
+
+        .form-title {
+          font-size: 1.4rem;
+        }
+
+        .login-hero,
+        .login-form-section {
+          padding: 1.8rem;
+        }
+
+        .form-container {
+          max-width: 340px;
+        }
+      }
+
       @media (max-width: 768px) {
         .navbar {
-          padding: 1rem 5%;
+          padding: 0.8rem 5% 0.4rem 5%;
         }
 
         .logo {
-          font-size: 1.8rem;
+          font-size: 1.7rem;
           margin-left: 0;
         }
 
-        .nav-links {
-          gap: 1rem;
-        }
-
-        .nav-links a {
-          padding: 0.5rem 1rem;
+        .back-button {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.8rem;
           margin-right: 0;
         }
 
-        .container {
-          margin: 2rem 5%;
-          padding: 2rem;
+        .login-container {
+          flex-direction: column;
+          max-height: none;
+          min-height: auto;
+          height: auto;
+          margin: 1rem 5% 4rem 5%; /* 1rem top, 4rem bottom */
         }
+
+        .login-hero {
+          padding: 1.5rem;
+          min-height: 150px;
+        }
+
+        .hero-content h1 {
+          font-size: 1.8rem;
+          text-align: center;
+        }
+        
+        .hero-content p {
+          font-size: 1rem;
+          text-align: center;
+          margin-top: 0.8rem;
+        }
+
+        .login-form-section {
+          padding: 1.8rem;
+          min-height: auto;
+        }
+
+        .form-container {
+          max-width: 100%;
+        }
+
+        .form-title {
+          font-size: 1.4rem;
+          margin-bottom: 1.2rem;
+        }
+
+        .form-group {
+          margin-bottom: 0.9rem;
+        }
+
+        footer {
+          padding: 1.5rem 5%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          margin: 0.8rem 5% 3.5rem 5%; /* 0.8rem top (same as register), 3.5rem bottom */
+          border-radius: 10px;
+        }
+
+        .login-hero {
+          padding: 1.2rem;
+          min-height: 130px;
+        }
+
+        .hero-content h1 {
+          font-size: 1.6rem;
+        }
+        
+        .hero-content p {
+          font-size: 0.95rem;
+        }
+
+        .login-form-section {
+          padding: 1.5rem;
+        }
+
+        .form-title {
+          font-size: 1.3rem;
+          margin-bottom: 1rem;
+        }
+
+        .form-control {
+          padding: 0.6rem 0.8rem 0.6rem 2.2rem;
+          font-size: 0.8rem;
+        }
+
+        .login-btn {
+          padding: 0.7rem;
+          font-size: 0.85rem;
+          margin-bottom: 0.9rem;
+        }
+
+        .error {
+          padding: 0.9rem 1rem;
+          font-size: 0.85rem;
+          gap: 6px;
+        }
+
+        .error::before {
+          width: 25px;
+          height: 25px;
+          font-size: 1rem;
+        }
+
+        footer {
+          padding: 1.2rem 5%;
+        }
+      }
+
+      @media (max-height: 700px) {
+        .login-container {
+          max-height: 85vh;
+          min-height: 420px;
+          margin: 1rem 3% 4rem 3%; /* 1rem top, 4rem bottom */
+        }
+      }
+
+      /* For taller screens - adjust container height */
+      @media (min-height: 900px) {
+        .login-container {
+          max-height: 70vh;
+          min-height: 550px;
+          margin: 1rem 3% 4rem 3%; /* 1rem top, 4rem bottom */
+        }
+      }
+
+      /* Ensure form fits without scrolling */
+      .login-form-section {
+        overflow-y: hidden;
       }
     </style>
   </head>
   <body>
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar - EXACTLY LIKE REGISTER PAGE -->
     <nav class="navbar">
-      <div class="logo">OrbitLink</div>
-      <div class="nav-links">
-        <a href="{{ url_for('user.logout') }}">Back</a>
-      </div>
+      <a href="{{ url_for('landing.landing_page') }}" class="logo">OrbitLink</a>
+      <a href="{{ url_for('landing.landing_page') }}" class="back-button"
+        >Back to Home</a
+      >
     </nav>
 
-    <!-- Login Form Container -->
-    <div class="container">
-      <h1>Welcome Back!</h1>
-
-      {% if error %}
-      <div class="error">{{ error }}</div>
-      {% endif %}
-
-      <form method="post" action="{{ url_for('user.login_post') }}">
-        <div class="form-group input-with-icon">
-          <span class="icon">👤</span>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter Username"
-            required
-          />
+    <div class="main-content">
+      <!-- Main Login Container -->
+      <div class="login-container">
+        <!-- Left Red Section -->
+        <div class="login-hero">
+          <div class="hero-content">
+            <h1>Welcome Back!</h1>
+            <p>Access your OrbitLink dashboard and continue analyzing your social networks with smart analytics.</p>
+          </div>
         </div>
 
-        <div class="form-group input-with-icon">
-          <span class="icon">🔒</span>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter Password"
-            required
-          />
+        <!-- Right Blue Section -->
+        <div class="login-form-section">
+          <div class="form-container">
+            <!-- Form Title -->
+            <h2 class="form-title">Login to Your Account</h2>
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{{ url_for('user.login_post') }}">
+              <div class="form-group">
+                <label for="username">Username or Email</label>
+                <div class="input-with-icon">
+                  <span class="icon"><i class="fas fa-user"></i></span>
+                  <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter your username or email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-with-icon">
+                  <span class="icon"><i class="fas fa-lock"></i></span>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="checkbox-row">
+                <input type="checkbox" id="remember_me" name="remember_me" />
+                <label for="remember_me">Remember Me</label>
+              </div>
+
+              <button type="submit" class="login-btn">Login</button>
+            </form>
+
+            <div class="reset-link">
+              <a href="{{ url_for('user.reset_password_get') }}" class="reset-btn">
+                <i class="fas fa-key"></i>
+                Reset Password
+              </a>
+            </div>
+
+            <div class="register-link">
+              Don't have an account?
+              <a href="{{ url_for('register.register_page') }}">Register Now</a>
+            </div>
+          </div>
         </div>
-
-        <div class="checkbox-row">
-          <input type="checkbox" id="remember_me" name="remember_me" />
-          <label for="remember_me">Remember Me</label>
-        </div>
-
-        <button type="submit" class="btn">Login</button>
-      </form>
-
-      <div style="text-align: center; margin-top: 0.9rem">
-        <a
-          href="{{ url_for('user.reset_password_get') }}"
-          style="
-            display: inline-block;
-            background: #f5b08a;
-            color: #0f1c3d;
-            font-weight: 700;
-            border-radius: 999px;
-            padding: 0.6rem 1rem;
-            text-decoration: none;
-          "
-        >
-          Reset Password
-        </a>
       </div>
-    </div>
 
-    <!-- Footer -->
-    <footer>
-      <p>© 2025 OrbitLink Analytics Platform. All rights reserved.</p>
-      <p>Contact: support@orbitlink.com</p>
-    </footer>
+      <!-- Footer - Darker like register page, no contact section -->
+      <footer>
+        <p>© 2025 OrbitLink Analytics Platform. All rights reserved.</p>
+        <p>Contact: support@orbitlink.com</p>
+      </footer>
+    </div>
   </body>
 </html>
