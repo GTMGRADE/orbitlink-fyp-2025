@@ -4,156 +4,215 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin - Users</title>
-
     <style>
       :root {
-        --navy: #1d2f61;
-        --navy-deep: #14224a;
-        --orange: #ef4a22;
-
-        /* Top buttons (Image 1 style) */
-        --btn-red: #ff3a3a;
-        --btn-active: #c40000;
-
-        /* User cards */
-        --card: #2f3b5a;
+        --navy: #1E3167;
+        --navy-deep: #14294a;
+        --orange: #F24822;
+        --red: #ff3333;
+        --red-dark: #cc0000;
+        --card-bg: rgba(255, 255, 255, 0.05);
         --card-border: rgba(255, 255, 255, 0.1);
-
-        /* status colors */
-        --pill-active-bg: rgba(100, 212, 106, 0.22);
-        --pill-active-bd: rgba(100, 212, 106, 0.45);
-
-        --pill-susp-bg: rgba(207, 207, 207, 0.18);
-        --pill-susp-bd: rgba(207, 207, 207, 0.4);
-
-        /* button colors */
-        --btn-suspend: var(--orange);
-        --btn-unsuspend: #cfcfcf;
+        --text-light: rgba(255, 255, 255, 0.9);
+        --text-muted: rgba(255, 255, 255, 0.7);
+        --success-bg: rgba(100, 212, 106, 0.22);
+        --success-border: rgba(100, 212, 106, 0.45);
+        --suspended-bg: rgba(207, 207, 207, 0.18);
+        --suspended-border: rgba(207, 207, 207, 0.4);
       }
 
       * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
       }
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-      }
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
-          sans-serif;
-        background: var(--navy-deep);
-        overflow-x: hidden;
-      }
 
-      /* Full screen layout */
-      .app {
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--navy);
+        color: white;
         min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+        line-height: 1.6;
       }
 
-      /* ===== HEADER ===== */
-      .header {
-        height: 90px;
-        background: var(--navy);
+      /* Navigation Bar - With admin tabs on the right */
+      .navbar {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 14px 22px;
-        flex: 0 0 auto;
+        align-items: center;
+        padding: 1.2rem 3%;
+        background-color: var(--navy);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .logo {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        background: var(--orange);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-weight: 700;
-      }
-
-      .topnav {
-        display: flex;
-        gap: 28px;
-        align-items: center;
-      }
-
-      .topbtn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 150px;
-        height: 56px;
-        padding: 0 22px;
-        border-radius: 10px;
-        background: var(--btn-red);
-        color: #111;
-        font-weight: 800;
-        font-size: 18px;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
         text-decoration: none;
-        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
-        transition: 0.15s;
-        border: 0;
       }
 
-      .topbtn:hover {
+      /* Right-side navigation container */
+      .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      /* Admin tabs - now on the right side */
+      .admin-nav-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-right: 0.8rem;
+        padding-right: 0.8rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .nav-tab {
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+
+      .nav-tab:hover {
+        background-color: rgba(255, 255, 255, 0.15);
         transform: translateY(-2px);
-        box-shadow: 0 10px 0 rgba(0, 0, 0, 0.22);
-      }
-      .topbtn:active {
-        transform: translateY(1px);
-        box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
-      }
-      .topbtn.active {
-        background: var(--btn-active);
       }
 
-      /* ===== CONTENT ===== */
-      .content {
-        flex: 1 1 auto;
-        padding: 36px 48px 64px;
-        background: var(--navy-deep);
+      .nav-tab.active {
+        background-color: var(--red);
+        color: black;
+        border-color: var(--red);
+      }
+
+      /* Logout button */
+      .nav-logout {
+        text-decoration: none;
+        color: black;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: var(--red);
+        white-space: nowrap;
+      }
+
+      .nav-logout:hover {
+        background-color: var(--red-dark);
+        transform: translateY(-2px);
+      }
+
+      /* Main Content Container */
+      .main-container {
+        padding: 2rem 3%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* Page Header */
+      .page-header {
+        margin-bottom: 2rem;
       }
 
       .page-title {
-        text-align: center;
-        font-size: clamp(44px, 4.8vw, 72px);
-        color: #fff;
-        letter-spacing: 2px;
-        margin: 10px 0 26px;
-        font-weight: 600;
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 0.5rem;
       }
 
-      .search-wrap {
+      .page-description {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      /* Search Bar - MATCHING PERSONAL DASHBOARD STYLE */
+      .search-container {
+        margin-bottom: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .search-form {
         display: flex;
-        justify-content: center;
-        margin-bottom: 34px;
-      }
-      .search {
-        width: min(860px, 92%);
-        height: 70px;
-        border-radius: 30px;
-        border: 2px solid #bdbdbd;
-        background: #fff;
-        padding: 0 26px;
-        font-size: 20px;
-        outline: none;
-        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
+        gap: 0.8rem;
+        align-items: center;
       }
 
-      /* User cards grid */
-      .grid {
-        width: min(1200px, 96%);
+      .search-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--red);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+      }
+
+      .search-btn {
+        padding: 0.8rem 1.5rem;
+        background: var(--red);
+        color: black;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .search-btn:hover {
+        background: var(--red-dark);
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      /* User Cards Grid - 3 CARDS PER ROW */
+      .users-grid {
+        width: 100%;
+        max-width: 1400px;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(2, minmax(280px, 1fr));
-        gap: 26px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
       }
 
+      @media (max-width: 1200px) {
+        .users-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .users-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* User Card - Cleaner version of original design */
       .user-card {
         background: linear-gradient(
           180deg,
@@ -162,268 +221,486 @@
         );
         border: 1px solid var(--card-border);
         border-radius: 12px;
-        padding: 18px 18px 58px;
-        min-height: 170px;
+        padding: 1.5rem;
+        min-height: 220px;
         position: relative;
-        color: #fff;
-        box-shadow: 0 10px 0 rgba(0, 0, 0, 0.18);
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .user-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.2);
       }
 
       .user-name {
-        font-size: 20px;
+        font-size: 1.3rem;
         font-weight: 800;
-        margin: 2px 0 12px;
+        margin: 0.5rem 0 1rem 0;
+        color: white;
       }
 
-      .row {
+      .info-row {
         display: flex;
-        gap: 12px;
+        gap: 0.8rem;
         align-items: center;
-        margin: 10px 0;
+        margin: 0.8rem 0;
         flex-wrap: wrap;
       }
 
-      .label {
-        font-weight: 800;
-        min-width: 56px;
-        opacity: 0.95;
+      .info-label {
+        font-weight: 700;
+        min-width: 50px;
+        opacity: 0.9;
+        color: var(--text-muted);
+        font-size: 0.9rem;
       }
 
-      /* pill style */
+      /* Pill style - Cleaner version */
       .pill {
         display: inline-flex;
         align-items: center;
-        padding: 6px 12px;
-        border-radius: 999px;
+        padding: 0.5rem 0.8rem;
+        border-radius: 20px;
         background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        font-size: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        font-size: 0.85rem;
         line-height: 1;
         white-space: nowrap;
+        color: var(--text-light);
       }
 
-      /* status pill styles */
+      /* Status pill styles */
       .status-pill.active {
-        background: var(--pill-active-bg);
-        border-color: var(--pill-active-bd);
-      }
-      .status-pill.suspended {
-        background: var(--pill-susp-bg);
-        border-color: var(--pill-susp-bd);
+        background: var(--success-bg);
+        border-color: var(--success-border);
+        color: #64d46a;
       }
 
+      .status-pill.suspended {
+        background: var(--suspended-bg);
+        border-color: var(--suspended-border);
+        color: #cfcfcf;
+      }
+
+      /* Action Button - Consistent with site design */
       .btn-action {
         position: absolute;
-        right: 18px;
-        bottom: 16px;
-        height: 38px;
-        min-width: 110px;
-        padding: 0 14px;
-        border-radius: 8px;
-        background: var(--btn-suspend);
-        color: #111;
-        font-weight: 800;
-        border: 0;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        height: 36px;
+        min-width: 100px;
+        padding: 0 1rem;
+        border-radius: 6px;
+        background: var(--orange);
+        color: black;
+        font-weight: 700;
+        border: none;
         cursor: pointer;
-        box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25);
-        transition: 0.15s;
+        transition: all 0.2s;
+        font-size: 0.9rem;
       }
+
       .btn-action:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 8px rgba(242, 72, 34, 0.3);
       }
+
       .btn-action:active {
-        transform: translateY(1px);
-        box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+        transform: translateY(0);
       }
 
       /* Unsuspend button variant */
       .btn-action.unsuspend {
-        background: var(--btn-unsuspend);
-        color: #111;
+        background: #cfcfcf;
+        color: #333;
       }
 
-      /* Responsive */
-      @media (max-width: 920px) {
-        .content {
-          padding: 28px 18px 48px;
+      .btn-action.unsuspend:hover {
+        box-shadow: 0 4px 8px rgba(207, 207, 207, 0.3);
+      }
+
+      /* Footer - Consistent with other pages */
+      footer {
+        margin-top: 4rem;
+        padding: 2rem 3%;
+        background-color: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      footer p {
+        color: var(--text-muted);
+        margin: 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .navbar {
+          padding: 1rem 5%;
+          flex-wrap: wrap;
+          gap: 0.8rem;
         }
-        .grid {
-          grid-template-columns: 1fr;
+        
+        .logo {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 0.5rem;
         }
-        .topnav {
-          gap: 14px;
+        
+        .navbar-right {
+          width: 100%;
+          justify-content: center;
         }
-        .topbtn {
-          min-width: 120px;
-          height: 52px;
-          font-size: 16px;
+        
+        .admin-nav-tabs {
+          margin-right: 0.5rem;
+          padding-right: 0.5rem;
         }
+        
+        .nav-tab {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.85rem;
+        }
+        
+        .nav-logout {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 1.5rem 5%;
+        }
+
+        .page-title {
+          font-size: 1.8rem;
+        }
+
+        .search-form {
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+
+        .search-input,
+        .search-btn {
+          width: 100%;
+        }
+
+        .user-card {
+          padding: 1.2rem;
+          min-height: 200px;
+        }
+
+        .user-name {
+          font-size: 1.2rem;
+        }
+
+        .btn-action {
+          right: 1rem;
+          bottom: 1rem;
+          min-width: 90px;
+          height: 32px;
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar-right {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .admin-nav-tabs {
+          margin-right: 0;
+          padding-right: 0;
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          padding-bottom: 0.5rem;
+          margin-bottom: 0.5rem;
+          width: 100%;
+          justify-content: center;
+        }
+        
+        .nav-tab {
+          flex: 1;
+          text-align: center;
+          padding: 0.6rem;
+        }
+        
+        .user-card {
+          padding: 1rem;
+        }
+
+        .info-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+
+        .info-label {
+          min-width: auto;
+        }
+
+        .pill {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.6rem;
+        }
+      }
+
+      /* Empty State for search results */
+      .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
       }
     </style>
   </head>
-
   <body>
-    <div class="app">
-      <header class="header">
-        <div class="logo">Logo</div>
+    <!-- Navigation Bar with Admin Tabs on the Right -->
+    <nav class="navbar">
+      <a href="{{ url_for('admin_ui.admin_home') }}" class="logo">OrbitLink</a>
+      
+      <div class="navbar-right">
+        <!-- Admin tabs now on the right side -->
+        <div class="admin-nav-tabs">
+          <a href="{{ url_for('admin_ui.admin_users_page') }}" class="nav-tab active">Users</a>
+          <a href="{{ url_for('admin_ui.admin_reviews_page') }}" class="nav-tab">Reviews</a>
+          <a href="{{ url_for('admin_ui.admin_edit_website_page') }}" class="nav-tab">Edit Website</a>
+        </div>
+        
+        <!-- Logout button -->
+        <a href="{{ url_for('user.logout') }}" class="nav-logout">Logout</a>
+      </div>
+    </nav>
 
-        <nav class="topnav">
-          <a
-            class="topbtn active"
-            href="{{ url_for('admin_ui.admin_users_page') }}"
-            >Users</a
-          >
-          <a class="topbtn" href="{{ url_for('admin_ui.admin_reviews_page') }}"
-            >Reviews</a
-          >
-          <a
-            class="topbtn"
-            href="{{ url_for('admin_ui.admin_edit_website_page') }}"
-            >Edit Website</a
-          >
-          <a class="topbtn" href="{{ url_for('user.logout') }}">Logout</a>
-        </nav>
-      </header>
+    <div class="main-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">User Management</h1>
+        <p class="page-description">Manage user accounts and their status</p>
+      </div>
 
-      <main class="content">
-        <div class="page-title">User&nbsp;&nbsp;Management</div>
-
-        <div class="search-wrap">
+      <!-- Search Bar - MATCHING PERSONAL DASHBOARD -->
+      <div class="search-container">
+        <form class="search-form" onsubmit="return false;">
           <input
             id="searchInput"
-            class="search"
+            class="search-input"
             type="text"
-            placeholder="Search user..."
+            placeholder="Search users by name, email, or role..."
+            autocomplete="off"
           />
-        </div>
+          <button type="button" class="search-btn" id="searchButton">Search</button>
+        </form>
+      </div>
 
-        <section id="userGrid" class="grid">
-          <article class="user-card" data-name="Grace Fu">
-            <div class="user-name">Grace Fu</div>
+      <!-- Users Grid - 3 CARDS PER ROW -->
+      <section id="usersGrid" class="users-grid">
+        <!-- Grace Fu -->
+        <article class="user-card" data-name="Grace Fu" data-email="grace123@yahoo.com" data-role="business user">
+          <div class="user-name">Grace Fu</div>
 
-            <div class="row">
-              <div class="label">Role:</div>
-              <div class="pill">Business User</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Role:</div>
+            <div class="pill">Business User</div>
+          </div>
 
-            <div class="row">
-              <div class="label">Email:</div>
-              <div class="pill">grace123@yahoo.com</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Email:</div>
+            <div class="pill">grace123@yahoo.com</div>
+          </div>
 
-            <div class="row">
-              <div class="label">Status:</div>
-              <div class="pill status-pill" data-status>Active</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="pill status-pill active" data-status>Active</div>
+          </div>
 
-            <button class="btn-action" type="button" data-action="toggle">
-              Suspend
-            </button>
-          </article>
+          <button class="btn-action" type="button" data-action="toggle">
+            Suspend
+          </button>
+        </article>
 
-          <article class="user-card" data-name="Denise Phua">
-            <div class="user-name">Denise Phua</div>
+        <!-- Denise Phua -->
+        <article class="user-card" data-name="Denise Phua" data-email="denise456@gmail.com" data-role="influencer user">
+          <div class="user-name">Denise Phua</div>
 
-            <div class="row">
-              <div class="label">Role:</div>
-              <div class="pill">Influencer User</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Role:</div>
+            <div class="pill">Influencer User</div>
+          </div>
 
-            <div class="row">
-              <div class="label">Email:</div>
-              <div class="pill">denise456@gmail.com</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Email:</div>
+            <div class="pill">denise456@gmail.com</div>
+          </div>
 
-            <div class="row">
-              <div class="label">Status:</div>
-              <div class="pill status-pill" data-status>Active</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="pill status-pill active" data-status>Active</div>
+          </div>
 
-            <button class="btn-action" type="button" data-action="toggle">
-              Suspend
-            </button>
-          </article>
+          <button class="btn-action" type="button" data-action="toggle">
+            Suspend
+          </button>
+        </article>
 
-          <article class="user-card" data-name="Rachel Ong">
-            <div class="user-name">Rachel Ong</div>
+        <!-- Rachel Ong -->
+        <article class="user-card" data-name="Rachel Ong" data-email="rachel789@hotmail.com" data-role="business user">
+          <div class="user-name">Rachel Ong</div>
 
-            <div class="row">
-              <div class="label">Role:</div>
-              <div class="pill">Business User</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Role:</div>
+            <div class="pill">Business User</div>
+          </div>
 
-            <div class="row">
-              <div class="label">Email:</div>
-              <div class="pill">rachel789@hotmail.com</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Email:</div>
+            <div class="pill">rachel789@hotmail.com</div>
+          </div>
 
-            <div class="row">
-              <div class="label">Status:</div>
-              <div class="pill status-pill" data-status>Suspended</div>
-            </div>
+          <div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="pill status-pill suspended" data-status>Suspended</div>
+          </div>
 
-            <button class="btn-action" type="button" data-action="toggle">
-              Unsuspend
-            </button>
-          </article>
-        </section>
-      </main>
+          <button class="btn-action unsuspend" type="button" data-action="toggle">
+            Unsuspend
+          </button>
+        </article>
+      </section>
     </div>
 
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 OrbitLink Admin Panel. All rights reserved.</p>
+      <p>Contact: support@orbitlink.com</p>
+    </footer>
+
     <script>
-      // ===== Search (filters by name) =====
-      const input = document.getElementById("searchInput");
-      const cards = Array.from(
-        document.querySelectorAll("#userGrid .user-card")
-      );
-
-      input.addEventListener("input", () => {
-        const q = input.value.trim().toLowerCase();
-        cards.forEach((card) => {
-          const name = (card.dataset.name || "").toLowerCase();
-          card.style.display = name.includes(q) ? "" : "none";
-        });
-      });
-
-      // ===== Helpers for status UI =====
-      function applyStatusUI(card) {
-        const statusPill = card.querySelector("[data-status]");
-        const btn = card.querySelector("button[data-action='toggle']");
-        if (!statusPill || !btn) return;
-
-        const current = statusPill.textContent.trim().toLowerCase();
-
-        // reset classes
-        statusPill.classList.remove("active", "suspended");
-        btn.classList.remove("unsuspend");
-
-        if (current === "suspended") {
-          statusPill.classList.add("suspended");
-          btn.textContent = "Unsuspend";
-          btn.classList.add("unsuspend");
-        } else {
-          statusPill.classList.add("active");
-          btn.textContent = "Suspend";
+      document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const cards = Array.from(document.querySelectorAll("#usersGrid .user-card"));
+        
+        // Add empty state if no users found
+        function checkEmptyState(searchTerm = '') {
+          const visibleCards = Array.from(cards).filter(card => 
+            card.style.display !== 'none'
+          );
+          
+          let emptyState = document.querySelector('.empty-state');
+          
+          if (visibleCards.length === 0 && searchTerm !== '') {
+            if (!emptyState) {
+              emptyState = document.createElement('div');
+              emptyState.className = 'empty-state';
+              emptyState.innerHTML = `
+                <p>No users match your search.</p>
+                <p>Try a different search term.</p>
+              `;
+              document.getElementById('usersGrid').appendChild(emptyState);
+            }
+          } else if (emptyState) {
+            emptyState.remove();
+          }
         }
-      }
+        
+        // Search function (searches by name, email, AND role)
+        function performSearch(searchTerm) {
+          const term = searchTerm.toLowerCase().trim();
+          
+          cards.forEach((card) => {
+            const name = (card.dataset.name || "").toLowerCase();
+            const email = (card.dataset.email || "").toLowerCase();
+            const role = (card.dataset.role || "").toLowerCase();
+            
+            // Search in name, email, OR role (case-insensitive)
+            if (term === '' || 
+                name.includes(term) || 
+                email.includes(term) || 
+                role.includes(term)) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+          
+          checkEmptyState(term);
+        }
+        
+        // Input search with debouncing
+        let debounceTimer;
+        input.addEventListener("input", () => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            performSearch(input.value);
+          }, 300);
+        });
+        
+        // Button search
+        searchButton.addEventListener("click", () => {
+          performSearch(input.value);
+        });
+        
+        // Enter key search
+        input.addEventListener("keypress", (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch(input.value);
+          }
+        });
 
-      // Apply on page load (so Rachel shows correct style immediately)
-      cards.forEach(applyStatusUI);
+        // ===== Helpers for status UI =====
+        function applyStatusUI(card) {
+          const statusPill = card.querySelector("[data-status]");
+          const btn = card.querySelector("button[data-action='toggle']");
+          if (!statusPill || !btn) return;
 
-      // ===== Suspend / Unsuspend (front-end functional toggle) =====
-      document.getElementById("userGrid").addEventListener("click", (e) => {
-        const btn = e.target.closest("button[data-action='toggle']");
-        if (!btn) return;
+          const current = statusPill.textContent.trim().toLowerCase();
 
-        const card = btn.closest(".user-card");
-        const statusPill = card.querySelector("[data-status]");
-        if (!statusPill) return;
+          // reset classes
+          statusPill.classList.remove("active", "suspended");
+          btn.classList.remove("unsuspend");
 
-        const current = statusPill.textContent.trim().toLowerCase();
-        statusPill.textContent = current === "active" ? "Suspended" : "Active";
+          if (current === "suspended") {
+            statusPill.classList.add("suspended");
+            btn.textContent = "Unsuspend";
+            btn.classList.add("unsuspend");
+          } else {
+            statusPill.classList.add("active");
+            btn.textContent = "Suspend";
+          }
+        }
 
-        applyStatusUI(card);
+        // Apply on page load
+        cards.forEach(applyStatusUI);
+
+        // ===== Suspend / Unsuspend (front-end functional toggle) =====
+        document.getElementById("usersGrid").addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-action='toggle']");
+          if (!btn) return;
+
+          const card = btn.closest(".user-card");
+          const statusPill = card.querySelector("[data-status]");
+          if (!statusPill) return;
+
+          const current = statusPill.textContent.trim().toLowerCase();
+          statusPill.textContent = current === "active" ? "Suspended" : "Active";
+
+          applyStatusUI(card);
+        });
+        
+        // Initial empty state check
+        checkEmptyState();
       });
     </script>
   </body>

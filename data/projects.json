@@ -1,37 +1,30 @@
 [
   {
     "id": 1,
-    "name": "Project Name 1",
+    "name": "Project 1",
     "description": "Demo project",
-    "last_opened": "2025-12-21",
+    "last_opened": "2025-12-30",
     "archived": false
   },
   {
     "id": 2,
-    "name": "Project Name 2",
+    "name": "Project 2",
     "description": "Another project",
-    "last_opened": "2025-12-20",
+    "last_opened": "2025-12-29",
     "archived": false
   },
   {
     "id": 3,
-    "name": "Project Name 3",
+    "name": "Project 3",
     "description": "Sample notes",
     "last_opened": "2025-12-19",
     "archived": false
   },
   {
     "id": 4,
-    "name": "Old project 1",
-    "description": "Old project from October",
-    "last_opened": "2025-10-15",
-    "archived": false
-  },
-  {
-    "id": 5,
-    "name": "New Proj",
-    "description": "Another old project",
-    "last_opened": "2025-10-20",
+    "name": "Project 4",
+    "description": "",
+    "last_opened": "2025-12-29",
     "archived": false
   }
 ]
