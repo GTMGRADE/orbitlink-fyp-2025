@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Project 1",
     "description": "Demo project",
-    "last_opened": "2025-12-30",
+    "last_opened": "2026-01-05",
     "archived": false
   },
   {
@@ -24,7 +24,14 @@
     "id": 4,
     "name": "Project 4",
     "description": "",
-    "last_opened": "2025-12-29",
+    "last_opened": "2026-01-05",
+    "archived": false
+  },
+  {
+    "id": 5,
+    "name": "demo",
+    "description": "this is pure demo",
+    "last_opened": "2026-01-05",
     "archived": false
   }
 ]

@@ -38,11 +38,18 @@ def projects_create_post():
     return redirect(url_for("projects.projects_list"))
 
 
+# @projects_bp.get("/projects/open/<int:pid>")
+# def projects_open(pid: int):
+#     logger.info("Open project id=%s", pid)
+#     projects_controller.open(pid)
+#     return redirect(url_for("projects.data_import"))
+
 @projects_bp.get("/projects/open/<int:pid>")
 def projects_open(pid: int):
     logger.info("Open project id=%s", pid)
     projects_controller.open(pid)
-    return redirect(url_for("projects.data_import"))
+    # Changed from redirect to data_import to direct redirect to project_sna
+    return redirect(url_for("projects.project_sna"))
 
 
 @projects_bp.post("/projects/rename/<int:pid>")
