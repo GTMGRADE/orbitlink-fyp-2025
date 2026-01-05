@@ -355,35 +355,52 @@
         background: rgb(220, 38, 38);
       }
 
-      /* Empty State */
+      /* Empty State - Improved Design */
       .empty-state {
         text-align: center;
-        padding: 2rem 1.5rem; /* Reduced */
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 1rem; /* Reduced */
+        padding: 3rem 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+        color: white;
       }
 
       .empty-state p {
-        margin-bottom: 0.8rem; /* Reduced */
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .create-project-link {
         display: inline-block;
-        padding: 0.7rem 1.2rem; /* Reduced */
+        padding: 0.9rem 2rem;
         background: #ff3333;
-        color: black;
+        color: white;
         text-decoration: none;
-        border-radius: 6px;
-        font-weight: 600;
-        transition: all 0.2s;
-        margin-top: 0.8rem;
-        font-size: 0.9rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .create-project-link:hover {
         background: #cc0000;
         color: white;
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
       /* Responsive Design */
@@ -476,6 +493,22 @@
         .table-container {
           border-radius: 10px;
         }
+
+        .empty-state {
+          padding: 2rem 1rem;
+        }
+
+        .empty-icon {
+          font-size: 3rem;
+        }
+
+        .empty-state h3 {
+          font-size: 1.3rem;
+        }
+
+        .empty-state p {
+          font-size: 1rem;
+        }
       }
 
       @media (max-width: 480px) {
@@ -517,6 +550,22 @@
         .action-btn {
           width: 100%;
           margin: 0;
+        }
+
+        .empty-state {
+          padding: 1.5rem 1rem;
+        }
+
+        .empty-icon {
+          font-size: 2.5rem;
+        }
+
+        .empty-state h3 {
+          font-size: 1.2rem;
+        }
+
+        .empty-state p {
+          font-size: 0.95rem;
         }
       }
 
@@ -615,7 +664,9 @@
             </table>
             {% else %}
             <div class="empty-state">
-              <p>No projects found. Create your first project to get started!</p>
+              <div class="empty-icon">📁</div>
+              <h3>No Projects Yet</h3>
+              <p>You haven't created any projects yet. Start by creating your first project to analyze social networks and gain insights.</p>
               <a href="{{ url_for('projects.projects_create_get') }}" class="create-project-link">Create First Project</a>
             </div>
             {% endif %}

@@ -7,28 +7,43 @@ logger = logging.getLogger(__name__)
 
 
 class ProjectsController:
-    def __init__(self):
-        self.repo = ProjectRepository()
+    def __init__(self, user_id: int):
+        self.user_id = user_id
+        self.repo = ProjectRepository(user_id)
 
     @staticmethod
-    def _format_date(iso: str | None) -> str:
-        if not iso:
+    def _format_date(dt) -> str:
+        if not dt:
             return "-"
         try:
-            dt = datetime.date.fromisoformat(iso)
-            return dt.strftime("%d/%m/%y")
+            if isinstance(dt, str):
+                # Handle string date
+                return datetime.datetime.strptime(dt, "%Y-%m-%d").strftime("%d/%m/%y")
+            elif isinstance(dt, datetime.datetime):
+                # Handle datetime object
+                return dt.strftime("%d/%m/%y")
+            elif isinstance(dt, datetime.date):
+                # Handle date object
+                return dt.strftime("%d/%m/%y")
+            else:
+                return str(dt)
         except Exception:
-            return iso
+            return str(dt)
 
     def view_recent(self) -> Dict:
         """View recent projects (limited to 3 most recently opened)"""
         all_projects: List[Project] = self.repo.list()
+        
+        # Filter out projects without last_opened date
+        projects_with_dates = [p for p in all_projects if p.last_opened]
+        
         # Sort by last_opened date (most recent first) and take top 3
         recent = sorted(
-            [p for p in all_projects if p.last_opened],
+            projects_with_dates,
             key=lambda x: x.last_opened,
             reverse=True
         )[:3]
+        
         vm = [
             {
                 "id": p.id,
@@ -38,6 +53,7 @@ class ProjectsController:
             }
             for p in recent
         ]
+        
         return {
             "page_title": "Dashboard",
             "projects": vm,
@@ -55,13 +71,14 @@ class ProjectsController:
             }
             for p in projects
         ]
+        
         return {
             "page_title": "All Projects",
             "projects": vm,
             "query": (query or ""),
         }
 
-    def create(self, name: str, description: str) -> Project:
+    def create(self, name: str, description: str) -> Project | None:
         return self.repo.create(name, description)
 
     def open(self, pid: int) -> Project | None:
@@ -75,6 +92,3 @@ class ProjectsController:
 
     def delete(self, pid: int) -> bool:
         return self.repo.delete(pid)
-
-
-projects_controller = ProjectsController()
