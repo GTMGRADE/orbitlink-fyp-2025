@@ -546,46 +546,83 @@
         const analysisResults = document.getElementById('analysisResults');
         const channelTitle = document.getElementById('channelTitle');
         const channelStats = document.getElementById('channelStats');
-        const pageTitle = document.querySelector('.page-title');
+        
+        // Show loading indicator initially
+        loadingIndicator.style.display = 'block';
+        
+        // Try to get project ID from URL or stored data
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('project_id') || localStorage.getItem('currentProjectId');
+        
+        async function loadAnalysisFromSession() {
+          if (projectId) {
+            try {
+              const response = await fetch(`/projects/${projectId}/current-session`);
+              const session = await response.json();
+              
+              if (session && session.analysis_data) {
+                displayAnalysis(session.analysis_data);
+                return true;
+              }
+            } catch (error) {
+              console.error('Error loading session:', error);
+            }
+          }
+          return false;
+        }
         
         if (analysisData) {
           try {
             const data = JSON.parse(analysisData);
+            displayAnalysis(data);
             
-            if (data.success && data.channel_metadata) {
-              // Show analysis results
-              analysisResults.style.display = 'block';
-              
-              // Display channel info - MATCH COLAB FORMAT
-              channelTitle.textContent = data.channel_metadata.title;
-              channelStats.innerHTML = `
-                <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem;">
-                  <span>📊 Subscribers: ${data.channel_metadata.subscriber_count ? data.channel_metadata.subscriber_count.toLocaleString() : 'N/A'}</span>
-                  <span>🎬 Videos Analyzed: ${data.videos_analyzed || 'N/A'}</span>
-                  <span>💬 Comments Analyzed: ${data.total_comments ? data.total_comments.toLocaleString() : 'N/A'}</span>
-                </div>
-              `;
-              
-              // Display influencers - TOP 5 ONLY, NO MEDALS
-              displayInfluencers(data.influencers, data.total_comments);
-              
-              // Clear the analysis data after displaying
-              sessionStorage.removeItem('youtubeAnalysis');
-              
-            } else {
-              showDefaultContent();
-            }
+            // Save to local storage for persistence
+            localStorage.setItem('lastAnalysis', JSON.stringify(data));
+            
           } catch (error) {
             console.error('Error parsing analysis data:', error);
-            showDefaultContent();
+            // Try loading from server session
+            loadAnalysisFromSession().then(success => {
+              if (!success) {
+                showDefaultContent();
+              }
+            });
           }
         } else {
-          showDefaultContent();
+          // Try loading from server session
+          loadAnalysisFromSession().then(success => {
+            if (!success) {
+              showDefaultContent();
+            }
+          });
+        }
+        
+        function displayAnalysis(data) {
+          loadingIndicator.style.display = 'none';
+          
+          if (data.success && data.channel_metadata) {
+            // Show analysis results
+            analysisResults.style.display = 'block';
+            
+            // Display channel info
+            channelTitle.textContent = data.channel_metadata.title;
+            channelStats.innerHTML = `
+              <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem;">
+                <span>📊 Subscribers: ${data.channel_metadata.subscriber_count ? data.channel_metadata.subscriber_count.toLocaleString() : 'N/A'}</span>
+                <span>🎬 Videos Analyzed: ${data.videos_analyzed || 'N/A'}</span>
+                <span>💬 Comments Analyzed: ${data.total_comments ? data.total_comments.toLocaleString() : 'N/A'}</span>
+              </div>
+            `;
+            
+            // Display influencers
+            displayInfluencers(data.influencers || [], data.total_comments || 0);
+            
+          } else {
+            showDefaultContent();
+          }
         }
         
         function displayInfluencers(influencers, totalComments) {
-          loadingIndicator.style.display = 'none';
-          
           if (!influencers || influencers.length === 0) {
             influencerList.innerHTML = `
               <div class="no-data">
@@ -599,7 +636,7 @@
             return;
           }
           
-          // Show only top 5 as requested
+          // Show only top 5
           const topInfluencers = influencers.slice(0, 5);
           
           let html = '';
@@ -649,7 +686,7 @@
                       </div>
                     </div>
                     
-                    <!-- Score Breakdown (like Colab) -->
+                    <!-- Score Breakdown -->
                     <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
                       <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
                         Score Breakdown:
@@ -690,6 +727,7 @@
         function showDefaultContent() {
           // Show default hardcoded influencers if no analysis data
           loadingIndicator.style.display = 'none';
+          // Keep the default content that's already in the HTML
         }
         
         function getScoreColor(score) {

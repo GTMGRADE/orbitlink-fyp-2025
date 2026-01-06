@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import json
 from flask import jsonify
 from controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
+from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 
 logger = logging.getLogger(__name__)
 
@@ -270,3 +271,34 @@ def get_youtube_analyses(project_id):
         return jsonify({"success": True, "analyses": analyses}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+    
+@projects_bp.get("/projects/<int:project_id>/current-session")
+def get_current_session(project_id):
+    """Get current analysis session for a project"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+    
+    try:
+        controller = AnalysisSessionController(user_id, project_id)
+        session = controller.get_current_session()
+        return jsonify(session), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@projects_bp.post("/projects/<int:project_id>/clear-session")
+def clear_current_session(project_id):
+    """Clear current analysis session for a project"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+    
+    try:
+        controller = AnalysisSessionController(user_id, project_id)
+        success = controller.clear_session()
+        return jsonify({"success": success}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    
+    

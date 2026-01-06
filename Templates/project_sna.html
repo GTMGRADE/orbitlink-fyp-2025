@@ -247,6 +247,51 @@
         box-shadow: 0 4px 8px rgba(39, 202, 63, 0.3);
       }
       
+      /* Current Session Display - Updated CSS */
+      .current-session-display {
+        background: rgba(39, 202, 63, 0.1);
+        border: 1px solid rgba(39, 202, 63, 0.3);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 2rem;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .session-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .session-channel {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #27ca3f;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .session-channel:before {
+        content: "▶️";
+        font-size: 0.9rem;
+      }
+
+      .clear-session-btn {
+        background: rgba(255, 51, 51, 0.2);
+        color: #ff3333;
+        border: 1px solid rgba(255, 51, 51, 0.3);
+        border-radius: 4px;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+
+      .clear-session-btn:hover {
+        background: rgba(255, 51, 51, 0.3);
+      }
+      
       /* Status Message */
       .status-message {
         padding: 1rem;
@@ -544,6 +589,16 @@
         .analysis-section {
           padding: 1.5rem;
         }
+        
+        .session-info {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-start;
+        }
+        
+        .clear-session-btn {
+          align-self: flex-end;
+        }
       }
     </style>
   </head>
@@ -577,25 +632,37 @@
           <!-- Data Input Section -->
           <div class="url-input-section">
             <div class="input-header">
-              <h3>Enter Data Source</h3>
-              <p>Paste the URL of the YouTube channel you want to analyze</p>
+              <h3 id="currentAnalysisTitle">Enter Data Source</h3>
+              <p id="currentAnalysisDesc">Paste the URL of the YouTube channel you want to analyze</p>
             </div>
             
-            <div class="input-group">
-              <input 
-                type="url" 
-                id="youtubeUrl" 
-                class="url-input" 
-                placeholder="https://www.youtube.com/@ChannelName or https://www.youtube.com/c/ChannelName"
-                value=""
-              />
-              <button type="button" class="confirm-btn" id="confirmBtn">Confirm</button>
+            <!-- Current Session Display - Simplified Version -->
+            <div id="currentSession" class="current-session-display" style="display: none;">
+              <div class="session-info">
+                <span class="session-channel" id="sessionChannel"></span>
+                <button class="clear-session-btn" id="clearSessionBtn">× Clear</button>
+              </div>
+              <!-- REMOVED: session-actions div -->
             </div>
             
-            <!-- Data source tabs -->
-            <div class="data-source-tabs">
-              <button class="tab-btn active" data-source="youtube">YouTube</button>
-              <button class="tab-btn" data-source="csv">CSV Upload</button>
+            <!-- URL Input (hidden when session exists) -->
+            <div id="urlInputSection">
+              <div class="input-group">
+                <input 
+                  type="url" 
+                  id="youtubeUrl" 
+                  class="url-input" 
+                  placeholder="https://www.youtube.com/@ChannelName or https://www.youtube.com/c/ChannelName"
+                  value=""
+                />
+                <button type="button" class="confirm-btn" id="confirmBtn">Analyze</button>
+              </div>
+              
+              <!-- Data source tabs -->
+              <div class="data-source-tabs">
+                <button class="tab-btn active" data-source="youtube">YouTube</button>
+                <button class="tab-btn" data-source="csv">CSV Upload</button>
+              </div>
             </div>
             
             <div id="statusMessage" class="status-message"></div>
@@ -609,21 +676,30 @@
               <div class="analysis-card disabled" id="sentimentCard">
                 <h3 class="analysis-name">Sentiment Analysis</h3>
                 <p class="analysis-desc">Analyze opinions and track sentiment shifts over time to understand public perception</p>
-                <a href="{{ url_for('projects.sentiment_analysis') }}" class="analysis-link disabled" id="sentimentLink">Open Analysis</a>
+                <a href="{{ url_for('projects.sentiment_analysis') }}" 
+                   class="analysis-link disabled" 
+                   id="sentimentLink"
+                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
               </div>
 
               <!-- Data Monitoring Card -->
               <div class="analysis-card disabled" id="monitoringCard">
                 <h3 class="analysis-name">Data Monitoring</h3>
                 <p class="analysis-desc">Track follower dynamics, post performance, and engagement metrics in real-time</p>
-                <a href="{{ url_for('projects.data_monitoring') }}" class="analysis-link disabled" id="monitoringLink">Open Analysis</a>
+                <a href="{{ url_for('projects.data_monitoring') }}" 
+                   class="analysis-link disabled" 
+                   id="monitoringLink"
+                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
               </div>
 
               <!-- Historical Analysis Card -->
               <div class="analysis-card disabled" id="historicalCard">
                 <h3 class="analysis-name">Historical Analysis</h3>
                 <p class="analysis-desc">Analyze long-term trends, follower growth, and historical campaign performance</p>
-                <a href="{{ url_for('projects.historical_analysis') }}" class="analysis-link disabled" id="historicalLink">Open Analysis</a>
+                <a href="{{ url_for('projects.historical_analysis') }}" 
+                   class="analysis-link disabled" 
+                   id="historicalLink"
+                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
               </div>
 
               {% if session.get('user_type') == 'business' %}
@@ -631,14 +707,20 @@
               <div class="analysis-card disabled" id="influencersCard">
                 <h3 class="analysis-name">Identify Influencers</h3>
                 <p class="analysis-desc">Identify key influencers and high-impact accounts driving conversations</p>
-                <a href="{{ url_for('projects.identify_influencers') }}" class="analysis-link disabled" id="influencersLink">Open Analysis</a>
+                <a href="{{ url_for('projects.identify_influencers') }}" 
+                   class="analysis-link disabled" 
+                   id="influencersLink"
+                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
               </div>
 
               <!-- Community Detection Card -->
               <div class="analysis-card disabled" id="communitiesCard">
                 <h3 class="analysis-name">Detect Communities</h3>
                 <p class="analysis-desc">Detect subgroups and analyze information flows between different community segments</p>
-                <a href="{{ url_for('projects.detect_communities') }}" class="analysis-link disabled" id="communitiesLink">Open Analysis</a>
+                <a href="{{ url_for('projects.detect_communities') }}" 
+                   class="analysis-link disabled" 
+                   id="communitiesLink"
+                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
               </div>
               {% endif %}
             </div>
@@ -698,18 +780,14 @@
             // Enable all analysis cards
             enableAnalysisCards();
             
+            // Show current session
+            await loadCurrentSession();
+            
             // Update button state
             confirmBtn.textContent = 'Analyzed ✓';
             confirmBtn.classList.add('confirmed');
             
-            // Show redirect message
-            setTimeout(() => {
-              statusMessage.textContent = 'Redirecting to influencers page...';
-              setTimeout(() => {
-                window.location.href = "{{ url_for('projects.identify_influencers') }}";
-              }, 1000);
-            }, 2000);
-            
+            // Status message only, no redirect
           } else {
             showStatus(`❌ Analysis failed: ${result.error}`, 'error');
             confirmBtn.textContent = 'Try Again';
@@ -724,14 +802,109 @@
         }
       }
       
-      function isValidYouTubeUrl(url) {
-        const patterns = [
-          /youtube\.com\/channel\//,
-          /youtube\.com\/@/,
-          /youtube\.com\/user\//,
-          /youtube\.com\/c\//
-        ];
-        return patterns.some(pattern => pattern.test(url));
+      // Load current session from server
+      async function loadCurrentSession() {
+        try {
+          const projectId = getCurrentProjectId();
+          const response = await fetch(`/projects/${projectId}/current-session`);
+          const session = await response.json();
+          
+          if (session && session.channel_title) {
+            showCurrentSession(session);
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Error loading session:', error);
+          return false;
+        }
+      }
+      
+      function showCurrentSession(session) {
+        const sessionDisplay = document.getElementById('currentSession');
+        const urlInputSection = document.getElementById('urlInputSection');
+        const title = document.getElementById('currentAnalysisTitle');
+        const desc = document.getElementById('currentAnalysisDesc');
+        
+        document.getElementById('sessionChannel').textContent = 
+          `Currently analyzing: ${session.channel_title}`;
+        
+        sessionDisplay.style.display = 'block';
+        urlInputSection.style.display = 'none';
+        
+        title.textContent = 'Analysis Ready!';
+        desc.textContent = `You're analyzing "${session.channel_title}". Select an analysis type below.`;
+        
+        // Enable all analysis cards
+        enableAnalysisCards();
+        
+        // Store project ID for analysis pages
+        const projectId = getCurrentProjectId();
+        localStorage.setItem('currentProjectId', projectId);
+      }
+      
+      async function clearCurrentSession() {
+        if (!confirm('Clear current analysis session? You\'ll need to re-analyze to view results.')) {
+          return;
+        }
+        
+        try {
+          const projectId = getCurrentProjectId();
+          const response = await fetch(`/projects/${projectId}/clear-session`, {
+            method: 'POST'
+          });
+        
+          if (response.ok) {
+            const sessionDisplay = document.getElementById('currentSession');
+            const urlInputSection = document.getElementById('urlInputSection');
+            const title = document.getElementById('currentAnalysisTitle');
+            const desc = document.getElementById('currentAnalysisDesc');
+            
+            sessionDisplay.style.display = 'none';
+            urlInputSection.style.display = 'block';
+            
+            title.textContent = 'Enter Data Source';
+            desc.textContent = 'Paste the URL of the YouTube channel you want to analyze';
+            
+            // Disable analysis cards
+            document.querySelectorAll('.analysis-card').forEach(card => {
+              card.classList.add('disabled');
+            });
+            
+            document.querySelectorAll('.analysis-link').forEach(link => {
+              link.classList.add('disabled');
+            });
+            
+            // Clear stored project ID
+            localStorage.removeItem('currentProjectId');
+            sessionStorage.removeItem('youtubeAnalysis');
+            
+            showStatus('Session cleared. Enter a new channel URL to analyze.', 'info');
+          }
+        } catch (error) {
+          console.error('Error clearing session:', error);
+          showStatus('Error clearing session', 'error');
+        }
+      }
+      
+      // JavaScript function to append project ID to links
+      function addProjectIdToLink(linkElement) {
+        // If card is disabled, prevent navigation
+        if (linkElement.classList.contains('disabled')) {
+          showStatus('Please analyze a YouTube channel first', 'error');
+          return false;
+        }
+        
+        const projectId = getCurrentProjectId();
+        if (projectId) {
+          const currentHref = linkElement.getAttribute('href');
+          const separator = currentHref.includes('?') ? '&' : '?';
+          linkElement.setAttribute('href', `${currentHref}${separator}project_id=${projectId}`);
+          
+          // Store in localStorage for the analysis page to use
+          localStorage.setItem('currentProjectId', projectId);
+        }
+        return true;
       }
       
       // Function to enable analysis cards
@@ -745,7 +918,21 @@
         
         analysisLinks.forEach(link => {
           link.classList.remove('disabled');
+          // Add click handler to append project ID
+          link.onclick = function(e) {
+            return addProjectIdToLink(this);
+          };
         });
+      }
+      
+      function isValidYouTubeUrl(url) {
+        const patterns = [
+          /youtube\.com\/channel\//,
+          /youtube\.com\/@/,
+          /youtube\.com\/user\//,
+          /youtube\.com\/c\//
+        ];
+        return patterns.some(pattern => pattern.test(url));
       }
       
       // Helper function to get project ID
@@ -779,6 +966,15 @@
         const tabBtns = document.querySelectorAll('.tab-btn');
         const analysisLinks = document.querySelectorAll('.analysis-link');
         const analysisCards = document.querySelectorAll('.analysis-card');
+        const clearSessionBtn = document.getElementById('clearSessionBtn');
+        
+        // Load current session on page load
+        loadCurrentSession();
+        
+        // Add event listener for clear session button
+        if (clearSessionBtn) {
+          clearSessionBtn.addEventListener('click', clearCurrentSession);
+        }
         
         // Add event listener for confirm button - now using analyzeYouTubeChannel
         confirmBtn.addEventListener('click', function() {
@@ -804,7 +1000,7 @@
             // Clear status and reset button when changing tabs
             const statusMessage = document.getElementById('statusMessage');
             statusMessage.style.display = 'none';
-            confirmBtn.textContent = 'Confirm';
+            confirmBtn.textContent = 'Analyze';
             confirmBtn.classList.remove('confirmed');
             confirmBtn.disabled = false;
           });
@@ -825,7 +1021,7 @@
         urlInput.addEventListener('input', function() {
           const statusMessage = document.getElementById('statusMessage');
           statusMessage.style.display = 'none';
-          confirmBtn.textContent = 'Confirm';
+          confirmBtn.textContent = 'Analyze';
           confirmBtn.classList.remove('confirmed');
           confirmBtn.disabled = false;
           

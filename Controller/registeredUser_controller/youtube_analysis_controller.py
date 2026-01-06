@@ -3,6 +3,7 @@ import os
 import json
 from datetime import datetime
 from services.youtube_analyzer import YouTubeAnalyzer
+from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 from db_config import get_connection
 
 class YouTubeAnalysisController:
@@ -201,3 +202,27 @@ class YouTubeAnalysisController:
         finally:
             cursor.close()
             conn.close()
+    
+    def analyze_channel(self, channel_url):
+        """Analyze YouTube channel and save results"""
+        # Run analysis with progress updates
+        result = self.analyze_channel_with_progress(channel_url)
+        
+        if 'error' in result:
+            return {'success': False, 'error': result['error']}
+        
+        # Save to database (existing code)
+        self.save_analysis_result(channel_url, result['data'])
+        
+        # Save to session storage
+        session_controller = AnalysisSessionController(self.user_id, self.project_id)
+        session_controller.save_analysis_session(
+            channel_url,
+            result['data']['channel_metadata']['title'],
+            result['data']
+        )
+        
+        return {
+            'success': True,
+            'data': result['data']
+        }
