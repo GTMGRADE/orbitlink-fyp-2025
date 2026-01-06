@@ -275,6 +275,12 @@
         color: #ff3333;
       }
       
+      .status-info {
+        background: rgba(66, 153, 225, 0.2);
+        border: 1px solid #4299e1;
+        color: #4299e1;
+      }
+      
       /* Data Source Tabs */
       .data-source-tabs {
         display: flex;
@@ -398,6 +404,23 @@
         transform: none;
         background: #666;
         box-shadow: none;
+      }
+      
+      /* Progress Spinner */
+      .progress-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
       
       /* Responsive Design - Matching Dashboard */
@@ -525,6 +548,9 @@
     </style>
   </head>
   <body>
+    <!-- Add project data element for storing project ID -->
+    <div id="projectData" data-project-id="{{ project_id if project_id else 1 }}" style="display: none;"></div>
+    
     <div class="layout">
       <aside class="sidebar">
         <div class="brand-section">
@@ -580,21 +606,21 @@
             <h2 class="section-title">Select Analysis Type</h2>
             <div class="analysis-grid">
               <!-- Sentiment Analysis Card -->
-              <div class="analysis-card" id="sentimentCard">
+              <div class="analysis-card disabled" id="sentimentCard">
                 <h3 class="analysis-name">Sentiment Analysis</h3>
                 <p class="analysis-desc">Analyze opinions and track sentiment shifts over time to understand public perception</p>
                 <a href="{{ url_for('projects.sentiment_analysis') }}" class="analysis-link disabled" id="sentimentLink">Open Analysis</a>
               </div>
 
               <!-- Data Monitoring Card -->
-              <div class="analysis-card" id="monitoringCard">
+              <div class="analysis-card disabled" id="monitoringCard">
                 <h3 class="analysis-name">Data Monitoring</h3>
                 <p class="analysis-desc">Track follower dynamics, post performance, and engagement metrics in real-time</p>
                 <a href="{{ url_for('projects.data_monitoring') }}" class="analysis-link disabled" id="monitoringLink">Open Analysis</a>
               </div>
 
               <!-- Historical Analysis Card -->
-              <div class="analysis-card" id="historicalCard">
+              <div class="analysis-card disabled" id="historicalCard">
                 <h3 class="analysis-name">Historical Analysis</h3>
                 <p class="analysis-desc">Analyze long-term trends, follower growth, and historical campaign performance</p>
                 <a href="{{ url_for('projects.historical_analysis') }}" class="analysis-link disabled" id="historicalLink">Open Analysis</a>
@@ -602,14 +628,14 @@
 
               {% if session.get('user_type') == 'business' %}
               <!-- Influencer Detection Card -->
-              <div class="analysis-card" id="influencersCard">
+              <div class="analysis-card disabled" id="influencersCard">
                 <h3 class="analysis-name">Identify Influencers</h3>
                 <p class="analysis-desc">Identify key influencers and high-impact accounts driving conversations</p>
                 <a href="{{ url_for('projects.identify_influencers') }}" class="analysis-link disabled" id="influencersLink">Open Analysis</a>
               </div>
 
               <!-- Community Detection Card -->
-              <div class="analysis-card" id="communitiesCard">
+              <div class="analysis-card disabled" id="communitiesCard">
                 <h3 class="analysis-name">Detect Communities</h3>
                 <p class="analysis-desc">Detect subgroups and analyze information flows between different community segments</p>
                 <a href="{{ url_for('projects.detect_communities') }}" class="analysis-link disabled" id="communitiesLink">Open Analysis</a>
@@ -622,13 +648,149 @@
     </div>
 
     <script>
+      // Function to handle YouTube analysis
+      async function analyzeYouTubeChannel() {
+        const urlInput = document.getElementById('youtubeUrl');
+        const channelUrl = urlInput.value.trim();
+        const confirmBtn = document.getElementById('confirmBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        
+        if (!channelUrl) {
+          showStatus('Please enter a YouTube channel URL', 'error');
+          return;
+        }
+        
+        // Validate YouTube URL
+        if (!isValidYouTubeUrl(channelUrl)) {
+          showStatus('Please enter a valid YouTube channel URL (e.g., https://www.youtube.com/@ChannelName)', 'error');
+          return;
+        }
+        
+        const projectId = getCurrentProjectId();
+        
+        // Show detailed loading state
+        confirmBtn.textContent = 'Analyzing...';
+        confirmBtn.disabled = true;
+        statusMessage.textContent = 'Starting analysis... This may take 2-3 minutes.';
+        statusMessage.className = 'status-message status-info';
+        statusMessage.style.display = 'block';
+        
+        try {
+          const response = await fetch('/projects/analyze-youtube', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              channel_url: channelUrl,
+              project_id: projectId
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments from ${result.data.videos_analyzed} videos.`, 'success');
+            
+            // Store analysis results
+            sessionStorage.setItem('youtubeAnalysis', JSON.stringify(result.data));
+            
+            // Enable all analysis cards
+            enableAnalysisCards();
+            
+            // Update button state
+            confirmBtn.textContent = 'Analyzed ✓';
+            confirmBtn.classList.add('confirmed');
+            
+            // Show redirect message
+            setTimeout(() => {
+              statusMessage.textContent = 'Redirecting to influencers page...';
+              setTimeout(() => {
+                window.location.href = "{{ url_for('projects.identify_influencers') }}";
+              }, 1000);
+            }, 2000);
+            
+          } else {
+            showStatus(`❌ Analysis failed: ${result.error}`, 'error');
+            confirmBtn.textContent = 'Try Again';
+            confirmBtn.disabled = false;
+          }
+          
+        } catch (error) {
+          console.error('Analysis error:', error);
+          showStatus('❌ Connection error. Please check your internet and try again.', 'error');
+          confirmBtn.textContent = 'Try Again';
+          confirmBtn.disabled = false;
+        }
+      }
+      
+      function isValidYouTubeUrl(url) {
+        const patterns = [
+          /youtube\.com\/channel\//,
+          /youtube\.com\/@/,
+          /youtube\.com\/user\//,
+          /youtube\.com\/c\//
+        ];
+        return patterns.some(pattern => pattern.test(url));
+      }
+      
+      // Function to enable analysis cards
+      function enableAnalysisCards() {
+        const analysisCards = document.querySelectorAll('.analysis-card');
+        const analysisLinks = document.querySelectorAll('.analysis-link');
+        
+        analysisCards.forEach(card => {
+          card.classList.remove('disabled');
+        });
+        
+        analysisLinks.forEach(link => {
+          link.classList.remove('disabled');
+        });
+      }
+      
+      // Helper function to get project ID
+      function getCurrentProjectId() {
+        const projectData = document.getElementById('projectData');
+        return projectData ? projectData.dataset.projectId : 1; // Default to 1
+      }
+      
+      function showStatus(message, type) {
+        const statusMessage = document.getElementById('statusMessage');
+        statusMessage.textContent = message;
+        statusMessage.className = 'status-message';
+        statusMessage.classList.add(`status-${type}`);
+        statusMessage.style.display = 'block';
+        
+        // Auto-hide success messages after 8 seconds
+        if (type === 'success') {
+          setTimeout(() => {
+            if (statusMessage.textContent.includes('✓ Analysis completed!')) {
+              // Don't hide if we're showing success message with data
+              return;
+            }
+            statusMessage.style.display = 'none';
+          }, 8000);
+        }
+      }
+      
       document.addEventListener('DOMContentLoaded', function() {
         const urlInput = document.getElementById('youtubeUrl');
         const confirmBtn = document.getElementById('confirmBtn');
-        const statusMessage = document.getElementById('statusMessage');
         const tabBtns = document.querySelectorAll('.tab-btn');
         const analysisLinks = document.querySelectorAll('.analysis-link');
         const analysisCards = document.querySelectorAll('.analysis-card');
+        
+        // Add event listener for confirm button - now using analyzeYouTubeChannel
+        confirmBtn.addEventListener('click', function() {
+          const activeTab = document.querySelector('.tab-btn.active').dataset.source;
+          
+          if (activeTab === 'youtube') {
+            analyzeYouTubeChannel();
+          } else {
+            // Handle CSV upload (simulate processing for now)
+            showStatus('CSV upload functionality coming soon!', 'error');
+          }
+        });
         
         // Tab selection
         tabBtns.forEach(btn => {
@@ -638,6 +800,13 @@
             
             const source = this.dataset.source;
             updatePlaceholder(source);
+            
+            // Clear status and reset button when changing tabs
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.style.display = 'none';
+            confirmBtn.textContent = 'Confirm';
+            confirmBtn.classList.remove('confirmed');
+            confirmBtn.disabled = false;
           });
         });
         
@@ -652,78 +821,9 @@
           }
         }
         
-        // URL validation and confirmation
-        confirmBtn.addEventListener('click', function() {
-          const url = urlInput.value.trim();
-          const activeTab = document.querySelector('.tab-btn.active').dataset.source;
-          
-          if (!url) {
-            showStatus('Please enter a valid URL or file path', 'error');
-            urlInput.focus();
-            return;
-          }
-          
-          // Validate YouTube URL if YouTube tab is selected
-          if (activeTab === 'youtube' && !isValidYouTubeUrl(url)) {
-            showStatus('Please enter a valid YouTube channel URL', 'error');
-            return;
-          }
-          
-          // Show loading state
-          confirmBtn.textContent = 'Processing...';
-          confirmBtn.disabled = true;
-          
-          // Simulate API call/processing
-          setTimeout(() => {
-            // Enable all analysis cards
-            analysisCards.forEach(card => {
-              card.classList.remove('disabled');
-            });
-            
-            analysisLinks.forEach(link => {
-              link.classList.remove('disabled');
-            });
-            
-            showStatus('✓ Success! Data has been loaded. You can now open any analysis.', 'success');
-            
-            // Update button state
-            confirmBtn.textContent = 'Confirmed';
-            confirmBtn.classList.add('confirmed');
-            confirmBtn.disabled = false;
-            
-            // Store the URL in session or send to server
-            console.log(`Processing ${activeTab} data from:`, url);
-            
-          }, 1500);
-        });
-        
-        function isValidYouTubeUrl(url) {
-          // Basic YouTube URL validation
-          const youtubePatterns = [
-            /^(https?:\/\/)?(www\.)?youtube\.com\/(c\/|channel\/|@)/,
-            /^(https?:\/\/)?(www\.)?youtu\.be\//,
-            /^(https?:\/\/)?(www\.)?youtube\.com\/user\//
-          ];
-          
-          return youtubePatterns.some(pattern => pattern.test(url));
-        }
-        
-        function showStatus(message, type) {
-          statusMessage.textContent = message;
-          statusMessage.className = 'status-message';
-          statusMessage.classList.add(`status-${type}`);
-          statusMessage.style.display = 'block';
-          
-          // Auto-hide success messages after 5 seconds
-          if (type === 'success') {
-            setTimeout(() => {
-              statusMessage.style.display = 'none';
-            }, 5000);
-          }
-        }
-        
         // Clear status when user starts typing
         urlInput.addEventListener('input', function() {
+          const statusMessage = document.getElementById('statusMessage');
           statusMessage.style.display = 'none';
           confirmBtn.textContent = 'Confirm';
           confirmBtn.classList.remove('confirmed');
@@ -767,6 +867,25 @@
             }
           });
         });
+        
+        // Check if we have analysis results from session storage
+        const youtubeAnalysis = sessionStorage.getItem('youtubeAnalysis');
+        if (youtubeAnalysis) {
+          try {
+            const data = JSON.parse(youtubeAnalysis);
+            if (data.total_comments) {
+              // Enable analysis cards if we have stored results
+              enableAnalysisCards();
+              confirmBtn.textContent = 'Analyzed ✓';
+              confirmBtn.classList.add('confirmed');
+              
+              // Show analysis summary
+              showStatus(`✓ Analysis ready! ${data.total_comments.toLocaleString()} comments from ${data.videos_analyzed || 'multiple'} videos analyzed.`, 'success');
+            }
+          } catch (e) {
+            console.error('Error parsing stored analysis:', e);
+          }
+        }
       });
     </script>
   </body>

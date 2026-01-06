@@ -1,5 +1,8 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session
+import json
+from flask import jsonify
+from controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
 
 logger = logging.getLogger(__name__)
 
@@ -216,3 +219,54 @@ def identify_influencers():
     
     logger.info("Identify Influencers page accessed")
     return render_template("identify_influencers.html")
+
+@projects_bp.post("/projects/analyze-youtube")
+def analyze_youtube():
+    """Handle YouTube channel analysis request"""
+    # Check if user is logged in
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+    
+    data = request.get_json()
+    channel_url = data.get('channel_url')
+    project_id = data.get('project_id')
+    
+    if not channel_url or not project_id:
+        return jsonify({"success": False, "error": "Missing channel URL or project ID"}), 400
+    
+    try:
+        controller = YouTubeAnalysisController(user_id, project_id)
+        result = controller.analyze_channel(channel_url)
+        
+        if result['success']:
+            return jsonify({
+                "success": True,
+                "message": "Analysis completed successfully",
+                "data": result['data']
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": result.get('error', 'Analysis failed')
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Analysis error: {str(e)}"
+        }), 500
+
+@projects_bp.get("/projects/<int:project_id>/youtube-analyses")
+def get_youtube_analyses(project_id):
+    """Get recent YouTube analyses for a project"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+    
+    try:
+        controller = YouTubeAnalysisController(user_id, project_id)
+        analyses = controller.get_recent_analyses()
+        return jsonify({"success": True, "analyses": analyses}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500

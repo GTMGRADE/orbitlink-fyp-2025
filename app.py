@@ -3,6 +3,9 @@ from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
 
+from db_config import init_db, check_database_status
+
+
 # unregistered user boundaries
 from boundary.guestUser_boundary.landing_ui import landing_bp
 from boundary.guestUser_boundary.reviews_ui import reviews_bp
@@ -11,6 +14,7 @@ from boundary.guestUser_boundary.register_ui import register_bp
 # registered user boundaries
 from boundary.registeredUser_boundary.user_ui import user_bp
 from boundary.registeredUser_boundary.projects_ui import projects_bp
+
 
 # admin user boundaries
 from boundary.admin_boundary.admin_api_boundary import admin_api_bp
@@ -42,10 +46,13 @@ app.register_blueprint(projects_bp)
 app.register_blueprint(admin_api_bp)
 app.register_blueprint(admin_ui_bp)
 
+# YouTube API configuration
+app.config['YOUTUBE_API_KEY'] = os.getenv('YOUTUBE_API_KEY')
 logging.basicConfig(
     filename="app.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
+
 )
 
 if __name__ == '__main__':
