@@ -45,16 +45,47 @@ def login_post():
     logger.warning("Failed login attempt with username: %s", username)
     return render_template("login.html", error=login_result.get("message"))
 
-
 @user_bp.get("/profile")
 def profile():
-    user = _get_current_user()
-    if not user:
+    # Check if user is logged in
+    user_id = session.get("user_id")
+    if not user_id:
         return redirect(url_for("user.login_get"))
-    message = request.args.get("message")
-    logger.info("Profile page accessed by user: %s", user.username)
-    return render_template("profile.html", user=user, message=message)
-    # return render_template("profile.html", user=user, message=message, user_type=session.get("user_type"))
+    
+    # For admin users
+    if session.get("user_type") == "admin":
+        # Admin should use admin profile or redirect to admin home
+        return redirect(url_for("admin_ui.admin_users_page"))
+    
+    # For regular users
+    try:
+        # Get user directly from database
+        from db_config import get_connection
+        conn = get_connection()
+        if not conn:
+            return redirect(url_for("user.login_get"))
+        
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT id, username, email, created_at, status 
+            FROM users 
+            WHERE id = %s
+        """, (user_id,))
+        
+        user_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if not user_data:
+            return redirect(url_for("user.login_get"))
+        
+        message = request.args.get("message")
+        logger.info("Profile page accessed by user: %s", user_data['username'])
+        return render_template("profile.html", user=user_data, message=message)
+        
+    except Exception as e:
+        logger.error(f"Error fetching profile: {str(e)}")
+        return redirect(url_for("user.login_get"))
 
 
 @user_bp.get("/reset-password")
