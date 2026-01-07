@@ -1,11 +1,8 @@
 import logging
-
 from flask import Blueprint, render_template, request, redirect, url_for, session
-
 from controller.registeredUser_controller.user_controller import user_controller
 
 logger = logging.getLogger(__name__)
-
 
 user_bp = Blueprint('user', __name__)
 
@@ -56,7 +53,8 @@ def profile():
         return redirect(url_for("user.login_get"))
     message = request.args.get("message")
     logger.info("Profile page accessed by user: %s", user.username)
-    return render_template("profile.html", user=user, message=message, user_type=session.get("user_type"))
+    return render_template("profile.html", user=user, message=message)
+    # return render_template("profile.html", user=user, message=message, user_type=session.get("user_type"))
 
 
 @user_bp.get("/reset-password")

@@ -1,3 +1,4 @@
+# boundary/guestUser_boundary/register_ui.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 import logging
 from controller.guestUser_controller.register_controller import RegisterController
@@ -15,23 +16,21 @@ def register_page():
     contact_controller = ContactController()
     
     if request.method == 'POST':
-        # Get form data
+        # Get form data (no role parameter)
         email = request.form.get('email')
         username = request.form.get('username')
         password = request.form.get('password')
-        role = request.form.get('role')
         
         # Validate required fields
-        if not all([email, username, password, role]):
+        if not all([email, username, password]):
             flash('All fields are required', 'error')
             return render_template('register.html', **controller.get_register_page_data())
         
-        # Register user
-        success, message, user_data = controller.register_user(email, username, password, role)
+        # Register user (no role parameter)
+        success, message, user_data = controller.register_user(email, username, password)
         
         if success:
             flash(message, 'success')
-            # STAY ON SAME PAGE instead of redirecting
             return render_template('register.html', **controller.get_register_page_data())
         else:
             flash(message, 'error')

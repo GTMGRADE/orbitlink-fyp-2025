@@ -71,17 +71,16 @@ class AccountEntity:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, username as name, role, email, status 
+                SELECT id, username as name, email, status 
                 FROM users 
-                WHERE role IN ('influencer', 'business')
+                WHERE id != 0  # Exclude hardcoded admin
                 ORDER BY id
             """)
             
             users = cursor.fetchall()
             
-            # Format the role for display
+            # Format the status for display
             for user in users:
-                user['role'] = user['role'].capitalize() + " User"
                 user['status'] = user['status'].capitalize()
             
             return users
@@ -104,18 +103,17 @@ class AccountEntity:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, username as name, role, email, status 
+                SELECT id, username as name, email, status 
                 FROM users 
-                WHERE role IN ('influencer', 'business')
-                AND (username LIKE %s OR email LIKE %s OR role LIKE %s)
+                WHERE id != 0  # Exclude hardcoded admin
+                AND (username LIKE %s OR email LIKE %s)
                 ORDER BY id
-            """, (kw, kw, kw))
+            """, (kw, kw))
             
             users = cursor.fetchall()
             
-            # Format the role for display
+            # Format the status for display
             for user in users:
-                user['role'] = user['role'].capitalize() + " User"
                 user['status'] = user['status'].capitalize()
             
             return users
@@ -137,7 +135,7 @@ class AccountEntity:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, username as name, role, email, status 
+                SELECT id, username as name, email, status 
                 FROM users 
                 WHERE id = %s
             """, (user_id,))
@@ -145,7 +143,6 @@ class AccountEntity:
             user = cursor.fetchone()
             
             if user:
-                user['role'] = user['role'].capitalize() + " User"
                 user['status'] = user['status'].capitalize()
             
             return user

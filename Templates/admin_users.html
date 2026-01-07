@@ -517,7 +517,7 @@
             id="searchInput"
             class="search-input"
             type="text"
-            placeholder="Search users by name, email, or role..."
+            placeholder="Search users by name or email..."
             autocomplete="off"
           />
           <button type="submit" class="search-btn" id="searchButton">Search</button>
@@ -589,12 +589,10 @@
         const filteredUsers = allUsers.filter(user => {
           const name = (user.name || "").toLowerCase();
           const email = (user.email || "").toLowerCase();
-          const role = (user.role || "").toLowerCase();
           
           return term === '' || 
                  name.includes(term) || 
-                 email.includes(term) || 
-                 role.includes(term);
+                 email.includes(term);
         });
         displayUsers(filteredUsers);
       }
@@ -620,11 +618,6 @@
           return `
             <article class="user-card" data-user-id="${user.id}">
               <div class="user-name">${escapeHtml(user.name)}</div>
-
-              <div class="info-row">
-                <div class="info-label">Role:</div>
-                <div class="pill">${escapeHtml(user.role)}</div>
-              </div>
 
               <div class="info-row">
                 <div class="info-label">Email:</div>

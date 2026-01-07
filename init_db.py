@@ -34,7 +34,6 @@ def init_db():
                     email VARCHAR(255) NOT NULL UNIQUE,
                     username VARCHAR(255) NOT NULL UNIQUE,
                     password VARCHAR(255) NOT NULL,
-                    role ENUM('influencer', 'business', 'admin') NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     status VARCHAR(20) DEFAULT 'active'
                 )

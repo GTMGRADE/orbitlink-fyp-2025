@@ -14,7 +14,7 @@ class RegisteredUser:
     username: str
     email: str
     password_hash: str
-    role: str
+    # role: str
     remember_me: bool = field(default=False)
 
 
@@ -30,7 +30,7 @@ class UserController:
             "password": "admin123",  # Simple password
             "role": "admin"
         }
-        
+
     def authenticate(self, username: str, password: str, remember_me: bool) -> dict:
         """Authenticate user - first check hardcoded admin, then database"""
         
@@ -44,7 +44,6 @@ class UserController:
                 username=self.hardcoded_admin["username"],
                 email=self.hardcoded_admin["email"],
                 password_hash="",
-                role=self.hardcoded_admin["role"],
                 remember_me=remember_me
             )
             print(f"✅ Logged in as HARDCODED ADMIN")
@@ -65,7 +64,7 @@ class UserController:
             
             # Check if user is suspended FIRST
             cursor.execute("""
-                SELECT id, username, email, password, role, status 
+                SELECT id, username, email, password, status 
                 FROM users 
                 WHERE (username = %s OR email = %s) AND status = 'suspended'
             """, (username, username))
@@ -79,7 +78,7 @@ class UserController:
             
             # Then check for active users
             cursor.execute("""
-                SELECT id, username, email, password, role, status 
+                SELECT id, username, email, password, status 
                 FROM users 
                 WHERE (username = %s OR email = %s) AND status = 'active'
             """, (username, username))
@@ -94,13 +93,12 @@ class UserController:
                         username=user_data['username'],
                         email=user_data['email'],
                         password_hash=user_data['password'],
-                        role=user_data['role'],
                         remember_me=remember_me
                     )
                     return {
                         "status": "success",
                         "user": user,
-                        "user_type": user_data['role'],
+                        "user_type": "user",  # Always "user" for regular users
                         "remember": remember_me,
                     }
             

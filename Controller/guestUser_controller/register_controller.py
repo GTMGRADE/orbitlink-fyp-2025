@@ -8,12 +8,9 @@ logger = logging.getLogger(__name__)
 class RegisterController:
     def __init__(self):
         self.conn = get_connection()
-    
+
     def register_user(self, email, username, password, role):
-        """
-        Register a new user in the database
-        Returns: (success, message, user_data)
-        """
+        """Register a new user in the database"""
         try:
             if not self.conn:
                 return False, "Database connection failed", None
@@ -30,14 +27,14 @@ class RegisterController:
             if cursor.fetchone():
                 return False, "Username already taken", None
             
-            # Create user with hashed password
-            user = User.create_user(email, username, password, role)
+            # Create user with hashed password (no role parameter)
+            user = User.create_user(email, username, password)
             
-            # Insert into database
+            # Insert into database without role
             cursor.execute("""
-                INSERT INTO users (email, username, password, role)
-                VALUES (%s, %s, %s, %s)
-            """, (user.email, user.username, user.password, user.role))
+                INSERT INTO users (email, username, password)
+                VALUES (%s, %s, %s)
+            """, (user.email, user.username, user.password))
             
             self.conn.commit()
             user_id = cursor.lastrowid
@@ -59,6 +56,7 @@ class RegisterController:
         finally:
             if 'cursor' in locals():
                 cursor.close()
+    
     
     def get_register_page_data(self):
         """Get data for the register page"""
