@@ -30,7 +30,7 @@ class UserController:
             "password": "admin123",  # Simple password
             "role": "admin"
         }
-
+        
     def authenticate(self, username: str, password: str, remember_me: bool) -> dict:
         """Authenticate user - first check hardcoded admin, then database"""
         
@@ -43,7 +43,7 @@ class UserController:
                 id=self.hardcoded_admin["id"],
                 username=self.hardcoded_admin["username"],
                 email=self.hardcoded_admin["email"],
-                password_hash="",  # Not needed for hardcoded
+                password_hash="",
                 role=self.hardcoded_admin["role"],
                 remember_me=remember_me
             )
@@ -63,11 +63,25 @@ class UserController:
         try:
             cursor = conn.cursor(dictionary=True)
             
-            # Trying to find user by username or email
+            # Check if user is suspended FIRST
             cursor.execute("""
-                SELECT id, username, email, password, role 
+                SELECT id, username, email, password, role, status 
                 FROM users 
-                WHERE username = %s OR email = %s
+                WHERE (username = %s OR email = %s) AND status = 'suspended'
+            """, (username, username))
+            
+            suspended_user = cursor.fetchone()
+            if suspended_user:
+                return {
+                    "status": "failure", 
+                    "message": "Your account has been suspended. Please contact support for further assistance."
+                }
+            
+            # Then check for active users
+            cursor.execute("""
+                SELECT id, username, email, password, role, status 
+                FROM users 
+                WHERE (username = %s OR email = %s) AND status = 'active'
             """, (username, username))
             
             user_data = cursor.fetchone()
@@ -205,7 +219,7 @@ class UserController:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, username, email, password, role 
+                SELECT id, username, email, password, role, status 
                 FROM users 
                 WHERE email = %s
             """, (email,))
@@ -308,6 +322,26 @@ class UserController:
                 "message": "If this email exists, a reset link has been sent.",
             }
         
+        # Check if user is suspended
+        conn = get_connection()
+        if not conn:
+            return {"status": "failure", "message": "Database error."}
+        
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT status FROM users WHERE email = %s", (email,))
+            result = cursor.fetchone()
+            
+            if result and result['status'] == 'suspended':
+                return {
+                    "status": "failure",
+                    "message": "Your account has been suspended. Please contact support for further assistance.",
+                }
+        except Exception as e:
+            logger.error(f"Error checking user status: {str(e)}")
+        finally:
+            cursor.close()
+            conn.close()
         
         logger.info("Password reset requested for email: %s (type=%s)", email, user_type)
         return {

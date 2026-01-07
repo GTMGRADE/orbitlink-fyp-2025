@@ -220,7 +220,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
       }
 
-      /* Error Message - PROFESSIONAL STYLING */
+      /* Error/Suspension Message - PROFESSIONAL STYLING */
       .error {
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
@@ -249,6 +249,13 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+      }
+
+      /* Suspension specific message - Different styling to stand out */
+      .error.suspended {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border-left: 5px solid #b45309;
+        box-shadow: 0 5px 15px rgba(245, 158, 11, 0.2);
       }
 
       /* Reset Password Link - STYLISH BUTTON */
@@ -522,7 +529,9 @@
             <h2 class="form-title">Login to Your Account</h2>
 
             {% if error %}
-            <div class="error">{{ error }}</div>
+            <div class="error {% if 'suspended' in error.lower() %}suspended{% endif %}">
+              {{ error }}
+            </div>
             {% endif %}
 
             <form method="post" action="{{ url_for('user.login_post') }}">
