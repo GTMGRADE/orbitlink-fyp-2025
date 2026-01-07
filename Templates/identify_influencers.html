@@ -353,8 +353,13 @@
       <main class="content">
         <div class="header">
           <div class="title">Identify Key Influencers</div>
-          <div class="header-buttons">
+          <!-- <div class="header-buttons">
             <a href="{{ url_for('projects.project_sna') }}">Back</a>
+          </div> -->
+          <div class="header-buttons">
+              <!-- <a href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', 1) }}"  -->
+              <a href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', '') }}" 
+                class="back-button">Back</a>
           </div>
         </div>
 
@@ -540,7 +545,6 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const analysisData = sessionStorage.getItem('youtubeAnalysis');
         const influencerList = document.getElementById('influencerList');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const analysisResults = document.getElementById('analysisResults');
@@ -550,11 +554,24 @@
         // Show loading indicator initially
         loadingIndicator.style.display = 'block';
         
-        // Try to get project ID from URL or stored data
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get('project_id') || localStorage.getItem('currentProjectId');
+        // Get project ID from URL or localStorage
+        const projectId = new URLSearchParams(window.location.search).get('project_id') || localStorage.getItem('currentProjectId');
         
-        async function loadAnalysisFromSession() {
+        // Try to load project-specific analysis data from sessionStorage
+        const projectAnalysis = sessionStorage.getItem(`youtubeAnalysis_${projectId}`);
+        
+        async function loadAnalysisData() {
+          if (projectAnalysis) {
+            try {
+              const data = JSON.parse(projectAnalysis);
+              displayAnalysis(data);
+              return true;
+            } catch (error) {
+              console.error('Error parsing project analysis data:', error);
+            }
+          }
+          
+          // If no project-specific data, try to load from server session
           if (projectId) {
             try {
               const response = await fetch(`/projects/${projectId}/current-session`);
@@ -562,40 +579,25 @@
               
               if (session && session.analysis_data) {
                 displayAnalysis(session.analysis_data);
+                
+                // Save to sessionStorage for future use
+                sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(session.analysis_data));
                 return true;
               }
             } catch (error) {
-              console.error('Error loading session:', error);
+              console.error('Error loading session from server:', error);
             }
           }
+          
           return false;
         }
         
-        if (analysisData) {
-          try {
-            const data = JSON.parse(analysisData);
-            displayAnalysis(data);
-            
-            // Save to local storage for persistence
-            localStorage.setItem('lastAnalysis', JSON.stringify(data));
-            
-          } catch (error) {
-            console.error('Error parsing analysis data:', error);
-            // Try loading from server session
-            loadAnalysisFromSession().then(success => {
-              if (!success) {
-                showDefaultContent();
-              }
-            });
+        // Load analysis data
+        loadAnalysisData().then(success => {
+          if (!success) {
+            showDefaultContent();
           }
-        } else {
-          // Try loading from server session
-          loadAnalysisFromSession().then(success => {
-            if (!success) {
-              showDefaultContent();
-            }
-          });
-        }
+        });
         
         function displayAnalysis(data) {
           loadingIndicator.style.display = 'none';
@@ -717,6 +719,9 @@
             <div class="analysis-summary">
               <p>
                 Analysis completed: ${topInfluencers.length} influencers identified from ${totalComments ? totalComments.toLocaleString() : '0'} comments
+              </p>
+              <p style="font-size: 0.9rem; margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6);">
+                Project ID: ${projectId || 'Not specified'}
               </p>
             </div>
           `;

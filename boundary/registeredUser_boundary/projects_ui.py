@@ -86,24 +86,6 @@ def projects_create_post():
     controller.create(name, description)
     return redirect(url_for("projects.projects_list"))
 
-
-@projects_bp.get("/projects/open/<int:pid>")
-def projects_open(pid: int):
-    # Check if user is logged in
-    if not get_user_id():
-        return redirect(url_for("user.login_get"))
-    
-    logger.info("Open project id=%s", pid)
-    
-    controller = create_projects_controller()
-    if not controller:
-        return redirect(url_for("user.login_get"))
-    
-    controller.open(pid)
-    # Changed from redirect to data_import to direct redirect to project_sna
-    return redirect(url_for("projects.project_sna"))
-
-
 @projects_bp.post("/projects/rename/<int:pid>")
 def projects_rename(pid: int):
     # Check if user is logged in
@@ -300,5 +282,21 @@ def clear_current_session(project_id):
         return jsonify({"success": success}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+@projects_bp.get("/projects/open/<int:pid>")
+def projects_open(pid: int):
+    # Check if user is logged in
+    if not get_user_id():
+        return redirect(url_for("user.login_get"))
+    
+    logger.info("Open project id=%s", pid)
+    
+    controller = create_projects_controller()
+    if not controller:
+        return redirect(url_for("user.login_get"))
+    
+    controller.open(pid)
+    # Pass project_id when redirecting to project_sna
+    return redirect(url_for("projects.project_sna", project_id=pid))
     
     

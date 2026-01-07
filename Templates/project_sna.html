@@ -613,11 +613,12 @@
         </div>
         <a href="{{ url_for('projects.projects_create_get') }}" class="create-btn">Create +</a>
         <nav class="menu">
-          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
-          <a href="{{ url_for('projects.project_sna') }}" class="active">Analysis</a>
-          <a href="#">Support</a>
-          <a href="#">Setting</a>
+            <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('projects.projects_list') }}">Projects</a>
+            <a href="{{ url_for('projects.project_sna') }}?project_id={{ project_id if project_id else '' }}" 
+              class="active">Analysis</a>
+            <a href="#">Support</a>
+            <a href="#">Setting</a>
         </nav>
       </aside>
 
@@ -625,7 +626,8 @@
         <!-- Header - Now properly aligned with OrbitLink logo -->
         <div class="header">
           <div class="title">Project Analysis</div>
-          <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a>
+          <!-- <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a> -->
+          <a href="{{ url_for('projects.dashboard') }}"class="profile-btn">Home</a>
         </div>
 
         <div class="container">
@@ -678,8 +680,7 @@
                 <p class="analysis-desc">Analyze opinions and track sentiment shifts over time to understand public perception</p>
                 <a href="{{ url_for('projects.sentiment_analysis') }}" 
                    class="analysis-link disabled" 
-                   id="sentimentLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
+                   id="sentimentLink">Open Analysis</a>
               </div>
 
               <!-- Data Monitoring Card -->
@@ -688,8 +689,7 @@
                 <p class="analysis-desc">Track follower dynamics, post performance, and engagement metrics in real-time</p>
                 <a href="{{ url_for('projects.data_monitoring') }}" 
                    class="analysis-link disabled" 
-                   id="monitoringLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
+                   id="monitoringLink">Open Analysis</a>
               </div>
 
               <!-- Historical Analysis Card -->
@@ -698,8 +698,7 @@
                 <p class="analysis-desc">Analyze long-term trends, follower growth, and historical campaign performance</p>
                 <a href="{{ url_for('projects.historical_analysis') }}" 
                    class="analysis-link disabled" 
-                   id="historicalLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
+                   id="historicalLink">Open Analysis</a>
               </div>
 
               {% if session.get('user_type') == 'business' %}
@@ -709,8 +708,7 @@
                 <p class="analysis-desc">Identify key influencers and high-impact accounts driving conversations</p>
                 <a href="{{ url_for('projects.identify_influencers') }}" 
                    class="analysis-link disabled" 
-                   id="influencersLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
+                   id="influencersLink">Open Analysis</a>
               </div>
 
               <!-- Community Detection Card -->
@@ -719,8 +717,7 @@
                 <p class="analysis-desc">Detect subgroups and analyze information flows between different community segments</p>
                 <a href="{{ url_for('projects.detect_communities') }}" 
                    class="analysis-link disabled" 
-                   id="communitiesLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
+                   id="communitiesLink">Open Analysis</a>
               </div>
               {% endif %}
             </div>
@@ -728,360 +725,427 @@
         </div>
       </main>
     </div>
-
     <script>
-      // Function to handle YouTube analysis
+      // Function to handle YouTube analysis - PROJECT-SPECIFIC
       async function analyzeYouTubeChannel() {
-        const urlInput = document.getElementById('youtubeUrl');
-        const channelUrl = urlInput.value.trim();
-        const confirmBtn = document.getElementById('confirmBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        
-        if (!channelUrl) {
-          showStatus('Please enter a YouTube channel URL', 'error');
-          return;
-        }
-        
-        // Validate YouTube URL
-        if (!isValidYouTubeUrl(channelUrl)) {
-          showStatus('Please enter a valid YouTube channel URL (e.g., https://www.youtube.com/@ChannelName)', 'error');
-          return;
-        }
-        
-        const projectId = getCurrentProjectId();
-        
-        // Show detailed loading state
-        confirmBtn.textContent = 'Analyzing...';
-        confirmBtn.disabled = true;
-        statusMessage.textContent = 'Starting analysis... This may take 2-3 minutes.';
-        statusMessage.className = 'status-message status-info';
-        statusMessage.style.display = 'block';
-        
-        try {
-          const response = await fetch('/projects/analyze-youtube', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              channel_url: channelUrl,
-              project_id: projectId
-            })
-          });
-          
-          const result = await response.json();
-          
-          if (result.success) {
-            showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments from ${result.data.videos_analyzed} videos.`, 'success');
-            
-            // Store analysis results
-            sessionStorage.setItem('youtubeAnalysis', JSON.stringify(result.data));
-            
-            // Enable all analysis cards
-            enableAnalysisCards();
-            
-            // Show current session
-            await loadCurrentSession();
-            
-            // Update button state
-            confirmBtn.textContent = 'Analyzed ✓';
-            confirmBtn.classList.add('confirmed');
-            
-            // Status message only, no redirect
-          } else {
-            showStatus(`❌ Analysis failed: ${result.error}`, 'error');
-            confirmBtn.textContent = 'Try Again';
-            confirmBtn.disabled = false;
-          }
-          
-        } catch (error) {
-          console.error('Analysis error:', error);
-          showStatus('❌ Connection error. Please check your internet and try again.', 'error');
-          confirmBtn.textContent = 'Try Again';
-          confirmBtn.disabled = false;
-        }
-      }
-      
-      // Load current session from server
-      async function loadCurrentSession() {
-        try {
+          const urlInput = document.getElementById('youtubeUrl');
+          const channelUrl = urlInput.value.trim();
+          const confirmBtn = document.getElementById('confirmBtn');
+          const statusMessage = document.getElementById('statusMessage');
           const projectId = getCurrentProjectId();
-          const response = await fetch(`/projects/${projectId}/current-session`);
-          const session = await response.json();
           
-          if (session && session.channel_title) {
-            showCurrentSession(session);
-            return true;
+          if (!channelUrl) {
+              showStatus('Please enter a YouTube channel URL', 'error');
+              return;
           }
-          return false;
-        } catch (error) {
-          console.error('Error loading session:', error);
-          return false;
-        }
+          
+          // Validate YouTube URL
+          if (!isValidYouTubeUrl(channelUrl)) {
+              showStatus('Please enter a valid YouTube channel URL (e.g., https://www.youtube.com/@ChannelName)', 'error');
+              return;
+          }
+          
+          // Show detailed loading state
+          confirmBtn.textContent = 'Analyzing...';
+          confirmBtn.disabled = true;
+          statusMessage.textContent = 'Starting analysis... This may take 2-3 minutes.';
+          statusMessage.className = 'status-message status-info';
+          statusMessage.style.display = 'block';
+          
+          try {
+              const response = await fetch('/projects/analyze-youtube', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      channel_url: channelUrl,
+                      project_id: projectId
+                  })
+              });
+              
+              const result = await response.json();
+              
+              if (result.success) {
+                  showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments from ${result.data.videos_analyzed} videos.`, 'success');
+                  
+                  // Store analysis results WITH PROJECT ID
+                  sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(result.data));
+                  
+                  // Enable all analysis cards
+                  enableAnalysisCards(projectId);
+                  
+                  // Show current session
+                  await loadCurrentSession(projectId);
+                  
+                  // Update button state
+                  confirmBtn.textContent = 'Analyzed ✓';
+                  confirmBtn.classList.add('confirmed');
+              } else {
+                  showStatus(`❌ Analysis failed: ${result.error}`, 'error');
+                  confirmBtn.textContent = 'Try Again';
+                  confirmBtn.disabled = false;
+              }
+              
+          } catch (error) {
+              console.error('Analysis error:', error);
+              showStatus('❌ Connection error. Please check your internet and try again.', 'error');
+              confirmBtn.textContent = 'Try Again';
+              confirmBtn.disabled = false;
+          }
       }
       
-      function showCurrentSession(session) {
-        const sessionDisplay = document.getElementById('currentSession');
-        const urlInputSection = document.getElementById('urlInputSection');
-        const title = document.getElementById('currentAnalysisTitle');
-        const desc = document.getElementById('currentAnalysisDesc');
-        
-        document.getElementById('sessionChannel').textContent = 
-          `Currently analyzing: ${session.channel_title}`;
-        
-        sessionDisplay.style.display = 'block';
-        urlInputSection.style.display = 'none';
-        
-        title.textContent = 'Analysis Ready!';
-        desc.textContent = `You're analyzing "${session.channel_title}". Select an analysis type below.`;
-        
-        // Enable all analysis cards
-        enableAnalysisCards();
-        
-        // Store project ID for analysis pages
-        const projectId = getCurrentProjectId();
-        localStorage.setItem('currentProjectId', projectId);
+      // Load current session from server - PROJECT-SPECIFIC
+      async function loadCurrentSession(projectId) {
+          try {
+              const currentProjectId = projectId || getCurrentProjectId();
+              const response = await fetch(`/projects/${currentProjectId}/current-session`);
+              const session = await response.json();
+              
+              if (session && session.channel_title) {
+                  showCurrentSession(session, currentProjectId);
+                  return true;
+              }
+              return false;
+          } catch (error) {
+              console.error('Error loading session:', error);
+              return false;
+          }
+      }
+      
+      function showCurrentSession(session, projectId) {
+          const sessionDisplay = document.getElementById('currentSession');
+          const urlInputSection = document.getElementById('urlInputSection');
+          const title = document.getElementById('currentAnalysisTitle');
+          const desc = document.getElementById('currentAnalysisDesc');
+          
+          document.getElementById('sessionChannel').textContent = 
+              `Currently analyzing: ${session.channel_title}`;
+          
+          sessionDisplay.style.display = 'block';
+          urlInputSection.style.display = 'none';
+          
+          title.textContent = 'Analysis Ready!';
+          desc.textContent = `You're analyzing "${session.channel_title}". Select an analysis type below.`;
+          
+          // Enable all analysis cards
+          enableAnalysisCards(projectId);
+          
+          // Store project ID for analysis pages
+          localStorage.setItem('currentProjectId', projectId);
+          
+          // Also store in session storage for immediate access
+          const youtubeAnalysis = sessionStorage.getItem(`youtubeAnalysis_${projectId}`);
+          if (!youtubeAnalysis && session.analysis_data) {
+              sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(session.analysis_data));
+          }
+      }
+      
+      // Function to show stored analysis session
+      function showStoredAnalysisSession(projectId, data) {
+          const sessionDisplay = document.getElementById('currentSession');
+          const urlInputSection = document.getElementById('urlInputSection');
+          const title = document.getElementById('currentAnalysisTitle');
+          const desc = document.getElementById('currentAnalysisDesc');
+          
+          if (sessionDisplay && data.channel_metadata) {
+              document.getElementById('sessionChannel').textContent = 
+                  `Currently analyzing: ${data.channel_metadata.title}`;
+              
+              sessionDisplay.style.display = 'block';
+              urlInputSection.style.display = 'none';
+              
+              title.textContent = 'Analysis Ready!';
+              desc.textContent = `You're analyzing "${data.channel_metadata.title}". Select an analysis type below.`;
+              
+              // Enable all analysis cards
+              enableAnalysisCards(projectId);
+              
+              const confirmBtn = document.getElementById('confirmBtn');
+              if (confirmBtn) {
+                  confirmBtn.textContent = 'Analyzed ✓';
+                  confirmBtn.classList.add('confirmed');
+              }
+          }
       }
       
       async function clearCurrentSession() {
-        if (!confirm('Clear current analysis session? You\'ll need to re-analyze to view results.')) {
-          return;
-        }
-        
-        try {
-          const projectId = getCurrentProjectId();
-          const response = await fetch(`/projects/${projectId}/clear-session`, {
-            method: 'POST'
-          });
-        
-          if (response.ok) {
-            const sessionDisplay = document.getElementById('currentSession');
-            const urlInputSection = document.getElementById('urlInputSection');
-            const title = document.getElementById('currentAnalysisTitle');
-            const desc = document.getElementById('currentAnalysisDesc');
-            
-            sessionDisplay.style.display = 'none';
-            urlInputSection.style.display = 'block';
-            
-            title.textContent = 'Enter Data Source';
-            desc.textContent = 'Paste the URL of the YouTube channel you want to analyze';
-            
-            // Disable analysis cards
-            document.querySelectorAll('.analysis-card').forEach(card => {
-              card.classList.add('disabled');
-            });
-            
-            document.querySelectorAll('.analysis-link').forEach(link => {
-              link.classList.add('disabled');
-            });
-            
-            // Clear stored project ID
-            localStorage.removeItem('currentProjectId');
-            sessionStorage.removeItem('youtubeAnalysis');
-            
-            showStatus('Session cleared. Enter a new channel URL to analyze.', 'info');
+          if (!confirm('Clear current analysis session? You\'ll need to re-analyze to view results.')) {
+              return;
           }
-        } catch (error) {
-          console.error('Error clearing session:', error);
-          showStatus('Error clearing session', 'error');
-        }
-      }
-      
-      // JavaScript function to append project ID to links
-      function addProjectIdToLink(linkElement) {
-        // If card is disabled, prevent navigation
-        if (linkElement.classList.contains('disabled')) {
-          showStatus('Please analyze a YouTube channel first', 'error');
-          return false;
-        }
-        
-        const projectId = getCurrentProjectId();
-        if (projectId) {
-          const currentHref = linkElement.getAttribute('href');
-          const separator = currentHref.includes('?') ? '&' : '?';
-          linkElement.setAttribute('href', `${currentHref}${separator}project_id=${projectId}`);
           
-          // Store in localStorage for the analysis page to use
-          localStorage.setItem('currentProjectId', projectId);
-        }
-        return true;
+          try {
+              const projectId = getCurrentProjectId();
+              const response = await fetch(`/projects/${projectId}/clear-session`, {
+                  method: 'POST'
+              });
+          
+              if (response.ok) {
+                  const sessionDisplay = document.getElementById('currentSession');
+                  const urlInputSection = document.getElementById('urlInputSection');
+                  const title = document.getElementById('currentAnalysisTitle');
+                  const desc = document.getElementById('currentAnalysisDesc');
+                  
+                  sessionDisplay.style.display = 'none';
+                  urlInputSection.style.display = 'block';
+                  
+                  title.textContent = 'Enter Data Source';
+                  desc.textContent = 'Paste the URL of the YouTube channel you want to analyze';
+                  
+                  // Disable analysis cards
+                  document.querySelectorAll('.analysis-card').forEach(card => {
+                      card.classList.add('disabled');
+                  });
+                  
+                  document.querySelectorAll('.analysis-link').forEach(link => {
+                      link.classList.add('disabled');
+                  });
+                  
+                  // Clear stored project ID and analysis data for THIS PROJECT
+                  sessionStorage.removeItem(`youtubeAnalysis_${projectId}`);
+                  localStorage.removeItem('currentProjectId');
+                  
+                  showStatus('Session cleared. Enter a new channel URL to analyze.', 'info');
+              }
+          } catch (error) {
+              console.error('Error clearing session:', error);
+              showStatus('Error clearing session', 'error');
+          }
       }
       
-      // Function to enable analysis cards
-      function enableAnalysisCards() {
-        const analysisCards = document.querySelectorAll('.analysis-card');
-        const analysisLinks = document.querySelectorAll('.analysis-link');
-        
-        analysisCards.forEach(card => {
-          card.classList.remove('disabled');
-        });
-        
-        analysisLinks.forEach(link => {
-          link.classList.remove('disabled');
-          // Add click handler to append project ID
-          link.onclick = function(e) {
-            return addProjectIdToLink(this);
-          };
-        });
+      // Helper function to append project ID to links - PROJECT-SPECIFIC
+      function addProjectIdToLink(linkElement, projectId) {
+          // If card is disabled, prevent navigation
+          if (linkElement.classList.contains('disabled')) {
+              showStatus('Please analyze a YouTube channel first', 'error');
+              return false;
+          }
+          
+          const currentProjectId = projectId || getCurrentProjectId();
+          if (currentProjectId) {
+              const currentHref = linkElement.getAttribute('href');
+              const separator = currentHref.includes('?') ? '&' : '?';
+              linkElement.setAttribute('href', `${currentHref}${separator}project_id=${currentProjectId}`);
+              
+              // Store in localStorage for the analysis page to use
+              localStorage.setItem('currentProjectId', currentProjectId);
+              
+              // Also store in sessionStorage for immediate access
+              const analysisData = sessionStorage.getItem(`youtubeAnalysis_${currentProjectId}`);
+              if (analysisData) {
+                  sessionStorage.setItem('youtubeAnalysis', analysisData);
+              }
+          }
+          return true;
+      }
+      
+      // Function to enable analysis cards - Check for PROJECT-SPECIFIC data
+      function enableAnalysisCards(projectId) {
+          const currentProjectId = projectId || getCurrentProjectId();
+          const hasAnalysisData = sessionStorage.getItem(`youtubeAnalysis_${currentProjectId}`) !== null;
+          
+          if (hasAnalysisData) {
+              const analysisCards = document.querySelectorAll('.analysis-card');
+              const analysisLinks = document.querySelectorAll('.analysis-link');
+              
+              analysisCards.forEach(card => {
+                  card.classList.remove('disabled');
+              });
+              
+              analysisLinks.forEach(link => {
+                  link.classList.remove('disabled');
+                  // Add click handler to append project ID
+                  link.onclick = function(e) {
+                      return addProjectIdToLink(this, currentProjectId);
+                  };
+              });
+          }
+      }
+      
+      // Helper function to get project ID from URL or data element
+      function getCurrentProjectId() {
+          // First try to get from URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlProjectId = urlParams.get('project_id');
+          
+          if (urlProjectId) {
+              // Store in the data element for consistency
+              const projectData = document.getElementById('projectData');
+              if (projectData) {
+                  projectData.dataset.projectId = urlProjectId;
+              }
+              return urlProjectId;
+          }
+          
+          // Then try from data element
+          const projectData = document.getElementById('projectData');
+          return projectData ? projectData.dataset.projectId : null;
       }
       
       function isValidYouTubeUrl(url) {
-        const patterns = [
-          /youtube\.com\/channel\//,
-          /youtube\.com\/@/,
-          /youtube\.com\/user\//,
-          /youtube\.com\/c\//
-        ];
-        return patterns.some(pattern => pattern.test(url));
-      }
-      
-      // Helper function to get project ID
-      function getCurrentProjectId() {
-        const projectData = document.getElementById('projectData');
-        return projectData ? projectData.dataset.projectId : 1; // Default to 1
+          const patterns = [
+              /youtube\.com\/channel\//,
+              /youtube\.com\/@/,
+              /youtube\.com\/user\//,
+              /youtube\.com\/c\//
+          ];
+          return patterns.some(pattern => pattern.test(url));
       }
       
       function showStatus(message, type) {
-        const statusMessage = document.getElementById('statusMessage');
-        statusMessage.textContent = message;
-        statusMessage.className = 'status-message';
-        statusMessage.classList.add(`status-${type}`);
-        statusMessage.style.display = 'block';
-        
-        // Auto-hide success messages after 8 seconds
-        if (type === 'success') {
-          setTimeout(() => {
-            if (statusMessage.textContent.includes('✓ Analysis completed!')) {
-              // Don't hide if we're showing success message with data
-              return;
-            }
-            statusMessage.style.display = 'none';
-          }, 8000);
-        }
+          const statusMessage = document.getElementById('statusMessage');
+          statusMessage.textContent = message;
+          statusMessage.className = 'status-message';
+          statusMessage.classList.add(`status-${type}`);
+          statusMessage.style.display = 'block';
+          
+          // Auto-hide success messages after 8 seconds
+          if (type === 'success') {
+              setTimeout(() => {
+                  if (statusMessage.textContent.includes('✓ Analysis completed!')) {
+                      // Don't hide if we're showing success message with data
+                      return;
+                  }
+                  statusMessage.style.display = 'none';
+              }, 8000);
+          }
       }
       
       document.addEventListener('DOMContentLoaded', function() {
-        const urlInput = document.getElementById('youtubeUrl');
-        const confirmBtn = document.getElementById('confirmBtn');
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const analysisLinks = document.querySelectorAll('.analysis-link');
-        const analysisCards = document.querySelectorAll('.analysis-card');
-        const clearSessionBtn = document.getElementById('clearSessionBtn');
-        
-        // Load current session on page load
-        loadCurrentSession();
-        
-        // Add event listener for clear session button
-        if (clearSessionBtn) {
-          clearSessionBtn.addEventListener('click', clearCurrentSession);
-        }
-        
-        // Add event listener for confirm button - now using analyzeYouTubeChannel
-        confirmBtn.addEventListener('click', function() {
-          const activeTab = document.querySelector('.tab-btn.active').dataset.source;
+          const urlInput = document.getElementById('youtubeUrl');
+          const confirmBtn = document.getElementById('confirmBtn');
+          const tabBtns = document.querySelectorAll('.tab-btn');
+          const analysisLinks = document.querySelectorAll('.analysis-link');
+          const analysisCards = document.querySelectorAll('.analysis-card');
+          const clearSessionBtn = document.getElementById('clearSessionBtn');
           
-          if (activeTab === 'youtube') {
-            analyzeYouTubeChannel();
-          } else {
-            // Handle CSV upload (simulate processing for now)
-            showStatus('CSV upload functionality coming soon!', 'error');
-          }
-        });
-        
-        // Tab selection
-        tabBtns.forEach(btn => {
-          btn.addEventListener('click', function() {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const source = this.dataset.source;
-            updatePlaceholder(source);
-            
-            // Clear status and reset button when changing tabs
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.style.display = 'none';
-            confirmBtn.textContent = 'Analyze';
-            confirmBtn.classList.remove('confirmed');
-            confirmBtn.disabled = false;
-          });
-        });
-        
-        function updatePlaceholder(source) {
-          switch(source) {
-            case 'youtube':
-              urlInput.placeholder = 'https://www.youtube.com/@ChannelName or https://www.youtube.com/c/ChannelName';
-              break;
-            case 'csv':
-              urlInput.placeholder = 'Drag and drop CSV file or paste file path';
-              break;
-          }
-        }
-        
-        // Clear status when user starts typing
-        urlInput.addEventListener('input', function() {
-          const statusMessage = document.getElementById('statusMessage');
-          statusMessage.style.display = 'none';
-          confirmBtn.textContent = 'Analyze';
-          confirmBtn.classList.remove('confirmed');
-          confirmBtn.disabled = false;
+          // Get current project ID from URL or localStorage
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlProjectId = urlParams.get('project_id');
+          const storedProjectId = localStorage.getItem('currentProjectId');
+          const currentProjectId = urlProjectId || storedProjectId || getCurrentProjectId();
           
-          // Disable analysis cards if URL is cleared
-          if (!this.value.trim()) {
-            analysisCards.forEach(card => {
-              card.classList.add('disabled');
-            });
-            
-            analysisLinks.forEach(link => {
-              link.classList.add('disabled');
-            });
-          }
-        });
-        
-        // Keyboard shortcut: Enter to confirm
-        urlInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            confirmBtn.click();
-          }
-        });
-        
-        // Initialize with YouTube placeholder
-        updatePlaceholder('youtube');
-        
-        // Add click handler for analysis cards (for visual feedback)
-        analysisCards.forEach(card => {
-          card.addEventListener('click', function(e) {
-            // Only trigger if not disabled and not clicking on the link itself
-            if (!this.classList.contains('disabled') && e.target !== this.querySelector('.analysis-link')) {
-              const link = this.querySelector('.analysis-link');
-              if (link && !link.classList.contains('disabled')) {
-                // Add visual feedback before navigation
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                  this.style.transform = '';
-                }, 200);
+          // Store project ID in both localStorage and the data element
+          if (currentProjectId) {
+              localStorage.setItem('currentProjectId', currentProjectId);
+              const projectData = document.getElementById('projectData');
+              if (projectData) {
+                  projectData.dataset.projectId = currentProjectId;
               }
-            }
-          });
-        });
-        
-        // Check if we have analysis results from session storage
-        const youtubeAnalysis = sessionStorage.getItem('youtubeAnalysis');
-        if (youtubeAnalysis) {
-          try {
-            const data = JSON.parse(youtubeAnalysis);
-            if (data.total_comments) {
-              // Enable analysis cards if we have stored results
-              enableAnalysisCards();
-              confirmBtn.textContent = 'Analyzed ✓';
-              confirmBtn.classList.add('confirmed');
-              
-              // Show analysis summary
-              showStatus(`✓ Analysis ready! ${data.total_comments.toLocaleString()} comments from ${data.videos_analyzed || 'multiple'} videos analyzed.`, 'success');
-            }
-          } catch (e) {
-            console.error('Error parsing stored analysis:', e);
           }
-        }
+          
+          console.log('Current Project ID:', currentProjectId);
+          
+          // Load current session for THIS PROJECT on page load
+          if (currentProjectId) {
+              loadCurrentSession(currentProjectId).then(success => {
+                  if (success) {
+                      console.log('Session loaded successfully');
+                  } else {
+                      console.log('No session found for project');
+                      // Check if we have stored analysis data
+                      checkForStoredAnalysis(currentProjectId);
+                  }
+              });
+          }
+          
+          // Function to check for stored analysis data
+          async function checkForStoredAnalysis(projectId) {
+              try {
+                  const projectAnalysis = sessionStorage.getItem(`youtubeAnalysis_${projectId}`);
+                  if (projectAnalysis) {
+                      const data = JSON.parse(projectAnalysis);
+                      if (data.total_comments) {
+                          // We have analysis data, show session and enable cards
+                          showStoredAnalysisSession(projectId, data);
+                      }
+                  }
+              } catch (e) {
+                  console.error('Error checking stored analysis:', e);
+              }
+          }
+          
+          // Add event listener for clear session button
+          if (clearSessionBtn) {
+              clearSessionBtn.addEventListener('click', clearCurrentSession);
+          }
+          
+          // Add event listener for confirm button - now using analyzeYouTubeChannel
+          confirmBtn.addEventListener('click', function() {
+              const activeTab = document.querySelector('.tab-btn.active').dataset.source;
+              
+              if (activeTab === 'youtube') {
+                  analyzeYouTubeChannel();
+              } else {
+                  // Handle CSV upload (simulate processing for now)
+                  showStatus('CSV upload functionality coming soon!', 'error');
+              }
+          });
+          
+          // Tab selection
+          tabBtns.forEach(btn => {
+              btn.addEventListener('click', function() {
+                  tabBtns.forEach(b => b.classList.remove('active'));
+                  this.classList.add('active');
+                  
+                  const source = this.dataset.source;
+                  updatePlaceholder(source);
+                  
+                  // Clear status and reset button when changing tabs
+                  const statusMessage = document.getElementById('statusMessage');
+                  statusMessage.style.display = 'none';
+                  confirmBtn.textContent = 'Analyze';
+                  confirmBtn.classList.remove('confirmed');
+                  confirmBtn.disabled = false;
+              });
+          });
+          
+          function updatePlaceholder(source) {
+              switch(source) {
+                  case 'youtube':
+                      urlInput.placeholder = 'https://www.youtube.com/@ChannelName or https://www.youtube.com/c/ChannelName';
+                      break;
+                  case 'csv':
+                      urlInput.placeholder = 'Drag and drop CSV file or paste file path';
+                      break;
+              }
+          }
+          
+          // Clear status when user starts typing
+          urlInput.addEventListener('input', function() {
+              const statusMessage = document.getElementById('statusMessage');
+              statusMessage.style.display = 'none';
+              confirmBtn.textContent = 'Analyze';
+              confirmBtn.classList.remove('confirmed');
+              confirmBtn.disabled = false;
+          });
+          
+          // Keyboard shortcut: Enter to confirm
+          urlInput.addEventListener('keypress', function(e) {
+              if (e.key === 'Enter') {
+                  confirmBtn.click();
+              }
+          });
+          
+          // Initialize with YouTube placeholder
+          updatePlaceholder('youtube');
+          
+          // Add click handler for analysis cards (for visual feedback)
+          analysisCards.forEach(card => {
+              card.addEventListener('click', function(e) {
+                  // Only trigger if not disabled and not clicking on the link itself
+                  if (!this.classList.contains('disabled') && e.target !== this.querySelector('.analysis-link')) {
+                      const link = this.querySelector('.analysis-link');
+                      if (link && !link.classList.contains('disabled')) {
+                          // Add visual feedback before navigation
+                          this.style.transform = 'scale(0.98)';
+                          setTimeout(() => {
+                              this.style.transform = '';
+                          }, 200);
+                      }
+                  }
+              });
+          });
       });
     </script>
   </body>
