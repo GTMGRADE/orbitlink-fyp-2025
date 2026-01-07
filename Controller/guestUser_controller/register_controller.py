@@ -9,7 +9,7 @@ class RegisterController:
     def __init__(self):
         self.conn = get_connection()
 
-    def register_user(self, email, username, password, role):
+    def register_user(self, email, username, password):
         """Register a new user in the database"""
         try:
             if not self.conn:
