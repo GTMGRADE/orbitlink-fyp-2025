@@ -205,22 +205,22 @@ def identify_influencers():
 
 @projects_bp.post("/projects/analyze-youtube")
 def analyze_youtube():
-    """Handle YouTube channel analysis request"""
+    """Handle YouTube channel or video analysis request"""
     # Check if user is logged in
     user_id = get_user_id()
     if not user_id:
         return jsonify({"success": False, "error": "Not logged in"}), 401
     
     data = request.get_json()
-    channel_url = data.get('channel_url')
+    youtube_url = data.get('youtube_url') or data.get('channel_url')  # Support both field names
     project_id = data.get('project_id')
     
-    if not channel_url or not project_id:
-        return jsonify({"success": False, "error": "Missing channel URL or project ID"}), 400
+    if not youtube_url or not project_id:
+        return jsonify({"success": False, "error": "Missing YouTube URL or project ID"}), 400
     
     try:
         controller = YouTubeAnalysisController(user_id, project_id)
-        result = controller.analyze_channel(channel_url)
+        result = controller.analyze_youtube(youtube_url)
         
         if result['success']:
             return jsonify({

@@ -635,7 +635,7 @@
           <div class="url-input-section">
             <div class="input-header">
               <h3 id="currentAnalysisTitle">Enter Data Source</h3>
-              <p id="currentAnalysisDesc">Paste the URL of the YouTube channel you want to analyze</p>
+              <p id="currentAnalysisDesc">Paste the URL of a YouTube channel or video you want to analyze</p>
             </div>
             
             <!-- Current Session Display - Simplified Version -->
@@ -654,7 +654,7 @@
                   type="url" 
                   id="youtubeUrl" 
                   class="url-input" 
-                  placeholder="https://www.youtube.com/@ChannelName or https://www.youtube.com/c/ChannelName"
+                  placeholder="https://www.youtube.com/@ChannelName or https://www.youtube.com/watch?v=..."
                   value=""
                 />
                 <button type="button" class="confirm-btn" id="confirmBtn">Analyze</button>
@@ -724,22 +724,23 @@
       </main>
     </div>
     <script>
-      // Function to handle YouTube analysis - PROJECT-SPECIFIC
+      // Function to handle YouTube analysis - UPDATED FOR BOTH VIDEO AND CHANNEL
       async function analyzeYouTubeChannel() {
           const urlInput = document.getElementById('youtubeUrl');
-          const channelUrl = urlInput.value.trim();
+          const youtubeUrl = urlInput.value.trim();
           const confirmBtn = document.getElementById('confirmBtn');
           const statusMessage = document.getElementById('statusMessage');
           const projectId = getCurrentProjectId();
           
-          if (!channelUrl) {
-              showStatus('Please enter a YouTube channel URL', 'error');
+          if (!youtubeUrl) {
+              showStatus('Please enter a YouTube channel or video URL', 'error');
               return;
           }
           
-          // Validate YouTube URL
-          if (!isValidYouTubeUrl(channelUrl)) {
-              showStatus('Please enter a valid YouTube channel URL (e.g., https://www.youtube.com/@ChannelName)', 'error');
+          // Check if it's a valid YouTube URL
+          const youtubePattern = /(youtube\.com|youtu\.be)/;
+          if (!youtubePattern.test(youtubeUrl)) {
+              showStatus('Please enter a valid YouTube URL', 'error');
               return;
           }
           
@@ -757,7 +758,7 @@
                       'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
-                      channel_url: channelUrl,
+                      youtube_url: youtubeUrl,
                       project_id: projectId
                   })
               });
@@ -765,7 +766,12 @@
               const result = await response.json();
               
               if (result.success) {
-                  showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments from ${result.data.videos_analyzed} videos.`, 'success');
+                  const analysisType = result.data.analysis_type || 'channel';
+                  const analysisTitle = analysisType === 'video' 
+                      ? result.data.video_metadata.title 
+                      : result.data.channel_metadata.title;
+                  
+                  showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments.`, 'success');
                   
                   // Store analysis results WITH PROJECT ID
                   sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(result.data));
@@ -817,14 +823,21 @@
           const title = document.getElementById('currentAnalysisTitle');
           const desc = document.getElementById('currentAnalysisDesc');
           
+          // Check if this is a video or channel analysis
+          const analysisData = session.analysis_data || {};
+          const analysisType = analysisData.analysis_type || 'channel';
+          const displayName = analysisType === 'video' 
+              ? `Video: ${analysisData.video_metadata?.title || session.channel_title}`
+              : `Channel: ${session.channel_title}`;
+          
           document.getElementById('sessionChannel').textContent = 
-              `Currently analyzing: ${session.channel_title}`;
+              `Currently analyzing: ${displayName}`;
           
           sessionDisplay.style.display = 'block';
           urlInputSection.style.display = 'none';
           
           title.textContent = 'Analysis Ready!';
-          desc.textContent = `You're analyzing "${session.channel_title}". Select an analysis type below.`;
+          desc.textContent = `You're analyzing "${displayName}". Select an analysis type below.`;
           
           // Enable all analysis cards
           enableAnalysisCards(projectId);
@@ -846,15 +859,20 @@
           const title = document.getElementById('currentAnalysisTitle');
           const desc = document.getElementById('currentAnalysisDesc');
           
-          if (sessionDisplay && data.channel_metadata) {
+          if (sessionDisplay) {
+              const analysisType = data.analysis_type || 'channel';
+              const displayName = analysisType === 'video' 
+                  ? `Video: ${data.video_metadata?.title || 'Unknown Video'}`
+                  : `Channel: ${data.channel_metadata?.title || 'Unknown Channel'}`;
+              
               document.getElementById('sessionChannel').textContent = 
-                  `Currently analyzing: ${data.channel_metadata.title}`;
+                  `Currently analyzing: ${displayName}`;
               
               sessionDisplay.style.display = 'block';
               urlInputSection.style.display = 'none';
               
               title.textContent = 'Analysis Ready!';
-              desc.textContent = `You're analyzing "${data.channel_metadata.title}". Select an analysis type below.`;
+              desc.textContent = `You're analyzing "${displayName}". Select an analysis type below.`;
               
               // Enable all analysis cards
               enableAnalysisCards(projectId);
@@ -888,7 +906,7 @@
                   urlInputSection.style.display = 'block';
                   
                   title.textContent = 'Enter Data Source';
-                  desc.textContent = 'Paste the URL of the YouTube channel you want to analyze';
+                  desc.textContent = 'Paste the URL of a YouTube channel or video you want to analyze';
                   
                   // Disable analysis cards
                   document.querySelectorAll('.analysis-card').forEach(card => {
@@ -903,7 +921,7 @@
                   sessionStorage.removeItem(`youtubeAnalysis_${projectId}`);
                   localStorage.removeItem('currentProjectId');
                   
-                  showStatus('Session cleared. Enter a new channel URL to analyze.', 'info');
+                  showStatus('Session cleared. Enter a new channel or video URL to analyze.', 'info');
               }
           } catch (error) {
               console.error('Error clearing session:', error);
@@ -915,7 +933,7 @@
       function addProjectIdToLink(linkElement, projectId) {
           // If card is disabled, prevent navigation
           if (linkElement.classList.contains('disabled')) {
-              showStatus('Please analyze a YouTube channel first', 'error');
+              showStatus('Please analyze a YouTube channel or video first', 'error');
               return false;
           }
           
@@ -980,14 +998,10 @@
           return projectData ? projectData.dataset.projectId : null;
       }
       
+      // UPDATED: Simple YouTube URL validation for both channel and video URLs
       function isValidYouTubeUrl(url) {
-          const patterns = [
-              /youtube\.com\/channel\//,
-              /youtube\.com\/@/,
-              /youtube\.com\/user\//,
-              /youtube\.com\/c\//
-          ];
-          return patterns.some(pattern => pattern.test(url));
+          const youtubePattern = /(youtube\.com|youtu\.be)/;
+          return youtubePattern.test(url);
       }
       
       function showStatus(message, type) {
@@ -1101,7 +1115,7 @@
           function updatePlaceholder(source) {
               switch(source) {
                   case 'youtube':
-                      urlInput.placeholder = 'https://www.youtube.com/@ChannelName or https://www.youtube.com/c/ChannelName';
+                      urlInput.placeholder = 'https://www.youtube.com/@ChannelName or https://www.youtube.com/watch?v=...';
                       break;
                   case 'csv':
                       urlInput.placeholder = 'Drag and drop CSV file or paste file path';

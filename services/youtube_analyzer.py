@@ -18,7 +18,7 @@ class YouTubeAnalyzer:
         self.youtube = build('youtube', 'v3', developerKey=api_key)
     
     def resolve_channel_id(self, channel_url):
-        """Resolve any YouTube URL to channel ID - EXACT SAME AS COLAB"""
+        """Resolve any YouTube URL to channel ID"""
         patterns = [
             (r"youtube\.com/channel/(UC[\w-]+)", "channel"),
             (r"youtube\.com/user/([\w-]+)", "user"),
@@ -53,8 +53,45 @@ class YouTubeAnalyzer:
         
         raise ValueError("Could not resolve channel URL")
     
+    def extract_video_id(self, video_input: str) -> str:
+        """Extract video ID from various YouTube URL formats"""
+        video_input = video_input.strip()
+
+        # If it looks like just a video ID
+        if re.fullmatch(r"[A-Za-z0-9_-]{8,}", video_input) and "youtube" not in video_input and "youtu.be" not in video_input:
+            return video_input
+
+        # Full YouTube URLs
+        m = re.search(r"v=([A-Za-z0-9_-]{8,})", video_input)
+        if m: 
+            return m.group(1)
+
+        m = re.search(r"youtu\.be/([A-Za-z0-9_-]{8,})", video_input)
+        if m: 
+            return m.group(1)
+
+        m = re.search(r"youtube\.com/shorts/([A-Za-z0-9_-]{8,})", video_input)
+        if m: 
+            return m.group(1)
+
+        raise ValueError("Could not extract video ID from input.")
+    
+    def looks_like_video_input(self, text: str) -> bool:
+        """Return True if input is a video URL or likely a video ID."""
+        t = text.strip()
+
+        # video URLs
+        if "watch?v=" in t or "youtu.be/" in t or "/shorts/" in t:
+            return True
+
+        # likely video id (usually 11 chars, but we allow 8+ to be safe)
+        if re.fullmatch(r"[A-Za-z0-9_-]{8,}", t) and "youtube" not in t:
+            return True
+
+        return False
+    
     def get_channel_metadata(self, channel_id):
-        """Get comprehensive channel information - EXACT SAME AS COLAB"""
+        """Get comprehensive channel information"""
         try:
             response = self.youtube.channels().list(
                 part="snippet,statistics,brandingSettings,topicDetails",
@@ -79,7 +116,7 @@ class YouTubeAnalyzer:
                 'profile_image': item['snippet'].get('thumbnails', {}).get('high', {}).get('url', '')
             }
             
-            # Calculate engagement rate (EXACT SAME AS COLAB)
+            # Calculate engagement rate
             if metadata['subscriber_count'] > 0 and metadata['video_count'] > 0:
                 metadata['engagement_rate'] = (metadata['view_count'] / metadata['subscriber_count']) / metadata['video_count'] * 100
             else:
@@ -92,11 +129,11 @@ class YouTubeAnalyzer:
             return None
     
     def get_channel_videos(self, channel_id, max_videos=30, timeframe_days=180):
-        """Get recent videos with metadata - MATCH COLAB EXACTLY"""
+        """Get recent videos with metadata"""
         videos = []
         next_page_token = None
         
-        # Calculate the publishedAfter date string in ISO 8601 format (SAME AS COLAB)
+        # Calculate the publishedAfter date string in ISO 8601 format
         published_after = (datetime.utcnow() - timedelta(days=timeframe_days)).isoformat() + "Z"
         
         try:
@@ -106,7 +143,7 @@ class YouTubeAnalyzer:
                     channelId=channel_id,
                     type="video",
                     order="date",
-                    publishedAfter=published_after,  # ADD THIS LINE - SAME AS COLAB
+                    publishedAfter=published_after,
                     maxResults=min(50, max_videos - len(videos)),
                     pageToken=next_page_token
                 )
@@ -135,7 +172,7 @@ class YouTubeAnalyzer:
                             'description': video_data['snippet'].get('description', '')
                         }
                         
-                        # Calculate engagement metrics (EXACT SAME AS COLAB)
+                        # Calculate engagement metrics
                         if video_info['views'] > 0:
                             video_info['like_rate'] = (video_info['likes'] / video_info['views']) * 100
                             video_info['comment_rate'] = (video_info['comments'] / video_info['views']) * 100
@@ -156,13 +193,54 @@ class YouTubeAnalyzer:
         
         return videos
     
+    def get_video_metadata(self, video_id):
+        """Get metadata for a single video"""
+        try:
+            response = self.youtube.videos().list(
+                part="snippet,statistics",
+                id=video_id
+            ).execute()
+            
+            if not response.get('items'):
+                return None
+                
+            item = response['items'][0]
+            snippet = item['snippet']
+            stats = item.get('statistics', {})
+            
+            video_info = {
+                'video_id': video_id,
+                'title': snippet.get('title', 'Unknown Title'),
+                'published_at': snippet.get('publishedAt', ''),
+                'views': int(stats.get('viewCount', 0)),
+                'likes': int(stats.get('likeCount', 0)) if 'likeCount' in stats else 0,
+                'comments': int(stats.get('commentCount', 0)) if 'commentCount' in stats else 0,
+                'description': snippet.get('description', ''),
+                'channel_id': snippet.get('channelId', ''),
+                'channel_title': snippet.get('channelTitle', 'Unknown Channel')
+            }
+            
+            # Calculate engagement rate
+            if video_info['views'] > 0:
+                video_info['like_rate'] = (video_info['likes'] / video_info['views']) * 100
+                video_info['comment_rate'] = (video_info['comments'] / video_info['views']) * 100
+            else:
+                video_info['like_rate'] = 0
+                video_info['comment_rate'] = 0
+                
+            return video_info
+            
+        except Exception as e:
+            print(f"Error fetching video metadata: {e}")
+            return None
+    
     def analyze_comments(self, video_id, channel_owner_id, max_comments=2000):
-        """Collect and analyze comments - MATCH COLAB EXACTLY"""
+        """Collect and analyze comments"""
         all_comments = []
         reply_edges = []
         
         try:
-            # Get all comment threads - NO HARD LIMIT LIKE COLAB
+            # Get all comment threads
             next_page_token = None
             comment_count = 0
             
@@ -176,20 +254,19 @@ class YouTubeAnalyzer:
                 ).execute()
                 
                 for thread in response.get('items', []):
-                    # Top-level comment - EXACT SAME AS COLAB
+                    # Top-level comment
                     top_comment = thread['snippet']['topLevelComment']
-                    thread_snippet = thread['snippet']  # This contains totalReplyCount!
+                    thread_snippet = thread['snippet']
                     
                     # Get the total reply count from THREAD level
                     thread_total_reply_count = thread_snippet.get('totalReplyCount', 0)
                     
                     top_data = self._extract_comment_metrics(top_comment, channel_owner_id, is_reply=False)
-                    # IMPORTANT: Add thread-level reply count to top comment (SAME AS COLAB)
                     top_data['total_reply_count'] = thread_total_reply_count
                     all_comments.append(top_data)
                     comment_count += 1
                     
-                    # Get replies - NO LIMIT, GET ALL LIKE COLAB
+                    # Get replies
                     if 'replies' in thread:
                         for reply in thread['replies']['comments']:
                             reply_data = self._extract_comment_metrics(reply, channel_owner_id, is_reply=True)
@@ -203,9 +280,12 @@ class YouTubeAnalyzer:
                                 'video_id': video_id,
                                 'timestamp': reply_data['published_at']
                             })
+                            
+                            if comment_count >= max_comments:
+                                break
                 
                 next_page_token = response.get('nextPageToken')
-                if not next_page_token:
+                if not next_page_token or comment_count >= max_comments:
                     break
                     
         except Exception as e:
@@ -214,7 +294,7 @@ class YouTubeAnalyzer:
         return all_comments, reply_edges
     
     def _extract_comment_metrics(self, comment, channel_owner_id, is_reply=False):
-        """Extract comprehensive metrics from a single comment - EXACT SAME AS COLAB"""
+        """Extract comprehensive metrics from a single comment"""
         snippet = comment['snippet']
         text = snippet.get('textDisplay', '')
         
@@ -245,7 +325,7 @@ class YouTubeAnalyzer:
         return metrics
     
     def _analyze_comment_text(self, text):
-        """Analyze comment text for various metrics - EXACT SAME AS COLAB"""
+        """Analyze comment text for various metrics"""
         analysis = {
             'text_length': len(text),
             'word_count': len(text.split()),
@@ -277,12 +357,12 @@ class YouTubeAnalyzer:
         
         return analysis
     
-    def calculate_influencer_scores(self, all_comments, reply_edges, videos_data):
-        """Calculate comprehensive influencer scores - EXACT SAME FORMULA AS COLAB"""
+    def calculate_influencer_scores(self, all_comments, reply_edges, videos_data, min_comments=3):
+        """Calculate comprehensive influencer scores normalized to 0-10 scale"""
         user_metrics = defaultdict(lambda: {
             'total_comments': 0,
             'total_likes': 0,
-            'total_replies_received': 0,  # Changed from avg_replies_received
+            'total_replies_received': 0,
             'avg_sentiment': 0,
             'unique_videos': set(),
             'comment_lengths': [],
@@ -293,7 +373,7 @@ class YouTubeAnalyzer:
             'author_name': ''
         })
         
-        # Process all comments (EXACT SAME LOGIC AS COLAB)
+        # Process all comments
         for comment in all_comments:
             author_id = comment['author_id']
             metrics = user_metrics[author_id]
@@ -301,7 +381,7 @@ class YouTubeAnalyzer:
             metrics['author_name'] = comment['author_name']
             metrics['total_comments'] += 1
             metrics['total_likes'] += comment['like_count']
-            metrics['total_replies_received'] += comment['total_reply_count']  # TOTAL, not avg
+            metrics['total_replies_received'] += comment['total_reply_count']
             metrics['comment_lengths'].append(comment['text_length'])
             metrics['unique_videos'].add(comment.get('video_id', 'unknown'))
             
@@ -309,43 +389,43 @@ class YouTubeAnalyzer:
             if not comment['is_reply']:
                 metrics['thread_starts'] += 1
             
-            # Channel owner interaction (EXACT SAME LOGIC)
+            # Channel owner interaction
             if comment['is_channel_owner'] and comment['is_reply']:
                 parent_author = next((c['author_id'] for c in all_comments 
                                     if c['comment_id'] == comment['parent_id']), None)
                 if parent_author:
                     user_metrics[parent_author]['channel_owner_replies_to'] += 1
             
-            # Sentiment accumulation (EXACT SAME LOGIC)
+            # Sentiment accumulation
             metrics['avg_sentiment'] = (metrics['avg_sentiment'] * (metrics['total_comments'] - 1) + 
                                        comment['sentiment_polarity']) / metrics['total_comments']
         
-        # Process reply edges for network metrics (EXACT SAME LOGIC)
+        # Process reply edges for network metrics
         for edge in reply_edges:
             user_metrics[edge['to']]['indegree'] += 1
             user_metrics[edge['from']]['outdegree'] += 1
         
-        # Calculate final scores - USING YOUR EXACT COLAB FORMULA
+        # Calculate final scores
         influencers = []
         for author_id, metrics in user_metrics.items():
-            if metrics['total_comments'] < 3:  # Minimum threshold (SAME AS COLAB)
+            if metrics['total_comments'] < min_comments:
                 continue
                 
             # Calculate raw metrics
             avg_comment_length = np.mean(metrics['comment_lengths']) if metrics['comment_lengths'] else 0
             video_participation = len(metrics['unique_videos'])
             
-            # Calculate individual component scores (0-10 scale) - EXACT SAME AS COLAB
+            # Calculate individual component scores (0-10 scale)
             scores = {
                 'engagement_score': min(10, (metrics['total_likes'] + metrics['total_replies_received'] * 2) / 100),
-                'consistency_score': min(10, video_participation * 2),  # 5+ videos gets max score
+                'consistency_score': min(10, video_participation * 2),
                 'network_score': min(10, (metrics['indegree'] + metrics['channel_owner_replies_to'] * 2) / 5),
                 'quality_score': min(10, (avg_comment_length / 50) + abs(metrics['avg_sentiment']) * 5),
                 'activity_score': min(10, (metrics['total_comments'] + metrics['thread_starts']) / 5),
                 'responsiveness_score': min(10, metrics['outdegree'] / 3)
             }
             
-            # Weighted total score (0-10 scale) - EXACT SAME WEIGHTS AS COLAB
+            # Weighted total score (0-10 scale)
             weights = {
                 'engagement_score': 0.25,
                 'consistency_score': 0.20,
@@ -355,17 +435,16 @@ class YouTubeAnalyzer:
                 'responsiveness_score': 0.10
             }
             
-            # YOUR EXACT FORMULA FROM COLAB
             total_score = sum(scores[key] * weights[key] for key in scores)
             
             influencers.append({
                 'author_id': author_id,
                 'author_name': metrics['author_name'],
-                'total_score': round(total_score, 2),  # Rounded to 2 decimal places (SAME AS COLAB)
+                'total_score': round(total_score, 2),
                 **scores,
                 'total_comments': metrics['total_comments'],
                 'total_likes': metrics['total_likes'],
-                'total_replies_received': metrics['total_replies_received'],  # ACTUAL REPLIES, NOT AVG
+                'total_replies_received': metrics['total_replies_received'],
                 'unique_videos': video_participation,
                 'indegree': metrics['indegree'],
                 'outdegree': metrics['outdegree'],
@@ -376,59 +455,164 @@ class YouTubeAnalyzer:
         
         return sorted(influencers, key=lambda x: x['total_score'], reverse=True)
     
-    def analyze_channel(self, channel_url):
-        """Main analysis method - MATCHING COLAB EXACTLY"""
+    def analyze_channel(self, channel_url, progress_callback=None):
+        """Analyze a YouTube channel"""
         try:
+            if progress_callback:
+                progress_callback('Starting channel analysis...', 5)
+            
             # Resolve channel
+            if progress_callback:
+                progress_callback('Resolving channel URL...', 10)
+            
             channel_id = self.resolve_channel_id(channel_url)
             
             # Get channel metadata
+            if progress_callback:
+                progress_callback('Fetching channel information...', 20)
+            
             channel_metadata = self.get_channel_metadata(channel_id)
             if not channel_metadata:
-                return {'error': 'Could not fetch channel metadata'}
+                return {'success': False, 'error': 'Could not fetch channel metadata'}
             
-            # Get recent videos - ANALYZE 30 VIDEOS LIKE COLAB
+            # Get recent videos
+            if progress_callback:
+                progress_callback('Collecting recent videos...', 30)
+            
             videos_data = self.get_channel_videos(channel_id, max_videos=30)
             
             if len(videos_data) == 0:
-                return {'error': 'No videos found for analysis'}
+                return {'success': False, 'error': 'No videos found for analysis'}
             
-            # Analyze comments from each video - ANALYZE ALL VIDEOS LIKE COLAB
+            # Analyze comments from each video
             all_comments = []
             all_edges = []
             
-            print(f"Analyzing {len(videos_data)} videos...")
             for i, video in enumerate(videos_data):
-                print(f"  Video {i+1}/{len(videos_data)}: Collecting comments...")
-                comments, edges = self.analyze_comments(video['video_id'], channel_id)
+                if progress_callback:
+                    progress = 30 + (i / len(videos_data)) * 50
+                    progress_callback(f'Analyzing video {i+1}/{len(videos_data)}...', progress)
+                
+                comments, edges = self.analyze_comments(video['video_id'], channel_id, max_comments=2000)
                 all_comments.extend(comments)
                 all_edges.extend(edges)
                 
                 # Add video ID to comments for tracking
                 for comment in comments[-len(comments):]:
                     comment['video_id'] = video['video_id']
-                
-                # Progress update
-                print(f"    Collected {len(comments)} comments (Total: {len(all_comments)})")
-            
-            print(f"\nTotal comments analyzed: {len(all_comments):,}")
             
             # Calculate influencer scores
-            print("Calculating influencer scores...")
+            if progress_callback:
+                progress_callback('Calculating influencer scores...', 90)
+            
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data)
             
-            return {
+            # Prepare result data
+            result_data = {
                 'success': True,
                 'channel_metadata': channel_metadata,
                 'videos_analyzed': len(videos_data),
                 'total_comments': len(all_comments),
-                'influencers': influencers[:20],  # Top 20 influencers
+                'influencers': influencers[:20],
                 'analysis_time': datetime.now().isoformat(),
-                'video_details': videos_data[:5]  # Include first 5 video details
+                'analysis_type': 'channel'
+            }
+            
+            if progress_callback:
+                progress_callback('Analysis complete!', 100)
+            
+            return {
+                'success': True,
+                'data': result_data
             }
             
         except Exception as e:
-            print(f"Error during analysis: {e}")
+            print(f"Error during channel analysis: {e}")
             import traceback
             traceback.print_exc()
-            return {'error': str(e)}
+            return {'success': False, 'error': str(e)}
+    
+    def analyze_video(self, video_url, progress_callback=None):
+        """Analyze a single YouTube video"""
+        try:
+            if progress_callback:
+                progress_callback('Starting video analysis...', 5)
+            
+            # Extract video ID
+            if progress_callback:
+                progress_callback('Extracting video ID...', 10)
+            
+            video_id = self.extract_video_id(video_url)
+            
+            # Get video metadata
+            if progress_callback:
+                progress_callback('Fetching video information...', 20)
+            
+            video_metadata = self.get_video_metadata(video_id)
+            if not video_metadata:
+                return {'success': False, 'error': 'Could not fetch video metadata'}
+            
+            # Get channel ID from video metadata
+            channel_id = video_metadata['channel_id']
+            
+            # Get channel metadata for context
+            channel_metadata = self.get_channel_metadata(channel_id)
+            
+            # Create videos_data with just this video
+            videos_data = [video_metadata]
+            
+            # Analyze comments
+            if progress_callback:
+                progress_callback('Analyzing comments...', 40)
+            
+            all_comments, all_edges = self.analyze_comments(video_id, channel_id, max_comments=5000)
+            
+            # Add video ID to comments for tracking
+            for comment in all_comments:
+                comment['video_id'] = video_id
+            
+            # Calculate influencer scores (lower min_comments for single video)
+            if progress_callback:
+                progress_callback('Calculating influencer scores...', 80)
+            
+            influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data, min_comments=1)
+            
+            # Prepare result data
+            result_data = {
+                'success': True,
+                'video_metadata': video_metadata,
+                'channel_metadata': channel_metadata,
+                'videos_analyzed': 1,
+                'total_comments': len(all_comments),
+                'influencers': influencers[:20],
+                'analysis_time': datetime.now().isoformat(),
+                'analysis_type': 'video'
+            }
+            
+            if progress_callback:
+                progress_callback('Analysis complete!', 100)
+            
+            return {
+                'success': True,
+                'data': result_data
+            }
+            
+        except Exception as e:
+            print(f"Error during video analysis: {e}")
+            import traceback
+            traceback.print_exc()
+            return {'success': False, 'error': str(e)}
+    
+    def analyze(self, input_url, progress_callback=None):
+        """Analyze YouTube input (auto-detects channel or video)"""
+        try:
+            # Auto-detect if it's a video or channel
+            if self.looks_like_video_input(input_url):
+                print(f"Detected video input: {input_url}")
+                return self.analyze_video(input_url, progress_callback)
+            else:
+                print(f"Detected channel input: {input_url}")
+                return self.analyze_channel(input_url, progress_callback)
+                
+        except Exception as e:
+            return {'success': False, 'error': f'Analysis error: {str(e)}'}

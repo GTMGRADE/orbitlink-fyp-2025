@@ -18,84 +18,20 @@ class YouTubeAnalysisController:
         
         self.analyzer = YouTubeAnalyzer(self.api_key)
     
-    def analyze_channel(self, channel_url, progress_callback=None):
-        """Analyze YouTube channel and save results"""
+    def analyze_youtube(self, input_url, progress_callback=None):
+        """Analyze YouTube channel or video and save results"""
         try:
-            # Run analysis with progress updates
-            if progress_callback:
-                progress_callback('Starting analysis...', 5)
+            # Run analysis with auto-detection
+            result = self.analyzer.analyze(input_url, progress_callback)
             
-            # Resolve channel
-            if progress_callback:
-                progress_callback('Resolving channel URL...', 10)
-            
-            channel_id = self.analyzer.resolve_channel_id(channel_url)
-            
-            # Get channel metadata
-            if progress_callback:
-                progress_callback('Fetching channel information...', 20)
-            
-            channel_metadata = self.analyzer.get_channel_metadata(channel_id)
-            if not channel_metadata:
-                return {'success': False, 'error': 'Could not fetch channel metadata'}
-            
-            # Get recent videos
-            if progress_callback:
-                progress_callback('Collecting recent videos...', 30)
-            
-            videos_data = self.analyzer.get_channel_videos(channel_id, max_videos=30)
-            
-            if len(videos_data) == 0:
-                return {'success': False, 'error': 'No videos found for analysis'}
-            
-            # Analyze comments from each video
-            all_comments = []
-            all_edges = []
-            
-            for i, video in enumerate(videos_data):
-                if progress_callback:
-                    progress = 30 + (i / len(videos_data)) * 50
-                    progress_callback(f'Analyzing video {i+1}/{len(videos_data)}...', progress)
+            if result['success']:
+                # Save results to database
+                self.save_analysis_result(input_url, result['data'])
                 
-                comments, edges = self.analyzer.analyze_comments(video['video_id'], channel_id, max_comments=2000)
-                all_comments.extend(comments)
-                all_edges.extend(edges)
-                
-                # Add video ID to comments for tracking
-                for comment in comments[-len(comments):]:
-                    comment['video_id'] = video['video_id']
+                # Save to session storage for immediate access
+                self.save_to_session_storage(input_url, result['data'])
             
-            # Calculate influencer scores
-            if progress_callback:
-                progress_callback('Calculating influencer scores...', 90)
-            
-            influencers = self.analyzer.calculate_influencer_scores(all_comments, all_edges, videos_data)
-            
-            # Prepare result data
-            result_data = {
-                'success': True,
-                'channel_metadata': channel_metadata,
-                'videos_analyzed': len(videos_data),
-                'total_comments': len(all_comments),
-                'influencers': influencers[:20],
-                'analysis_time': datetime.now().isoformat(),
-                'project_id': self.project_id,  # Include project ID in result
-                'channel_url': channel_url
-            }
-            
-            # Save results to database
-            self.save_analysis_result(channel_url, result_data)
-            
-            # Save to session storage for immediate access
-            self.save_to_session_storage(channel_url, result_data)
-            
-            if progress_callback:
-                progress_callback('Analysis complete!', 100)
-            
-            return {
-                'success': True,
-                'data': result_data
-            }
+            return result
             
         except Exception as e:
             print(f"Error during analysis: {e}")
@@ -103,7 +39,15 @@ class YouTubeAnalysisController:
             traceback.print_exc()
             return {'success': False, 'error': str(e)}
     
-    def save_analysis_result(self, channel_url, result):
+    def analyze_channel(self, channel_url, progress_callback=None):
+        """Legacy method for channel analysis (backward compatibility)"""
+        return self.analyzer.analyze_channel(channel_url, progress_callback)
+    
+    def analyze_video(self, video_url, progress_callback=None):
+        """Legacy method for video analysis"""
+        return self.analyzer.analyze_video(video_url, progress_callback)
+    
+    def save_analysis_result(self, input_url, result):
         """Save analysis results to database with project-specific storage"""
         conn = get_connection()
         if not conn:
@@ -112,21 +56,13 @@ class YouTubeAnalysisController:
         try:
             cursor = conn.cursor()
             
-            # Create analysis table if not exists
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS youtube_analysis (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    user_id INT NOT NULL,
-                    project_id INT NOT NULL,
-                    channel_url VARCHAR(500) NOT NULL,
-                    channel_title VARCHAR(255),
-                    analysis_data JSON,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
-                    INDEX idx_user_project (user_id, project_id)
-                )
-            """)
+            # Get title based on analysis type
+            if result.get('analysis_type') == 'video':
+                title = result.get('video_metadata', {}).get('title', 'Video Analysis')
+                channel_title = result.get('video_metadata', {}).get('channel_title', 'Unknown')
+            else:
+                title = result.get('channel_metadata', {}).get('title', 'Channel Analysis')
+                channel_title = title
             
             # Insert analysis result with project_id
             cursor.execute("""
@@ -134,9 +70,9 @@ class YouTubeAnalysisController:
                 VALUES (%s, %s, %s, %s, %s)
             """, (
                 self.user_id,
-                self.project_id,  # Project-specific storage
-                channel_url,
-                result['channel_metadata']['title'],
+                self.project_id,
+                input_url,
+                channel_title,
                 json.dumps(result)
             ))
             
@@ -150,19 +86,27 @@ class YouTubeAnalysisController:
             cursor.close()
             conn.close()
     
-    def save_to_session_storage(self, channel_url, result_data):
+    def save_to_session_storage(self, input_url, result_data):
         """Save analysis to session storage for immediate frontend access"""
         try:
             session_controller = AnalysisSessionController(self.user_id, self.project_id)
+            
+            # Get title based on analysis type
+            if result_data.get('analysis_type') == 'video':
+                title = result_data.get('video_metadata', {}).get('title', 'Video Analysis')
+            else:
+                title = result_data.get('channel_metadata', {}).get('title', 'Channel Analysis')
+            
             session_controller.save_analysis_session(
-                channel_url,
-                result_data['channel_metadata']['title'],
+                input_url,
+                title,
                 result_data
             )
             print(f"Analysis saved to session storage for project_id: {self.project_id}")
         except Exception as e:
             print(f"Error saving to session storage: {e}")
     
+    # ... rest of your existing methods remain the same ...
     def get_recent_analyses(self, limit=5):
         """Get recent analyses for this specific project"""
         conn = get_connection()
@@ -221,7 +165,7 @@ class YouTubeAnalysisController:
         """Get current analysis session for this project"""
         try:
             session_controller = AnalysisSessionController(self.user_id, self.project_id)
-            session_data = session_controller.get_analysis_session()
+            session_data = session_controller.get_current_session()
             if session_data:
                 print(f"Retrieved session data for project_id: {self.project_id}")
             return session_data
@@ -233,7 +177,7 @@ class YouTubeAnalysisController:
         """Clear analysis session for this project"""
         try:
             session_controller = AnalysisSessionController(self.user_id, self.project_id)
-            session_controller.clear_analysis_session()
+            session_controller.clear_session()
             print(f"Cleared session data for project_id: {self.project_id}")
         except Exception as e:
             print(f"Error clearing session data: {e}")
