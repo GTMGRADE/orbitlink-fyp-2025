@@ -207,101 +207,160 @@
         transform: translateY(-1px);
       }
 
-      /* Projects Table - More Compact */
-      .projects-card {
+      /* Projects Grid Container - Glass Panel Design */
+      .projects-container {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
-        overflow: hidden;
+        padding: 1.5rem;
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      .table-container {
-        overflow-x: auto;
+      /* Projects Grid - 3 columns */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 1200px) {
+        .projects-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Project Card - Glass Effect Design */
+      .project-card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0.02) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        min-height: 280px;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
       }
 
-      .projects-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 700px;
+      .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12) 0%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
       }
 
-      .projects-table thead {
-        background: rgba(242, 72, 34, 0.12);
-        border-bottom: 2px solid rgba(242, 72, 34, 0.25);
+      /* Project Header */
+      .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
       }
 
-      .projects-table th {
-        padding: 1rem 1.2rem; /* Reduced */
-        text-align: left;
+      .project-name {
+        font-size: 1.3rem;
         font-weight: 700;
-        font-size: 0.95rem; /* Reduced */
         color: white;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        line-height: 1.2;
+        flex: 1;
       }
 
-      .projects-table tbody tr {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.15s;
-      }
-
-      .projects-table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.04);
-      }
-
-      .projects-table td {
-        padding: 0.9rem 1.2rem; /* Reduced */
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 0.9rem; /* Reduced */
-      }
-
-      .projects-table td:first-child {
-        font-weight: 600;
-        color: white;
-      }
-
-      .project-link {
+      .project-open-btn {
         color: #ff3333;
         text-decoration: none;
         font-weight: 600;
-        transition: all 0.15s;
-        padding: 0.2rem 0.4rem;
-        border-radius: 3px;
-      }
-
-      .project-link:hover {
-        color: #cc0000;
-        background: rgba(255, 51, 51, 0.08);
-      }
-
-      /* Action Buttons - More Compact */
-      .action-cell {
-        text-align: right;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        background: rgba(255, 51, 51, 0.1);
+        border: 1px solid rgba(255, 51, 51, 0.2);
         white-space: nowrap;
+        margin-left: 0.8rem;
       }
 
-      .action-form {
-        display: inline-block;
-        margin-left: 0.4rem;
+      .project-open-btn:hover {
+        background: rgba(255, 51, 51, 0.2);
+        transform: translateY(-1px);
+      }
+
+      /* Project Description */
+      .project-description {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        line-clamp: 3;    
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
+      /* Project Metadata */
+      .project-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      /* Action Buttons - NEW LAYOUT */
+      .project-actions {
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Rename Section - Full width at top */
+      .rename-section {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        width: 100%;
       }
 
       .rename-input {
-        width: 160px; /* Reduced */
-        padding: 0.4rem 0.6rem; /* Reduced */
+        flex: 1;
+        padding: 0.5rem 0.8rem;
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 5px;
+        border-radius: 6px;
         color: white;
-        font-size: 0.85rem; /* Reduced */
-        margin-right: 0.4rem;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        min-width: 0; /* Allows flex item to shrink */
       }
 
       .rename-input:focus {
         outline: none;
-        border-color: #ff3333;
+        border-color: #3b82f6;
         background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
       }
 
       .rename-input::placeholder {
@@ -309,34 +368,50 @@
         font-size: 0.8rem;
       }
 
+      /* Bottom Action Buttons - Side by side */
+      .bottom-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      /* Action Buttons */
       .action-btn {
-        padding: 0.4rem 0.8rem; /* Reduced */
-        border-radius: 5px;
+        padding: 0.5rem 0.8rem;
+        border-radius: 6px;
         border: none;
         cursor: pointer;
         font-weight: 600;
-        font-size: 0.8rem; /* Reduced */
+        font-size: 0.8rem;
         transition: all 0.15s;
-        margin: 0 0.15rem;
+        white-space: nowrap;
+        min-width: 80px;
+        text-align: center;
       }
 
       .action-btn.rename-btn {
         background: rgba(59, 130, 246, 0.9);
         color: white;
+        border: 1px solid rgba(59, 130, 246, 0.5);
+        flex-shrink: 0;
       }
 
       .action-btn.archive-btn {
         background: rgba(245, 158, 11, 0.9);
         color: white;
+        border: 1px solid rgba(245, 158, 11, 0.5);
       }
 
       .action-btn.delete-btn {
         background: rgba(239, 68, 68, 0.9);
         color: white;
+        border: 1px solid rgba(239, 68, 68, 0.5);
       }
 
       .action-btn:hover {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       }
 
       .action-btn:active {
@@ -355,11 +430,41 @@
         background: rgb(220, 38, 38);
       }
 
-      /* Empty State - Improved Design */
+      /* Responsive adjustments for actions */
+      @media (max-width: 1200px) {
+        .project-actions {
+          gap: 0.6rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .project-actions {
+          gap: 0.5rem;
+        }
+        
+        .rename-section {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .bottom-actions {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .action-btn {
+          width: 100%;
+        }
+      }
+
+      /* Empty State - Updated Design */
       .empty-state {
         text-align: center;
-        padding: 3rem 1.5rem;
+        padding: 4rem 1.5rem;
         color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
       }
 
       .empty-icon {
@@ -486,16 +591,12 @@
           width: 100%;
         }
 
-        .projects-table {
-          min-width: 600px;
-        }
-
-        .table-container {
-          border-radius: 10px;
+        .projects-container {
+          padding: 1rem;
         }
 
         .empty-state {
-          padding: 2rem 1rem;
+          padding: 3rem 1rem;
         }
 
         .empty-icon {
@@ -525,35 +626,23 @@
           font-size: 0.85rem;
         }
 
-        .projects-table th,
-        .projects-table td {
-          padding: 0.7rem 0.8rem;
+        .project-card {
+          padding: 1.2rem;
+          min-height: 260px;
         }
 
-        .action-cell {
-          display: flex;
+        .project-header {
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.8rem;
         }
 
-        .action-form {
+        .project-open-btn {
+          align-self: flex-start;
           margin-left: 0;
-          width: 100%;
-        }
-
-        .rename-input {
-          width: 100%;
-          margin-right: 0;
-          margin-bottom: 0.4rem;
-        }
-
-        .action-btn {
-          width: 100%;
-          margin: 0;
         }
 
         .empty-state {
-          padding: 1.5rem 1rem;
+          padding: 2rem 1rem;
         }
 
         .empty-icon {
@@ -593,7 +682,6 @@
         <a href="{{ url_for('projects.projects_create_get') }}" class="create-btn">Create +</a>
         <nav class="menu">
           <a href="{{ url_for('projects.dashboard') }}" class="active">Dashboard</a>
-          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
           <a href="#">Support</a>
           <a href="#">Setting</a>
         </nav>
@@ -622,55 +710,72 @@
           </form>
         </div>
 
-        <!-- Projects Table -->
-        <div class="projects-card">
-          <div class="table-container">
-            {% if projects %}
-            <table class="projects-table">
-              <thead>
-                <tr>
-                  <th>Project Name</th>
-                  <th>Last Opened</th>
-                  <th style="text-align: right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for p in projects %}
-                <tr>
-                  <td>
-                    <a href="{{ url_for('projects.projects_open', pid=p.id) }}" class="project-link">{{ p.name }}</a>
-                  </td>
-                  <td>{{ p.last_opened }}</td>
-                  <td class="action-cell">
-                    <form class="action-form" method="post" action="{{ url_for('projects.projects_rename', pid=p.id) }}">
-                      <input
-                        class="rename-input"
-                        name="new_name"
-                        placeholder="New project name"
-                        autocomplete="off"
-                      />
-                      <button class="action-btn rename-btn" type="submit">Rename</button>
-                    </form>
-                    <form class="action-form" method="post" action="{{ url_for('projects.projects_archive', pid=p.id) }}">
-                      <button class="action-btn archive-btn" type="submit">Archive</button>
-                    </form>
-                    <form class="action-form" method="post" action="{{ url_for('projects.projects_delete', pid=p.id) }}">
-                      <button class="action-btn delete-btn" type="submit">Delete</button>
-                    </form>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            {% else %}
-            <div class="empty-state">
-              <div class="empty-icon">📁</div>
-              <h3>No Projects Yet</h3>
-              <p>You haven't created any projects yet. Start by creating your first project to analyze social networks and gain insights.</p>
-              <a href="{{ url_for('projects.projects_create_get') }}" class="create-project-link">Create First Project</a>
+        <!-- Projects Grid Container -->
+        <div class="projects-container">
+          {% if projects %}
+          <div class="projects-grid">
+            {% for p in projects %}
+            <div class="project-card">
+              <!-- Project Header -->
+              <div class="project-header">
+                <h3 class="project-name">{{ p.name }}</h3>
+                <a href="{{ url_for('projects.projects_open', pid=p.id) }}" class="project-open-btn">Open →</a>
+              </div>
+              
+              <!-- Project Description -->
+              {% if p.description %}
+              <p class="project-description">{{ p.description }}</p>
+              {% else %}
+              <p class="project-description" style="color: rgba(255, 255, 255, 0.5); font-style: italic;">
+                No description provided
+              </p>
+              {% endif %}
+              
+              <!-- Project Metadata -->
+              <div class="project-meta">
+                <div class="meta-item">
+                  <span>📅</span>
+                  <span>Last opened: {{ p.last_opened }}</span>
+                </div>
+              </div>
+              
+              <!-- Action Buttons - NEW LAYOUT -->
+              <div class="project-actions">
+                <!-- Rename Section - Full width at top -->
+                <form class="action-form rename-section" method="post" action="{{ url_for('projects.projects_rename', pid=p.id) }}">
+                  <input
+                    class="rename-input"
+                    name="new_name"
+                    placeholder="New name..."
+                    autocomplete="off"
+                  />
+                  <button class="action-btn rename-btn" type="submit">Rename</button>
+                </form>
+                
+                <!-- Bottom Action Buttons - Side by side -->
+                <div class="bottom-actions">
+                  <!-- Archive Button - Bottom Left -->
+                  <form class="action-form" method="post" action="{{ url_for('projects.projects_archive', pid=p.id) }}">
+                    <button class="action-btn archive-btn" type="submit">Archive</button>
+                  </form>
+                  
+                  <!-- Delete Button - Bottom Right -->
+                  <form class="action-form" method="post" action="{{ url_for('projects.projects_delete', pid=p.id) }}">
+                    <button class="action-btn delete-btn" type="submit">Delete</button>
+                  </form>
+                </div>
+              </div>
             </div>
-            {% endif %}
+            {% endfor %}
           </div>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">📁</div>
+            <h3>No Projects Yet</h3>
+            <p>You haven't created any projects yet. Start by creating your first project to analyze social networks and gain insights.</p>
+            <a href="{{ url_for('projects.projects_create_get') }}" class="create-project-link">Create First Project</a>
+          </div>
+          {% endif %}
         </div>
       </main>
     </div>
@@ -704,7 +809,60 @@
           searchInput.focus();
         }
 
-        // Remove the JavaScript alignment function since CSS handles it now
+        // Add hover effects to project cards
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+          card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+          });
+          
+          card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+
+        // Add animation for empty state
+        const emptyState = document.querySelector('.empty-state');
+        if (emptyState) {
+          emptyState.style.opacity = '0';
+          emptyState.style.transform = 'translateY(20px)';
+          emptyState.style.transition = 'all 0.5s ease';
+          
+          setTimeout(() => {
+            emptyState.style.opacity = '1';
+            emptyState.style.transform = 'translateY(0)';
+          }, 300);
+        }
+
+        // Add focus effect to rename inputs
+        const renameInputs = document.querySelectorAll('.rename-input');
+        renameInputs.forEach(input => {
+          input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+            this.parentElement.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.2)';
+          });
+          
+          input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+            this.parentElement.style.boxShadow = 'none';
+          });
+        });
+        
+        // Add visual feedback for bottom buttons
+        const actionButtons = document.querySelectorAll('.archive-btn, .delete-btn');
+        actionButtons.forEach(button => {
+          button.addEventListener('mouseenter', function() {
+            if (this.classList.contains('archive-btn')) {
+              this.parentElement.style.transform = 'translateX(-2px)';
+            } else if (this.classList.contains('delete-btn')) {
+              this.parentElement.style.transform = 'translateX(2px)';
+            }
+          });
+          
+          button.addEventListener('mouseleave', function() {
+            this.parentElement.style.transform = 'translateX(0)';
+          });
+        });
       });
     </script>
   </body>
