@@ -109,6 +109,35 @@
         margin-bottom: 2rem;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
       }
+
+      /* Loading State */
+      .loading-state {
+        text-align: center;
+        padding: 3rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #f24822;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Dashboard Image */
+      .dashboard-image {
+        width: 100%;
+        border-radius: 12px;
+        margin: 1rem 0;
+      }
+
       .main-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -235,73 +264,249 @@
         <div class="header">
           <div class="title">Detect Communities/Clusters</div>
           <div class="header-buttons">
-            <a href="{{ url_for('projects.project_sna') }}">Back</a>
+            <a
+              href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', '') }}"
+              class="back-button"
+              >Back</a
+            >
           </div>
         </div>
 
         <div class="container">
-          <h1 class="page-title">Detect Communities/Clusters</h1>
+          <!-- Loading indicator -->
+          <div id="loadingIndicator" class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading community detection data...</p>
+          </div>
 
-          <div class="main-grid">
-            <div>
+          <!-- Main content (hidden initially) -->
+          <div id="mainContent" style="display: none">
+            <h1 class="page-title">Detect Communities/Clusters</h1>
+
+            <!-- Dashboard visualization will be loaded here -->
+            <div id="dashboardContainer">
+              <img
+                id="dashboardImage"
+                class="dashboard-image"
+                style="display: none"
+              />
+            </div>
+
+            <!-- Fallback static content -->
+            <div id="fallbackContent" style="display: none">
+              <div class="main-grid">
+                <div>
+                  <div class="card">
+                    <div class="algorithm-card">
+                      <div class="algorithm-title">
+                        Algorithm: Decision Trees
+                      </div>
+                      <div class="algorithm-name">Decision Trees</div>
+                    </div>
+                    <div style="margin-top: 1.5rem">
+                      <div
+                        style="
+                          font-size: 0.9rem;
+                          color: #b0c4de;
+                          margin-bottom: 1rem;
+                        "
+                      >
+                        Network Graph(Communities)
+                      </div>
+                      <div class="network-graph">
+                        Network Visualization<br />(Interactive Graph)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="metric-card">
+                    <div class="metric-label">Modularity</div>
+                    <div class="metric-label">Score</div>
+                    <div class="metric-value">0.62</div>
+                    <div class="metric-change">+0.07 / last run</div>
+                  </div>
+
+                  <div class="metric-card">
+                    <div class="metric-label">Communities</div>
+                    <div class="metric-value">14</div>
+                    <div class="metric-change">+ 2 new</div>
+                  </div>
+                </div>
+              </div>
+
               <div class="card">
-                <div class="algorithm-card">
-                  <div class="algorithm-title">Algorithm: Decision Trees</div>
-                  <div class="algorithm-name">Decision Trees</div>
+                <div
+                  style="
+                    font-weight: 700;
+                    margin-bottom: 1.5rem;
+                    font-size: 1.1rem;
+                  "
+                >
+                  Top Communities
                 </div>
-                <div style="margin-top: 1.5rem">
-                  <div
-                    style="
-                      font-size: 0.9rem;
-                      color: #b0c4de;
-                      margin-bottom: 1rem;
-                    "
-                  >
-                    Network Graph(Communities)
-                  </div>
-                  <div class="network-graph">
-                    Network Visualization<br />(Interactive Graph)
-                  </div>
+                <div class="communities-grid">
+                  <button class="community-btn">Community A | 66...</button>
+                  <button class="community-btn">Community B | 50 Nodes</button>
+                  <button class="community-btn">Community C | 42...</button>
+                  <button class="community-btn">Outliers | 21 Nodes</button>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <div class="metric-card">
-                <div class="metric-label">Modularity</div>
-                <div class="metric-label">Score</div>
-                <div class="metric-value">0.62</div>
-                <div class="metric-change">+0.07 / last run</div>
-              </div>
-
-              <div class="metric-card">
-                <div class="metric-label">Communities</div>
-                <div class="metric-value">14</div>
-                <div class="metric-change">+ 2 new</div>
+              <div class="tip">
+                <strong>Tip:</strong> click a cluster to view its influencers,
+                keywords, and cross-community bridges.
               </div>
             </div>
-          </div>
-
-          <div class="card">
-            <div
-              style="font-weight: 700; margin-bottom: 1.5rem; font-size: 1.1rem"
-            >
-              Top Communities
-            </div>
-            <div class="communities-grid">
-              <button class="community-btn">Community A | 66...</button>
-              <button class="community-btn">Community B | 50 Nodes</button>
-              <button class="community-btn">Community C | 42...</button>
-              <button class="community-btn">Outliers | 21 Nodes</button>
-            </div>
-          </div>
-
-          <div class="tip">
-            <strong>Tip:</strong> click a cluster to view its influencers,
-            keywords, and cross-community bridges.
           </div>
         </div>
       </main>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loadingIndicator = document.getElementById("loadingIndicator");
+        const mainContent = document.getElementById("mainContent");
+        const dashboardImage = document.getElementById("dashboardImage");
+        const dashboardContainer =
+          document.getElementById("dashboardContainer");
+        const fallbackContent = document.getElementById("fallbackContent");
+
+        // Get project ID from URL
+        const projectId = new URLSearchParams(window.location.search).get(
+          "project_id"
+        );
+
+        async function loadCommunityData() {
+          if (!projectId) {
+            showFallback();
+            return;
+          }
+
+          try {
+            // First try to load from sessionStorage (data from YouTube analysis)
+            const youtubeAnalysis = sessionStorage.getItem(
+              `youtubeAnalysis_${projectId}`
+            );
+
+            if (youtubeAnalysis) {
+              const data = JSON.parse(youtubeAnalysis);
+
+              if (
+                data.community_detection &&
+                data.community_detection.num_communities > 0
+              ) {
+                // Display community data from analysis
+                displayCommunityData(data.community_detection);
+                loadingIndicator.style.display = "none";
+                mainContent.style.display = "block";
+                return;
+              }
+            }
+
+            // If no data in session, try to fetch from server
+            const response = await fetch(
+              `/projects/${projectId}/community-data`
+            );
+            const data = await response.json();
+
+            if (data.success && data.dashboard_image) {
+              // Display the dashboard visualization
+              dashboardImage.src = `data:image/png;base64,${data.dashboard_image}`;
+              dashboardImage.style.display = "block";
+
+              loadingIndicator.style.display = "none";
+              mainContent.style.display = "block";
+
+              console.log("Community data loaded:", data);
+            } else {
+              showFallback();
+            }
+          } catch (error) {
+            console.error("Error loading community data:", error);
+            showFallback();
+          }
+        }
+
+        function displayCommunityData(communityData) {
+          // Create a summary display
+          const summaryHtml = `
+            <div class="card" style="margin-bottom: 2rem;">
+              <h2 style="margin-bottom: 1rem; font-size: 1.5rem;">Community Detection Results</h2>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div class="metric-card">
+                  <div class="metric-label">Total Communities</div>
+                  <div class="metric-value">${
+                    communityData.num_communities
+                  }</div>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-label">Modularity Score</div>
+                  <div class="metric-value">${communityData.modularity}</div>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-label">Largest Community</div>
+                  <div class="metric-value">${
+                    communityData.communities[0]?.size || 0
+                  }</div>
+                  <div class="metric-change">members</div>
+                </div>
+              </div>
+            </div>
+            
+            ${
+              communityData.network_visualization
+                ? `
+              <div class="card" style="margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Community Network Visualization</h3>
+                <img src="data:image/png;base64,${communityData.network_visualization}" 
+                     style="width: 100%; border-radius: 8px; background: white;" 
+                     alt="Community Network Graph" />
+              </div>
+            `
+                : ""
+            }
+            
+            <div class="card">
+              <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Top Communities</h3>
+              <div class="communities-grid">
+                ${communityData.communities
+                  .slice(0, 6)
+                  .map(
+                    (comm) => `
+                  <div class="community-btn" style="text-align: left; padding: 1.2rem;">
+                    <div style="font-weight: 700; margin-bottom: 0.5rem;">Community ${
+                      comm.community_id
+                    }</div>
+                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">
+                      👥 ${comm.size} members<br/>
+                      💬 ${comm.total_comments} comments<br/>
+                      😊 Sentiment: ${
+                        comm.avg_sentiment > 0 ? "👍" : "👎"
+                      } ${Math.abs(comm.avg_sentiment).toFixed(2)}
+                    </div>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </div>
+          `;
+
+          dashboardContainer.innerHTML = summaryHtml;
+        }
+
+        function showFallback() {
+          loadingIndicator.style.display = "none";
+          mainContent.style.display = "block";
+          fallbackContent.style.display = "block";
+          dashboardImage.style.display = "none";
+        }
+
+        // Load data on page load
+        loadCommunityData();
+      });
+    </script>
   </body>
 </html>
