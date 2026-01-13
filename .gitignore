@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -108,3 +109,18 @@ dmypy.log
 Thumbs.db
 ehthumbs.db
 
+
+# Logs
+*.log
+logs/
+*.out
+*.err
+# Temporary files
+*.tmp   
+tmp/
+*.temp
+# Backup files
+*~.bak
+*.swp   
+# Coverage reports
+.coverage

@@ -6,7 +6,6 @@ class WebsiteContentEntity:
     Stores content in-memory so updates persist during runtime.
     """
 
-    # In-memory pages/content (you can add more pages later)
     _PAGES = {
         1: {
             "page_id": 1,

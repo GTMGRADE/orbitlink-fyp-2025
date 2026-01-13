@@ -3,246 +3,1162 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project SNA - Analysis</title>
+    <title>Project SNA - OrbitLink</title>
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
+
       body {
         font-family: Arial, sans-serif;
-        background: #0f1c3d;
-        color: #fff;
+        background-color: #1E3167; /* Same blue as dashboard/landing */
+        color: white;
         min-height: 100vh;
       }
+
+      /* Unified Layout - Matching Dashboard */
       .layout {
         display: grid;
         grid-template-columns: 240px 1fr;
         min-height: 100vh;
       }
+
+      /* Sidebar - More Compact (Matching Dashboard) */
       .sidebar {
-        background: #f24822;
-        padding: 1rem 0.8rem;
+        background: #F24822; /* Same orange */
+        padding: 1.2rem 0.8rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.2rem;
+        position: relative;
       }
+
+      /* Brand - More Compact, Aligned with Dashboard */
+      .brand-section {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        margin-bottom: 0.2rem;
+      }
+
       .brand {
-        font-weight: 800;
-        font-size: 1.4rem;
-        margin: 0.5rem 0.4rem;
+        font-size: 1.9rem;
+        font-weight: bold;
+        color: black;
+        line-height: 1;
       }
+
+      /* Create Button - More Compact (Matching Dashboard) */
       .create-btn {
         background: #14294a;
-        color: #fff;
-        border-radius: 16px;
-        padding: 1rem;
+        color: white;
+        border-radius: 10px;
+        padding: 0.9rem 0.8rem;
         text-align: center;
-        font-weight: 800;
-      }
-      .create-btn a {
-        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
         text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
+
+      .create-btn:hover {
+        background: #0f1c3d;
+        transform: translateY(-1px);
+      }
+
+      /* Menu - Moved Higher (Matching Dashboard) */
       .menu {
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
+        margin-top: 0.3rem;
       }
+
       .menu a {
         display: block;
-        padding: 0.7rem 0.8rem;
+        padding: 0.75rem 0.8rem;
         background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        color: white;
         text-decoration: none;
-        border-radius: 6px;
-        font-style: italic;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.9rem;
       }
+
       .menu a.active {
-        background: rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.15);
       }
+
+      .menu a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(3px);
+      }
+
+      /* Main Content Area - Matching Dashboard Blue */
       .content {
-        background: #0f1c3d;
-        padding: 2rem;
+        background: #1E3167;
+        padding: 1.5rem 2rem;
       }
+
+      /* Header - More Compact, Better Alignment (Matching Dashboard) */
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
       }
+
       .title {
         font-size: 1.8rem;
-        font-weight: 800;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 0.3px;
+        line-height: 1;
+        padding-top: 0.2rem;
       }
-      .header-buttons {
-        display: flex;
-        gap: 0.8rem;
-      }
-      .header-buttons a {
-        background: #ff3333;
-        color: #000;
-        border-radius: 6px;
-        padding: 0.7rem 1.5rem;
+
+      .profile-btn {
         text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s;
+        color: black;
+        font-weight: 700;
+        padding: 0.7rem 1.5rem;
+        background: #ff3333;
+        border-radius: 6px;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        line-height: 1;
+        height: fit-content;
+        margin-top: 0.2rem;
       }
-      .header-buttons a:hover {
+
+      .profile-btn:hover {
         background: #cc0000;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        color: white;
+        transform: translateY(-2px);
       }
+
+      .profile-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Main Container - Matching Dashboard Style */
       .container {
-        background: linear-gradient(135deg, #1a3a52 0%, #14294a 100%);
-        padding: 3rem 2rem;
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         max-width: 1200px;
         margin: 0 auto;
       }
-      .page-title {
-        text-align: center;
-        font-size: 2rem;
-        font-weight: 900;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      }
-      .subtitle {
-        text-align: center;
-        font-size: 1.1rem;
-        color: #b0c4de;
-        margin-bottom: 3rem;
-      }
-      .config-section {
-        background: #1e3a52;
-        border-radius: 16px;
+      
+      /* URL Input Section - Cleaner Design */
+      .url-input-section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
         padding: 2rem;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .config-title {
+      
+      .input-header {
         text-align: center;
-        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .input-header h3 {
+        font-size: 1.4rem;
+        color: white;
+        margin-bottom: 0.8rem;
         font-weight: 700;
-        margin-bottom: 2rem;
-        color: #b0c4de;
       }
-      .options-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-      }
-      .option-btn {
-        padding: 1.2rem 2rem;
-        border-radius: 25px;
-        border: 2px solid #00bfff;
-        background: rgba(0, 191, 255, 0.1);
-        color: #00bfff;
+      
+      .input-header p {
+        color: rgba(255, 255, 255, 0.8);
         font-size: 1rem;
+        line-height: 1.5;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      
+      .input-group {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      
+      .url-input {
+        flex: 1;
+        padding: 1rem 1.2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+      
+      .url-input:focus {
+        outline: none;
+        border-color: #ff3333;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 2px rgba(255, 51, 51, 0.2);
+      }
+      
+      .url-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      
+      .confirm-btn {
+        padding: 1rem 2rem;
+        background: #ff3333;
+        color: white;
+        border: none;
+        border-radius: 8px;
         font-weight: 700;
+        font-size: 1rem;
         cursor: pointer;
         transition: all 0.3s;
-        text-decoration: none;
-        display: inline-block;
+        white-space: nowrap;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .confirm-btn:hover {
+        background: #cc0000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      
+      .confirm-btn.confirmed {
+        background: #27ca3f;
+      }
+      
+      .confirm-btn.confirmed:hover {
+        background: #1fa832;
+        box-shadow: 0 4px 8px rgba(39, 202, 63, 0.3);
+      }
+      
+      /* Current Session Display - Updated CSS */
+      .current-session-display {
+        background: rgba(39, 202, 63, 0.1);
+        border: 1px solid rgba(39, 202, 63, 0.3);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 2rem;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .session-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .session-channel {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #27ca3f;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .session-channel:before {
+        content: "▶️";
+        font-size: 0.9rem;
+      }
+
+      .clear-session-btn {
+        background: rgba(255, 51, 51, 0.2);
+        color: #ff3333;
+        border: 1px solid rgba(255, 51, 51, 0.3);
+        border-radius: 4px;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+
+      .clear-session-btn:hover {
+        background: rgba(255, 51, 51, 0.3);
+      }
+      
+      /* Status Message */
+      .status-message {
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        display: none;
+        margin-top: 1rem;
+        animation: fadeIn 0.3s ease;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .status-success {
+        background: rgba(39, 202, 63, 0.2);
+        border: 1px solid #27ca3f;
+        color: #27ca3f;
+      }
+      
+      .status-error {
+        background: rgba(255, 51, 51, 0.2);
+        border: 1px solid #ff3333;
+        color: #ff3333;
+      }
+      
+      .status-info {
+        background: rgba(66, 153, 225, 0.2);
+        border: 1px solid #4299e1;
+        color: #4299e1;
+      }
+      
+      /* Data Source Tabs */
+      .data-source-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .tab-btn {
+        padding: 0.8rem 1.5rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+      }
+      
+      .tab-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-2px);
+      }
+      
+      .tab-btn.active {
+        background: rgba(255, 51, 51, 0.2);
+        border-color: #ff3333;
+        color: #ff3333;
+      }
+      
+      /* Analysis Section */
+      .analysis-section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .section-title {
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: white;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .analysis-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .analysis-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
         text-align: center;
       }
-      .option-btn:hover {
-        background: rgba(0, 191, 255, 0.2);
-        transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
+      
+      .analysis-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       }
-      .option-btn.primary {
-        /* background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-        border-color: #ff1493;
-        color: #fff; */
-        border: 2px solid #00bfff;
-        background: rgba(0, 191, 255, 0.1);
-        color: #00bfff;
+      
+      .analysis-card.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
       }
-      .option-btn.primary:hover {
-        transform: translateY(-3px);
-        /* box-shadow: 0 4px 12px rgba(255, 20, 147, 0.4); */
-        box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
+      
+      .analysis-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.8rem;
       }
+      
+      .analysis-desc {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+      }
+      
+      .analysis-link {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background: #ff3333;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .analysis-link:hover {
+        background: #cc0000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      
+      .analysis-link.disabled {
+        background: #666;
+        cursor: not-allowed;
+      }
+      
+      .analysis-link.disabled:hover {
+        transform: none;
+        background: #666;
+        box-shadow: none;
+      }
+      
+      /* Progress Spinner */
+      .progress-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* Responsive Design - Matching Dashboard */
+      @media (max-width: 1024px) {
+        .layout {
+          grid-template-columns: 220px 1fr;
+        }
+        
+        .content {
+          padding: 1.2rem 1.5rem;
+        }
+        
+        .title {
+          font-size: 1.6rem;
+        }
+        
+        .brand {
+          font-size: 1.7rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .layout {
           grid-template-columns: 1fr;
         }
-        .options-grid {
+
+        .sidebar {
+          flex-direction: row;
+          align-items: center;
+          padding: 0.8rem 1rem;
+          gap: 1rem;
+        }
+
+        .brand-section {
+          margin-bottom: 0;
+          padding: 0.3rem 0.5rem;
+        }
+
+        .brand {
+          font-size: 1.7rem;
+        }
+
+        .create-btn {
+          padding: 0.7rem 0.8rem;
+          font-size: 0.9rem;
+        }
+
+        .menu {
+          display: none;
+        }
+
+        .content {
+          padding: 1rem 1.2rem;
+        }
+
+        .header {
+          flex-direction: column;
+          gap: 0.8rem;
+          align-items: flex-start;
+          margin-bottom: 1.2rem;
+          padding-bottom: 0.8rem;
+        }
+
+        .title {
+          font-size: 1.5rem;
+          padding-top: 0;
+        }
+
+        .profile-btn {
+          align-self: flex-start;
+          padding: 0.6rem 1.2rem;
+          font-size: 0.9rem;
+          margin-top: 0;
+        }
+
+        .analysis-grid {
           grid-template-columns: 1fr;
         }
+
         .container {
           padding: 1.5rem;
+        }
+
+        .input-group {
+          flex-direction: column;
+        }
+
+        .confirm-btn {
+          width: 100%;
+        }
+
+        .data-source-tabs {
+          flex-direction: column;
+        }
+
+        .tab-btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .content {
+          padding: 0.8rem 1rem;
+        }
+
+        .title {
+          font-size: 1.4rem;
+        }
+
+        .profile-btn {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+        
+        .container {
+          padding: 1.2rem;
+        }
+        
+        .url-input-section,
+        .analysis-section {
+          padding: 1.5rem;
+        }
+        
+        .session-info {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-start;
+        }
+        
+        .clear-session-btn {
+          align-self: flex-end;
         }
       }
     </style>
   </head>
   <body>
+    <!-- Add project data element for storing project ID -->
+    <div id="projectData" data-project-id="{{ project_id if project_id else 1 }}" style="display: none;"></div>
+    
     <div class="layout">
       <aside class="sidebar">
-        <div class="brand">OrbitLink</div>
-        <div class="create-btn">
-          <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
+        <div class="brand-section">
+          <div class="brand">OrbitLink</div>
         </div>
+        <a href="{{ url_for('projects.projects_create_get') }}" class="create-btn">Create +</a>
         <nav class="menu">
-          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
-          <a href="{{ url_for('projects.project_sna') }}" class="active"
-            >Analysis</a
-          >
-          <a href="#">Support</a>
-          <a href="#">Setting</a>
+            <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
+            <!-- <a href="{{ url_for('projects.projects_list') }}">Projects</a> -->
+            <!-- <a href="{{ url_for('projects.project_sna') }}?project_id={{ project_id if project_id else '' }}"  -->
+              <!-- class="active">Analysis</a> -->
+            <a href="#">Support</a>
+            <a href="#">Setting</a>
         </nav>
       </aside>
 
       <main class="content">
+        <!-- Header - Now properly aligned with OrbitLink logo -->
         <div class="header">
-          <div class="title">Project SNA</div>
-          <div class="header-buttons">
-            <a href="{{ url_for('projects.data_import') }}">Back</a>
-          </div>
+          <div class="title">Project Analysis</div>
+          <!-- <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a> -->
+          <!-- <a href="{{ url_for('projects.dashboard') }}"class="profile-btn">Home</a> -->
         </div>
 
         <div class="container">
-          <h1 class="page-title">Project SNA</h1>
-          <p class="subtitle">Specify the Analysis Configuration</p>
+          <!-- Data Input Section -->
+          <div class="url-input-section">
+            <div class="input-header">
+              <h3 id="currentAnalysisTitle">Enter Data Source</h3>
+              <p id="currentAnalysisDesc">Paste the URL of a YouTube channel or video you want to analyze</p>
+            </div>
+            
+            <!-- Current Session Display - Simplified Version -->
+            <div id="currentSession" class="current-session-display" style="display: none;">
+              <div class="session-info">
+                <span class="session-channel" id="sessionChannel"></span>
+                <button class="clear-session-btn" id="clearSessionBtn">× Clear</button>
+              </div>
+              <!-- REMOVED: session-actions div -->
+            </div>
+            
+            <!-- URL Input (hidden when session exists) -->
+            <div id="urlInputSection">
+              <div class="input-group">
+                <input 
+                  type="url" 
+                  id="youtubeUrl" 
+                  class="url-input" 
+                  placeholder="https://www.youtube.com/@ChannelName or https://www.youtube.com/watch?v=..."
+                  value=""
+                />
+                <button type="button" class="confirm-btn" id="confirmBtn">Analyze</button>
+              </div>
+              
+              <!-- Data source tabs -->
+              <div class="data-source-tabs">
+                <button class="tab-btn active" data-source="youtube">YouTube</button>
+                <button class="tab-btn" data-source="csv">CSV Upload</button>
+              </div>
+            </div>
+            
+            <div id="statusMessage" class="status-message"></div>
+          </div>
 
-          <div class="config-section">
-            <div class="options-grid">
-              <a
-                href="{{ url_for('projects.sentiment_analysis') }}"
-                class="option-btn primary"
-                >Sentiment Analysis</a
-              >
-              {% if session.get('user_type') == 'business' %}
-              <a
-                href="{{ url_for('projects.identify_influencers') }}"
-                class="option-btn"
-                >Identify Key Influencers</a
-              >
-              <a
-                href="{{ url_for('projects.detect_communities') }}"
-                class="option-btn"
-                >Detect Communities/Clusters</a
-              >
-              {% endif %}
-              <a
-                href="{{ url_for('projects.data_monitoring') }}"
-                class="option-btn"
-                >Data monitoring</a
-              >
-              <a
-                href="{{ url_for('projects.historical_analysis') }}"
-                class="option-btn"
-                >Historical Data analysis</a
-              >
+          <!-- Analysis Options Section -->
+          <div class="analysis-section">
+            <h2 class="section-title">Select Analysis Type</h2>
+            <div class="analysis-grid">
+              <!-- Sentiment Analysis Card -->
+              <div class="analysis-card disabled" id="sentimentCard">
+                <h3 class="analysis-name">Sentiment Analysis</h3>
+                <p class="analysis-desc">Analyze opinions and track sentiment shifts over time to understand public perception</p>
+                <a href="{{ url_for('projects.sentiment_analysis') }}" 
+                   class="analysis-link disabled" 
+                   id="sentimentLink">Open Analysis</a>
+              </div>
+
+              <!-- Data Monitoring Card -->
+              <div class="analysis-card disabled" id="monitoringCard">
+                <h3 class="analysis-name">Data Monitoring</h3>
+                <p class="analysis-desc">Track follower dynamics, post performance, and engagement metrics in real-time</p>
+                <a href="{{ url_for('projects.data_monitoring') }}" 
+                   class="analysis-link disabled" 
+                   id="monitoringLink">Open Analysis</a>
+              </div>
+
+              <!-- Historical Analysis Card -->
+              <div class="analysis-card disabled" id="historicalCard">
+                <h3 class="analysis-name">Historical Analysis</h3>
+                <p class="analysis-desc">Analyze long-term trends, follower growth, and historical campaign performance</p>
+                <a href="{{ url_for('projects.historical_analysis') }}" 
+                   class="analysis-link disabled" 
+                   id="historicalLink">Open Analysis</a>
+              </div>
+
+              <!-- Influencer Detection Card -->
+              <div class="analysis-card disabled" id="influencersCard">
+                <h3 class="analysis-name">Identify Influencers</h3>
+                <p class="analysis-desc">Identify key influencers and high-impact accounts driving conversations</p>
+                <a href="{{ url_for('projects.identify_influencers') }}" 
+                   class="analysis-link disabled" 
+                   id="influencersLink">Open Analysis</a>
+              </div>
+
+              <!-- Community Detection Card -->
+              <div class="analysis-card disabled" id="communitiesCard">
+                <h3 class="analysis-name">Detect Communities</h3>
+                <p class="analysis-desc">Detect subgroups and analyze information flows between different community segments</p>
+                <a href="{{ url_for('projects.detect_communities') }}" 
+                   class="analysis-link disabled" 
+                   id="communitiesLink">Open Analysis</a>
+              </div>
             </div>
           </div>
         </div>
       </main>
     </div>
+    <script>
+      // Function to handle YouTube analysis - UPDATED FOR BOTH VIDEO AND CHANNEL
+      async function analyzeYouTubeChannel() {
+          const urlInput = document.getElementById('youtubeUrl');
+          const youtubeUrl = urlInput.value.trim();
+          const confirmBtn = document.getElementById('confirmBtn');
+          const statusMessage = document.getElementById('statusMessage');
+          const projectId = getCurrentProjectId();
+          
+          if (!youtubeUrl) {
+              showStatus('Please enter a YouTube channel or video URL', 'error');
+              return;
+          }
+          
+          // Check if it's a valid YouTube URL
+          const youtubePattern = /(youtube\.com|youtu\.be)/;
+          if (!youtubePattern.test(youtubeUrl)) {
+              showStatus('Please enter a valid YouTube URL', 'error');
+              return;
+          }
+          
+          // Show detailed loading state
+          confirmBtn.textContent = 'Analyzing...';
+          confirmBtn.disabled = true;
+          statusMessage.textContent = 'Starting analysis... This may take 2-3 minutes.';
+          statusMessage.className = 'status-message status-info';
+          statusMessage.style.display = 'block';
+          
+          try {
+              const response = await fetch('/projects/analyze-youtube', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      youtube_url: youtubeUrl,
+                      project_id: projectId
+                  })
+              });
+              
+              const result = await response.json();
+              
+              if (result.success) {
+                  const analysisType = result.data.analysis_type || 'channel';
+                  const analysisTitle = analysisType === 'video' 
+                      ? result.data.video_metadata.title 
+                      : result.data.channel_metadata.title;
+                  
+                  showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments.`, 'success');
+                  
+                  // Store analysis results WITH PROJECT ID
+                  sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(result.data));
+                  
+                  // Enable all analysis cards
+                  enableAnalysisCards(projectId);
+                  
+                  // Show current session
+                  await loadCurrentSession(projectId);
+                  
+                  // Update button state
+                  confirmBtn.textContent = 'Analyzed ✓';
+                  confirmBtn.classList.add('confirmed');
+              } else {
+                  showStatus(`❌ Analysis failed: ${result.error}`, 'error');
+                  confirmBtn.textContent = 'Try Again';
+                  confirmBtn.disabled = false;
+              }
+              
+          } catch (error) {
+              console.error('Analysis error:', error);
+              showStatus('❌ Connection error. Please check your internet and try again.', 'error');
+              confirmBtn.textContent = 'Try Again';
+              confirmBtn.disabled = false;
+          }
+      }
+      
+      // Load current session from server - PROJECT-SPECIFIC
+      async function loadCurrentSession(projectId) {
+          try {
+              const currentProjectId = projectId || getCurrentProjectId();
+              const response = await fetch(`/projects/${currentProjectId}/current-session`);
+              const session = await response.json();
+              
+              if (session && session.channel_title) {
+                  showCurrentSession(session, currentProjectId);
+                  return true;
+              }
+              return false;
+          } catch (error) {
+              console.error('Error loading session:', error);
+              return false;
+          }
+      }
+      
+      function showCurrentSession(session, projectId) {
+          const sessionDisplay = document.getElementById('currentSession');
+          const urlInputSection = document.getElementById('urlInputSection');
+          const title = document.getElementById('currentAnalysisTitle');
+          const desc = document.getElementById('currentAnalysisDesc');
+          
+          // Check if this is a video or channel analysis
+          const analysisData = session.analysis_data || {};
+          const analysisType = analysisData.analysis_type || 'channel';
+          const displayName = analysisType === 'video' 
+              ? `Video: ${analysisData.video_metadata?.title || session.channel_title}`
+              : `Channel: ${session.channel_title}`;
+          
+          document.getElementById('sessionChannel').textContent = 
+              `Currently analyzing: ${displayName}`;
+          
+          sessionDisplay.style.display = 'block';
+          urlInputSection.style.display = 'none';
+          
+          title.textContent = 'Analysis Ready!';
+          desc.textContent = `You're analyzing "${displayName}". Select an analysis type below.`;
+          
+          // Enable all analysis cards
+          enableAnalysisCards(projectId);
+          
+          // Store project ID for analysis pages
+          localStorage.setItem('currentProjectId', projectId);
+          
+          // Also store in session storage for immediate access
+          const youtubeAnalysis = sessionStorage.getItem(`youtubeAnalysis_${projectId}`);
+          if (!youtubeAnalysis && session.analysis_data) {
+              sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(session.analysis_data));
+          }
+      }
+      
+      // Function to show stored analysis session
+      function showStoredAnalysisSession(projectId, data) {
+          const sessionDisplay = document.getElementById('currentSession');
+          const urlInputSection = document.getElementById('urlInputSection');
+          const title = document.getElementById('currentAnalysisTitle');
+          const desc = document.getElementById('currentAnalysisDesc');
+          
+          if (sessionDisplay) {
+              const analysisType = data.analysis_type || 'channel';
+              const displayName = analysisType === 'video' 
+                  ? `Video: ${data.video_metadata?.title || 'Unknown Video'}`
+                  : `Channel: ${data.channel_metadata?.title || 'Unknown Channel'}`;
+              
+              document.getElementById('sessionChannel').textContent = 
+                  `Currently analyzing: ${displayName}`;
+              
+              sessionDisplay.style.display = 'block';
+              urlInputSection.style.display = 'none';
+              
+              title.textContent = 'Analysis Ready!';
+              desc.textContent = `You're analyzing "${displayName}". Select an analysis type below.`;
+              
+              // Enable all analysis cards
+              enableAnalysisCards(projectId);
+              
+              const confirmBtn = document.getElementById('confirmBtn');
+              if (confirmBtn) {
+                  confirmBtn.textContent = 'Analyzed ✓';
+                  confirmBtn.classList.add('confirmed');
+              }
+          }
+      }
+      
+      async function clearCurrentSession() {
+          if (!confirm('Clear current analysis session? You\'ll need to re-analyze to view results.')) {
+              return;
+          }
+          
+          try {
+              const projectId = getCurrentProjectId();
+              const response = await fetch(`/projects/${projectId}/clear-session`, {
+                  method: 'POST'
+              });
+          
+              if (response.ok) {
+                  const sessionDisplay = document.getElementById('currentSession');
+                  const urlInputSection = document.getElementById('urlInputSection');
+                  const title = document.getElementById('currentAnalysisTitle');
+                  const desc = document.getElementById('currentAnalysisDesc');
+                  
+                  sessionDisplay.style.display = 'none';
+                  urlInputSection.style.display = 'block';
+                  
+                  title.textContent = 'Enter Data Source';
+                  desc.textContent = 'Paste the URL of a YouTube channel or video you want to analyze';
+                  
+                  // Disable analysis cards
+                  document.querySelectorAll('.analysis-card').forEach(card => {
+                      card.classList.add('disabled');
+                  });
+                  
+                  document.querySelectorAll('.analysis-link').forEach(link => {
+                      link.classList.add('disabled');
+                  });
+                  
+                  // Clear stored project ID and analysis data for THIS PROJECT
+                  sessionStorage.removeItem(`youtubeAnalysis_${projectId}`);
+                  localStorage.removeItem('currentProjectId');
+                  
+                  showStatus('Session cleared. Enter a new channel or video URL to analyze.', 'info');
+              }
+          } catch (error) {
+              console.error('Error clearing session:', error);
+              showStatus('Error clearing session', 'error');
+          }
+      }
+      
+      // Helper function to append project ID to links - PROJECT-SPECIFIC
+      function addProjectIdToLink(linkElement, projectId) {
+          // If card is disabled, prevent navigation
+          if (linkElement.classList.contains('disabled')) {
+              showStatus('Please analyze a YouTube channel or video first', 'error');
+              return false;
+          }
+          
+          const currentProjectId = projectId || getCurrentProjectId();
+          if (currentProjectId) {
+              const currentHref = linkElement.getAttribute('href');
+              const separator = currentHref.includes('?') ? '&' : '?';
+              linkElement.setAttribute('href', `${currentHref}${separator}project_id=${currentProjectId}`);
+              
+              // Store in localStorage for the analysis page to use
+              localStorage.setItem('currentProjectId', currentProjectId);
+              
+              // Also store in sessionStorage for immediate access
+              const analysisData = sessionStorage.getItem(`youtubeAnalysis_${currentProjectId}`);
+              if (analysisData) {
+                  sessionStorage.setItem('youtubeAnalysis', analysisData);
+              }
+          }
+          return true;
+      }
+      
+      // Function to enable analysis cards - Check for PROJECT-SPECIFIC data
+      function enableAnalysisCards(projectId) {
+          const currentProjectId = projectId || getCurrentProjectId();
+          const hasAnalysisData = sessionStorage.getItem(`youtubeAnalysis_${currentProjectId}`) !== null;
+          
+          if (hasAnalysisData) {
+              const analysisCards = document.querySelectorAll('.analysis-card');
+              const analysisLinks = document.querySelectorAll('.analysis-link');
+              
+              analysisCards.forEach(card => {
+                  card.classList.remove('disabled');
+              });
+              
+              analysisLinks.forEach(link => {
+                  link.classList.remove('disabled');
+                  // Add click handler to append project ID
+                  link.onclick = function(e) {
+                      return addProjectIdToLink(this, currentProjectId);
+                  };
+              });
+          }
+      }
+      
+      // Helper function to get project ID from URL or data element
+      function getCurrentProjectId() {
+          // First try to get from URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlProjectId = urlParams.get('project_id');
+          
+          if (urlProjectId) {
+              // Store in the data element for consistency
+              const projectData = document.getElementById('projectData');
+              if (projectData) {
+                  projectData.dataset.projectId = urlProjectId;
+              }
+              return urlProjectId;
+          }
+          
+          // Then try from data element
+          const projectData = document.getElementById('projectData');
+          return projectData ? projectData.dataset.projectId : null;
+      }
+      
+      // UPDATED: Simple YouTube URL validation for both channel and video URLs
+      function isValidYouTubeUrl(url) {
+          const youtubePattern = /(youtube\.com|youtu\.be)/;
+          return youtubePattern.test(url);
+      }
+      
+      function showStatus(message, type) {
+          const statusMessage = document.getElementById('statusMessage');
+          statusMessage.textContent = message;
+          statusMessage.className = 'status-message';
+          statusMessage.classList.add(`status-${type}`);
+          statusMessage.style.display = 'block';
+          
+          // Auto-hide success messages after 8 seconds
+          if (type === 'success') {
+              setTimeout(() => {
+                  if (statusMessage.textContent.includes('✓ Analysis completed!')) {
+                      // Don't hide if we're showing success message with data
+                      return;
+                  }
+                  statusMessage.style.display = 'none';
+              }, 8000);
+          }
+      }
+      
+      document.addEventListener('DOMContentLoaded', function() {
+          const urlInput = document.getElementById('youtubeUrl');
+          const confirmBtn = document.getElementById('confirmBtn');
+          const tabBtns = document.querySelectorAll('.tab-btn');
+          const analysisLinks = document.querySelectorAll('.analysis-link');
+          const analysisCards = document.querySelectorAll('.analysis-card');
+          const clearSessionBtn = document.getElementById('clearSessionBtn');
+          
+          // Get current project ID from URL or localStorage
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlProjectId = urlParams.get('project_id');
+          const storedProjectId = localStorage.getItem('currentProjectId');
+          const currentProjectId = urlProjectId || storedProjectId || getCurrentProjectId();
+          
+          // Store project ID in both localStorage and the data element
+          if (currentProjectId) {
+              localStorage.setItem('currentProjectId', currentProjectId);
+              const projectData = document.getElementById('projectData');
+              if (projectData) {
+                  projectData.dataset.projectId = currentProjectId;
+              }
+          }
+          
+          console.log('Current Project ID:', currentProjectId);
+          
+          // Load current session for THIS PROJECT on page load
+          if (currentProjectId) {
+              loadCurrentSession(currentProjectId).then(success => {
+                  if (success) {
+                      console.log('Session loaded successfully');
+                  } else {
+                      console.log('No session found for project');
+                      // Check if we have stored analysis data
+                      checkForStoredAnalysis(currentProjectId);
+                  }
+              });
+          }
+          
+          // Function to check for stored analysis data
+          async function checkForStoredAnalysis(projectId) {
+              try {
+                  const projectAnalysis = sessionStorage.getItem(`youtubeAnalysis_${projectId}`);
+                  if (projectAnalysis) {
+                      const data = JSON.parse(projectAnalysis);
+                      if (data.total_comments) {
+                          // We have analysis data, show session and enable cards
+                          showStoredAnalysisSession(projectId, data);
+                      }
+                  }
+              } catch (e) {
+                  console.error('Error checking stored analysis:', e);
+              }
+          }
+          
+          // Add event listener for clear session button
+          if (clearSessionBtn) {
+              clearSessionBtn.addEventListener('click', clearCurrentSession);
+          }
+          
+          // Add event listener for confirm button - now using analyzeYouTubeChannel
+          confirmBtn.addEventListener('click', function() {
+              const activeTab = document.querySelector('.tab-btn.active').dataset.source;
+              
+              if (activeTab === 'youtube') {
+                  analyzeYouTubeChannel();
+              } else {
+                  // Handle CSV upload (simulate processing for now)
+                  showStatus('CSV upload functionality coming soon!', 'error');
+              }
+          });
+          
+          // Tab selection
+          tabBtns.forEach(btn => {
+              btn.addEventListener('click', function() {
+                  tabBtns.forEach(b => b.classList.remove('active'));
+                  this.classList.add('active');
+                  
+                  const source = this.dataset.source;
+                  updatePlaceholder(source);
+                  
+                  // Clear status and reset button when changing tabs
+                  const statusMessage = document.getElementById('statusMessage');
+                  statusMessage.style.display = 'none';
+                  confirmBtn.textContent = 'Analyze';
+                  confirmBtn.classList.remove('confirmed');
+                  confirmBtn.disabled = false;
+              });
+          });
+          
+          function updatePlaceholder(source) {
+              switch(source) {
+                  case 'youtube':
+                      urlInput.placeholder = 'https://www.youtube.com/@ChannelName or https://www.youtube.com/watch?v=...';
+                      break;
+                  case 'csv':
+                      urlInput.placeholder = 'Drag and drop CSV file or paste file path';
+                      break;
+              }
+          }
+          
+          // Clear status when user starts typing
+          urlInput.addEventListener('input', function() {
+              const statusMessage = document.getElementById('statusMessage');
+              statusMessage.style.display = 'none';
+              confirmBtn.textContent = 'Analyze';
+              confirmBtn.classList.remove('confirmed');
+              confirmBtn.disabled = false;
+          });
+          
+          // Keyboard shortcut: Enter to confirm
+          urlInput.addEventListener('keypress', function(e) {
+              if (e.key === 'Enter') {
+                  confirmBtn.click();
+              }
+          });
+          
+          // Initialize with YouTube placeholder
+          updatePlaceholder('youtube');
+          
+          // Add click handler for analysis cards (for visual feedback)
+          analysisCards.forEach(card => {
+              card.addEventListener('click', function(e) {
+                  // Only trigger if not disabled and not clicking on the link itself
+                  if (!this.classList.contains('disabled') && e.target !== this.querySelector('.analysis-link')) {
+                      const link = this.querySelector('.analysis-link');
+                      if (link && !link.classList.contains('disabled')) {
+                          // Add visual feedback before navigation
+                          this.style.transform = 'scale(0.98)';
+                          setTimeout(() => {
+                              this.style.transform = '';
+                          }, 200);
+                      }
+                  }
+              });
+          });
+      });
+    </script>
   </body>
 </html>
