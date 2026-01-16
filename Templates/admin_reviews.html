@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Reviews</title>
+    <style>
+      :root {
+        --navy: #1E3167;
+        --navy-deep: #14294a;
+        --orange: #F24822;
+        --red: #ff3333;
+        --red-dark: #cc0000;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --text-light: rgba(255, 255, 255, 0.9);
+        --text-muted: rgba(255, 255, 255, 0.7);
+        --glass-bg: rgba(255, 255, 255, 0.07);
+        --glass-border: rgba(255, 255, 255, 0.12);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--navy);
+        color: white;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      /* Navigation Bar - Consistent with admin_users */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 3%;
+        background-color: var(--navy);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+      }
+
+      /* Right-side navigation container */
+      .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      /* Admin tabs - on the right side */
+      .admin-nav-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-right: 0.8rem;
+        padding-right: 0.8rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .nav-tab {
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+
+      .nav-tab:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .nav-tab.active {
+        background-color: var(--red);
+        color: black;
+        border-color: var(--red);
+      }
+
+      /* Logout button */
+      .nav-logout {
+        text-decoration: none;
+        color: black;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: var(--red);
+        white-space: nowrap;
+      }
+
+      .nav-logout:hover {
+        background-color: var(--red-dark);
+        transform: translateY(-2px);
+      }
+
+      /* Main Content Container */
+      .main-container {
+        padding: 2rem 3%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* Page Header */
+      .page-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+      }
+
+      .page-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-description {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Reviews Container - Glass Effect Design */
+      .reviews-container {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        margin-bottom: 2rem;
+      }
+
+      /* Reviews Grid - 3 columns like admin_users */
+      .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      @media (max-width: 1200px) {
+        .reviews-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .reviews-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Review Card - Glass Effect Design */
+      .review-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.8rem;
+        color: white;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        min-height: 220px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* Stars Rating */
+      .stars {
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        margin-bottom: 1.2rem;
+        color: #FFD700;
+      }
+
+      /* Review Message */
+      .review-message {
+        flex-grow: 1;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+        font-size: 0.95rem;
+        color: var(--text-light);
+      }
+
+      /* Review Footer */
+      .review-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1.2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .review-author {
+        font-style: italic;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .review-date {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        opacity: 0.8;
+      }
+
+      /* Statistics Section */
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .stats-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .stat-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-3px);
+      }
+
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--orange);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      /* Footer - Consistent with other pages */
+      footer {
+        margin-top: 4rem;
+        padding: 2rem 3%;
+        background-color: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      footer p {
+        color: var(--text-muted);
+        margin: 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .navbar {
+          padding: 1rem 5%;
+          flex-wrap: wrap;
+          gap: 0.8rem;
+        }
+        
+        .logo {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 0.5rem;
+        }
+        
+        .navbar-right {
+          width: 100%;
+          justify-content: center;
+        }
+        
+        .admin-nav-tabs {
+          margin-right: 0.5rem;
+          padding-right: 0.5rem;
+        }
+        
+        .nav-tab {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.85rem;
+        }
+        
+        .nav-logout {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+        
+        .reviews-container {
+          padding: 1.8rem;
+        }
+        
+        .page-title {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 1.5rem 5%;
+        }
+
+        .reviews-container {
+          padding: 1.5rem;
+        }
+
+        .review-card {
+          padding: 1.5rem;
+          min-height: 200px;
+        }
+
+        .stars {
+          font-size: 1.2rem;
+          margin-bottom: 1rem;
+        }
+
+        .review-message {
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar-right {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .admin-nav-tabs {
+          margin-right: 0;
+          padding-right: 0;
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          padding-bottom: 0.5rem;
+          margin-bottom: 0.5rem;
+          width: 100%;
+          justify-content: center;
+        }
+        
+        .nav-tab {
+          flex: 1;
+          text-align: center;
+          padding: 0.6rem;
+        }
+        
+        .reviews-container {
+          padding: 1.2rem;
+        }
+
+        .review-card {
+          padding: 1.2rem;
+        }
+
+        .review-footer {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-start;
+        }
+        
+        .review-date {
+          align-self: flex-end;
+        }
+        
+        .stat-value {
+          font-size: 2rem;
+        }
+      }
+
+      /* Animation for cards */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .review-card {
+        animation: fadeInUp 0.5s ease-out forwards;
+      }
+
+      .review-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+
+      .review-card:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+
+      /* Empty State */
+      .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar - Consistent with admin_users -->
+    <nav class="navbar">
+      <a href="{{ url_for('admin_ui.admin_home') }}" class="logo">OrbitLink</a>
+      
+      <div class="navbar-right">
+        <!-- Admin tabs on the right side -->
+        <div class="admin-nav-tabs">
+          <a href="{{ url_for('admin_ui.admin_users_page') }}" class="nav-tab">Users</a>
+          <a href="{{ url_for('admin_ui.admin_reviews_page') }}" class="nav-tab active">Reviews</a>
+          <a href="{{ url_for('admin_ui.admin_edit_website_page') }}" class="nav-tab">Edit Website</a>
+        </div>
+        
+        <!-- Logout button -->
+        <a href="{{ url_for('user.logout') }}" class="nav-logout">Logout</a>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Customer Reviews</h1>
+        <p class="page-description">View and manage customer feedback and ratings</p>
+      </div>
+
+      <!-- Reviews Container - Glass Effect Design -->
+      <div class="reviews-container">
+        <!-- Statistics Section -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-value">4.8</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Total Reviews</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Positive Feedback</div>
+          </div>
+        </div>
+
+        <!-- Reviews Grid - 3 columns like admin_users -->
+        <div class="reviews-grid">
+          <!-- Review 1 -->
+          <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-message">
+              This app makes social network analysis much easier to understand. The visualisations are clean and very helpful.
+            </p>
+            <div class="review-footer">
+              <span class="review-author">~ Grace Fu</span>
+              <span class="review-date">2025/Dec/11</span>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-message">
+              I like how the app shows trends and communities clearly. It helped me gain insights faster than manual analysis.
+            </p>
+            <div class="review-footer">
+              <span class="review-author">~ Denise Phua</span>
+              <span class="review-date">2025/Dec/14</span>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-message">
+              The features are well-organised and practical for real projects. Progress indicators also make long analyses less confusing.
+            </p>
+            <div class="review-footer">
+              <span class="review-author">~ Rachel Ong</span>
+              <span class="review-date">2025/Dec/15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 OrbitLink Admin Panel. All rights reserved.</p>
+      <p>Contact: support@orbitlink.com</p>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Add interactive effects to review cards
+        const reviewCards = document.querySelectorAll('.review-card');
+        
+        reviewCards.forEach(card => {
+          // Add click effect for potential future interactions
+          card.addEventListener('click', function() {
+            this.style.transform = 'translateY(-2px) scale(1.02)';
+            setTimeout(() => {
+              this.style.transform = 'translateY(-5px)';
+            }, 150);
+          });
+          
+          // Add keyboard navigation support
+          card.setAttribute('tabindex', '0');
+          card.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              this.click();
+            }
+          });
+        });
+        
+        // Animate statistics cards on scroll
+        const observerOptions = {
+          threshold: 0.5,
+          rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, observerOptions);
+        
+        // Observe stat cards for animation
+        document.querySelectorAll('.stat-card').forEach(card => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          card.style.transition = 'all 0.5s ease-out';
+          observer.observe(card);
+        });
+        
+        // Simple filter functionality for potential future use
+        console.log('Admin Reviews page loaded successfully.');
+      });
+    </script>
+  </body>
+</html>

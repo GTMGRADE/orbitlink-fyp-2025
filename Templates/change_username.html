@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Change Username - OrbitLink</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1E3167;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Navigation Bar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 3%;
+        background-color: #1E3167;
+        flex-shrink: 0;
+      }
+
+      .logo {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: rgb(0, 0, 0);
+        font-weight: 600;
+        padding: 0.7rem 1.5rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: #ff3333;
+      }
+
+      .nav-links a:hover {
+        background-color: #cc0000;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Main Content - Perfectly positioned */
+      .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem 3%;
+        margin-bottom: 50px;
+      }
+
+      .unified-container {
+        width: 100%;
+        max-width: 800px;
+        background: linear-gradient(135deg, #1a3a52 0%, #14294a 100%);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      /* Header Section */
+      .container-header {
+        background-color: #F24822;
+        padding: 1.8rem 2rem;
+        color: black;
+      }
+
+      .container-header h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+      }
+
+      .container-header p {
+        font-size: 1rem;
+        color: rgba(0, 0, 0, 0.9);
+      }
+
+      /* Main Content Area */
+      .container-content {
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      /* Left Column */
+      .info-section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .info-section h2 {
+        font-size: 1.3rem;
+        color: white;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .current-username {
+        background: rgba(242, 72, 34, 0.15);
+        border: 1px solid rgba(242, 72, 34, 0.3);
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin-top: 0.8rem;
+      }
+
+      .current-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+      }
+
+      .current-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: white;
+      }
+
+      /* Right Column */
+      .form-section {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-section h2 {
+        font-size: 1.3rem;
+        color: white;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* Error Message */
+      .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin-bottom: 1.2rem;
+        border: 1px solid #f5c6cb;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      /* Form Styling */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 0.6rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #ff3333;
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Button */
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background-color: #ff3333;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 0.5rem;
+      }
+
+      .btn:hover {
+        background-color: #cc0000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      /* Footer */
+      footer {
+        padding: 1.5rem 3%;
+        background-color: #1e1e1e;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+        margin-top: auto;
+      }
+
+      footer p {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0.5rem 0;
+        font-size: 0.95rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 1rem 5%;
+        }
+
+        .logo {
+          font-size: 1.8rem;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a {
+          padding: 0.6rem 1.2rem;
+          font-size: 0.9rem;
+        }
+
+        .main-container {
+          padding: 1.2rem 5%;
+          margin-bottom: 40px;
+        }
+
+        .unified-container {
+          max-width: 100%;
+          border-radius: 14px;
+        }
+
+        .container-header {
+          padding: 1.5rem 1.5rem;
+        }
+
+        .container-header h1 {
+          font-size: 1.6rem;
+        }
+
+        .container-content {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          padding: 1.5rem;
+        }
+
+        .info-section,
+        .form-section {
+          padding: 1.2rem;
+        }
+
+        .info-section h2,
+        .form-section h2 {
+          font-size: 1.2rem;
+        }
+
+        .current-username {
+          padding: 1rem;
+        }
+
+        .current-value {
+          font-size: 1.2rem;
+        }
+
+        .form-group input {
+          padding: 0.8rem 0.9rem;
+        }
+
+        .btn {
+          padding: 0.9rem;
+        }
+
+        footer {
+          padding: 1.2rem 5%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container-header {
+          padding: 1.2rem 1.2rem;
+        }
+
+        .container-header h1 {
+          font-size: 1.4rem;
+        }
+
+        .container-content {
+          padding: 1.2rem;
+          gap: 1.2rem;
+        }
+
+        .info-section,
+        .form-section {
+          padding: 1rem;
+        }
+
+        .current-username {
+          padding: 0.8rem;
+        }
+
+        .form-group input {
+          padding: 0.7rem 0.8rem;
+        }
+
+        .btn {
+          padding: 0.8rem;
+        }
+      }
+
+      @media (min-height: 800px) {
+        .main-container {
+          margin-bottom: 60px;
+        }
+      }
+
+      @media (min-height: 1000px) {
+        .main-container {
+          margin-bottom: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <a href="{{ url_for('projects.dashboard') }}" class="logo">OrbitLink</a>
+      <div class="nav-links">
+        <a href="{{ url_for('user.profile') }}">Back to Profile</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+      <div class="unified-container">
+        <!-- Header -->
+        <div class="container-header">
+          <h1>Change Username</h1>
+          <p>Update your display name on OrbitLink</p>
+        </div>
+
+        <!-- Content Area -->
+        <div class="container-content">
+          <!-- Left: Current Info -->
+          <div class="info-section">
+            <h2>Current Username</h2>
+            <div class="current-username">
+              <div class="current-label">Your current username is:</div>
+              <div class="current-value">{{ current_username }}</div>
+            </div>
+          </div>
+
+          <!-- Right: Form -->
+          <div class="form-section">
+            <h2>Enter New Username</h2>
+            
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{{ url_for('user.change_username_post') }}">
+              <div class="form-group">
+                <label for="new_username">New Username</label>
+                <input
+                  type="text"
+                  id="new_username"
+                  name="new_username"
+                  placeholder="Enter your new username"
+                  required
+                  autocomplete="off"
+                  autofocus
+                />
+              </div>
+
+              <button type="submit" class="btn">Update Username</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 OrbitLink Analytics Platform. All rights reserved.</p>
+      <p>Contact: support@orbitlink.com</p>
+    </footer>
+
+    <script>
+      // Basic validation for username length
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            const input = document.getElementById('new_username');
+            const username = input.value.trim();
+            
+            if (username.length < 3) {
+              e.preventDefault();
+              alert('Username must be at least 3 characters long');
+              input.focus();
+              return;
+            }
+            
+            if (username.length > 30) {
+              e.preventDefault();
+              alert('Username must be less than 30 characters');
+              input.focus();
+              return;
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
