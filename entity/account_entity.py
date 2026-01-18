@@ -23,39 +23,26 @@ class AccountEntity:
             return cls(email=email, role="admin")
         
         # 2. SECOND CHECK: Database admin
-        conn = get_connection()
-        if not conn:
+        db = get_connection()
+        if db is None:
             raise LoginError("Database connection error.")
         
         try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT email, role FROM users 
-                WHERE email = %s AND role = 'admin'
-            """, (email,))
-            
-            user_data = cursor.fetchone()
+            # Find admin user by email
+            user_data = db.users.find_one(
+                {"email": email, "role": "admin"},
+                {"email": 1, "role": 1, "password": 1}
+            )
             
             if user_data:
-                # Verify password
-                cursor.execute("""
-                    SELECT password FROM users 
-                    WHERE email = %s AND role = 'admin'
-                """, (email,))
-                password_data = cursor.fetchone()
-                
-                if password_data:
-                    from entity.user import User
-                    if User.verify_password(password_data['password'], password):
-                        return cls(email=user_data['email'], role=user_data['role'])
+                from entity.user import User
+                if User.verify_password(user_data['password'], password):
+                    return cls(email=user_data['email'], role=user_data['role'])
             
             raise LoginError("Invalid email or password.")
             
         except Exception as e:
             raise LoginError(f"Authentication error: {str(e)}")
-        finally:
-            cursor.close()
-            conn.close()
 
     def to_dict(self) -> dict:
         return {"email": self.email, "role": self.role}
@@ -64,150 +51,163 @@ class AccountEntity:
     @classmethod
     def retrieve_user_accounts(cls) -> list[dict]:
         """Retrieve all user accounts from database"""
-        conn = get_connection()
-        if not conn:
+        db = get_connection()
+        if db is None:
             return []
         
         try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT id, username as name, email, status 
-                FROM users 
-                WHERE id != 0  # Exclude hardcoded admin
-                ORDER BY id
-            """)
+            # Find all users, exclude hardcoded admin by checking for specific email
+            users = list(db.users.find(
+                {"email": {"$ne": "admin@example.com"}},
+                {"_id": 1, "username": 1, "email": 1, "status": 1}
+            ).sort("_id", 1))
             
-            users = cursor.fetchall()
-            
-            # Format the status for display
+            # Format the response
+            formatted_users = []
             for user in users:
-                user['status'] = user['status'].capitalize()
+                formatted_users.append({
+                    "id": str(user["_id"]),
+                    "name": user.get("username", ""),
+                    "email": user.get("email", ""),
+                    "status": user.get("status", "active").capitalize()
+                })
             
-            return users
+            return formatted_users
             
         except Exception as e:
             print(f"Error retrieving users: {str(e)}")
             return []
-        finally:
-            cursor.close()
-            conn.close()
 
     @classmethod
     def search_user_accounts(cls, keyword: str) -> list[dict]:
         """Search user accounts by keyword"""
-        kw = f"%{keyword}%"
-        conn = get_connection()
-        if not conn:
+        db = get_connection()
+        if db is None:
             return []
         
         try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT id, username as name, email, status 
-                FROM users 
-                WHERE id != 0  # Exclude hardcoded admin
-                AND (username LIKE %s OR email LIKE %s)
-                ORDER BY id
-            """, (kw, kw))
+            # MongoDB regex search (case-insensitive)
+            regex_pattern = {"$regex": keyword, "$options": "i"}
+            users = list(db.users.find(
+                {
+                    "email": {"$ne": "admin@example.com"},
+                    "$or": [
+                        {"username": regex_pattern},
+                        {"email": regex_pattern}
+                    ]
+                },
+                {"_id": 1, "username": 1, "email": 1, "status": 1}
+            ).sort("_id", 1))
             
-            users = cursor.fetchall()
-            
-            # Format the status for display
+            # Format the response
+            formatted_users = []
             for user in users:
-                user['status'] = user['status'].capitalize()
+                formatted_users.append({
+                    "id": str(user["_id"]),
+                    "name": user.get("username", ""),
+                    "email": user.get("email", ""),
+                    "status": user.get("status", "active").capitalize()
+                })
             
-            return users
+            return formatted_users
             
         except Exception as e:
             print(f"Error searching users: {str(e)}")
             return []
-        finally:
-            cursor.close()
-            conn.close()
 
     @classmethod
-    def get_user_by_id(cls, user_id: int) -> dict | None:
+    def get_user_by_id(cls, user_id: str) -> dict | None:
         """Get user by ID"""
-        conn = get_connection()
-        if not conn:
+        db = get_connection()
+        if db is None:
             return None
         
         try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT id, username as name, email, status 
-                FROM users 
-                WHERE id = %s
-            """, (user_id,))
+            from bson import ObjectId
+            # Try to convert to ObjectId if it's a valid format
+            try:
+                query_id = ObjectId(user_id)
+            except:
+                query_id = user_id
             
-            user = cursor.fetchone()
+            user = db.users.find_one(
+                {"_id": query_id},
+                {"_id": 1, "username": 1, "email": 1, "status": 1}
+            )
             
             if user:
-                user['status'] = user['status'].capitalize()
+                return {
+                    "id": str(user["_id"]),
+                    "name": user.get("username", ""),
+                    "email": user.get("email", ""),
+                    "status": user.get("status", "active").capitalize()
+                }
             
-            return user
+            return None
             
         except Exception as e:
             print(f"Error getting user by ID: {str(e)}")
             return None
-        finally:
-            cursor.close()
-            conn.close()
 
     @classmethod
-    def update_status(cls, user_id: int, status: str) -> bool:
+    def update_status(cls, user_id: str, status: str) -> bool:
         """Update user status in database"""
         status = (status or "").strip().lower()
         if status not in ("active", "suspended"):
             return False
 
-        conn = get_connection()
-        if not conn:
+        db = get_connection()
+        if db is None:
             return False
         
         try:
-            cursor = conn.cursor()
-            cursor.execute("""
-                UPDATE users SET status = %s WHERE id = %s
-            """, (status, user_id))
-            conn.commit()
-            return cursor.rowcount > 0
+            from bson import ObjectId
+            try:
+                query_id = ObjectId(user_id)
+            except:
+                query_id = user_id
+            
+            result = db.users.update_one(
+                {"_id": query_id},
+                {"$set": {"status": status}}
+            )
+            return result.modified_count > 0
             
         except Exception as e:
             print(f"Error updating status: {str(e)}")
-            conn.rollback()
             return False
-        finally:
-            cursor.close()
-            conn.close()
 
     @classmethod
-    def toggle_suspend(cls, user_id: int) -> dict | None:
+    def toggle_suspend(cls, user_id: str) -> dict | None:
         """Toggle a user's status between Active <-> Suspended."""
         user = cls.get_user_by_id(user_id)
         if not user:
             return None
 
-        # Get current status from database
-        conn = get_connection()
-        if not conn:
+        db = get_connection()
+        if db is None:
             return None
         
         try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("SELECT status FROM users WHERE id = %s", (user_id,))
-            result = cursor.fetchone()
+            from bson import ObjectId
+            try:
+                query_id = ObjectId(user_id)
+            except:
+                query_id = user_id
             
-            if not result:
+            # Get current status
+            user_doc = db.users.find_one({"_id": query_id}, {"status": 1})
+            if not user_doc:
                 return None
             
-            current_status = result['status']
+            current_status = user_doc.get('status', 'active')
             new_status = "suspended" if current_status == "active" else "active"
             
-            cursor.execute("""
-                UPDATE users SET status = %s WHERE id = %s
-            """, (new_status, user_id))
-            conn.commit()
+            # Update status
+            db.users.update_one(
+                {"_id": query_id},
+                {"$set": {"status": new_status}}
+            )
             
             # Update the user dict
             user['status'] = new_status.capitalize()
@@ -215,8 +215,4 @@ class AccountEntity:
             
         except Exception as e:
             print(f"Error toggling suspend: {str(e)}")
-            conn.rollback()
             return None
-        finally:
-            cursor.close()
-            conn.close()

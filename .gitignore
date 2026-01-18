@@ -124,3 +124,9 @@ tmp/
 *.swp   
 # Coverage reports
 .coverage
+
+# Firebase credentials (sensitive)
+**/firebase-key.json
+**/firebase-keynotadmin.json
+DatabaseExtract/firebase-key.json
+DatabaseExtract/firebase-keynotadmin.json

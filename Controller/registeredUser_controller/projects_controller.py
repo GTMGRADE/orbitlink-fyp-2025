@@ -1,6 +1,5 @@
 import logging
 from typing import Dict, List
-from flask import session
 from entity.project import ProjectRepository, Project
 import datetime
 
@@ -8,33 +7,43 @@ logger = logging.getLogger(__name__)
 
 
 class ProjectsController:
-    def get_user_id(self) -> str:
-        """Get current user ID from session"""
-        return session.get("user_id", "")
-
-    def get_repo(self) -> ProjectRepository:
-        """Get repository for current user"""
-        return ProjectRepository(self.get_user_id())
+    def __init__(self, user_id: str):
+        self.user_id = user_id
+        self.repo = ProjectRepository(user_id)
 
     @staticmethod
-    def _format_date(iso: str | None) -> str:
-        if not iso:
+    def _format_date(dt) -> str:
+        if not dt:
             return "-"
         try:
-            dt = datetime.date.fromisoformat(iso)
-            return dt.strftime("%d/%m/%y")
+            if isinstance(dt, str):
+                # Handle string date
+                return datetime.datetime.strptime(dt, "%Y-%m-%d").strftime("%d/%m/%y")
+            elif isinstance(dt, datetime.datetime):
+                # Handle datetime object
+                return dt.strftime("%d/%m/%y")
+            elif isinstance(dt, datetime.date):
+                # Handle date object
+                return dt.strftime("%d/%m/%y")
+            else:
+                return str(dt)
         except Exception:
-            return iso
+            return str(dt)
 
     def view_recent(self) -> Dict:
         """View recent projects (limited to 3 most recently opened)"""
-        all_projects: List[Project] = self.get_repo().list()
+        all_projects: List[Project] = self.repo.list()
+        
+        # Filter out projects without last_opened date
+        projects_with_dates = [p for p in all_projects if p.last_opened]
+        
         # Sort by last_opened date (most recent first) and take top 3
         recent = sorted(
-            [p for p in all_projects if p.last_opened],
+            projects_with_dates,
             key=lambda x: x.last_opened,
             reverse=True
         )[:3]
+        
         vm = [
             {
                 "id": p.id,
@@ -44,6 +53,7 @@ class ProjectsController:
             }
             for p in recent
         ]
+        
         return {
             "page_title": "Dashboard",
             "projects": vm,
@@ -51,8 +61,7 @@ class ProjectsController:
         }
 
     def view_all(self, query: str | None = None) -> Dict:
-        repo = self.get_repo()
-        projects: List[Project] = repo.search(query) if query else repo.list()
+        projects: List[Project] = self.repo.search(query) if query else self.repo.list()
         vm = [
             {
                 "id": p.id,
@@ -62,26 +71,24 @@ class ProjectsController:
             }
             for p in projects
         ]
+        
         return {
             "page_title": "All Projects",
             "projects": vm,
             "query": (query or ""),
         }
 
-    def create(self, name: str, description: str) -> Project:
-        return self.get_repo().create(name, description)
+    def create(self, name: str, description: str) -> Project | None:
+        return self.repo.create(name, description)
 
     def open(self, pid: str) -> Project | None:
-        return self.get_repo().open(pid)
+        return self.repo.open(pid)
 
     def rename(self, pid: str, new_name: str) -> Project | None:
-        return self.get_repo().rename(pid, new_name)
+        return self.repo.rename(pid, new_name)
 
     def archive(self, pid: str) -> Project | None:
-        return self.get_repo().archive(pid)
+        return self.repo.archive(pid)
 
     def delete(self, pid: str) -> bool:
-        return self.get_repo().delete(pid)
-
-
-projects_controller = ProjectsController()
+        return self.repo.delete(pid)
