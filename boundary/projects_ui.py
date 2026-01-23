@@ -7,10 +7,17 @@ logger = logging.getLogger(__name__)
 projects_bp = Blueprint("projects", __name__)
 
 
+@projects_bp.get("/dashboard")
+def dashboard():
+    logger.info("Dashboard accessed (recent projects)")
+    data = projects_controller.view_recent()
+    return render_template("projects_dashboard.html", **data)
+
+
 @projects_bp.get("/projects")
-def projects_dashboard():
+def projects_list():
     query = request.args.get("q")
-    logger.info("Projects dashboard accessed (query=%s)", query)
+    logger.info("Projects list accessed (query=%s)", query)
     data = projects_controller.view_all(query)
     return render_template("projects_dashboard.html", **data)
 
@@ -28,14 +35,14 @@ def projects_create_post():
     if not name:
         return render_template("projects_create.html", error="Project name is required.")
     projects_controller.create(name, description)
-    return redirect(url_for("projects.projects_dashboard"))
+    return redirect(url_for("projects.projects_list"))
 
 
 @projects_bp.get("/projects/open/<int:pid>")
 def projects_open(pid: int):
     logger.info("Open project id=%s", pid)
     projects_controller.open(pid)
-    return redirect(url_for("projects.projects_dashboard"))
+    return redirect(url_for("projects.data_import"))
 
 
 @projects_bp.post("/projects/rename/<int:pid>")
@@ -43,19 +50,19 @@ def projects_rename(pid: int):
     new_name = request.form.get("new_name", "").strip()
     if new_name:
         projects_controller.rename(pid, new_name)
-    return redirect(url_for("projects.projects_dashboard"))
+    return redirect(url_for("projects.projects_list"))
 
 
 @projects_bp.post("/projects/archive/<int:pid>")
 def projects_archive(pid: int):
     projects_controller.archive(pid)
-    return redirect(url_for("projects.projects_dashboard"))
+    return redirect(url_for("projects.projects_list"))
 
 
 @projects_bp.post("/projects/delete/<int:pid>")
 def projects_delete(pid: int):
     projects_controller.delete(pid)
-    return redirect(url_for("projects.projects_dashboard"))
+    return redirect(url_for("projects.projects_list"))
 
 
 @projects_bp.get("/projects/api-keys")
@@ -80,6 +87,12 @@ def sentiment_analysis():
 def detect_communities():
     logger.info("Detect Communities page accessed")
     return render_template("detect_communities.html")
+
+
+@projects_bp.get("/projects/data-import")
+def data_import():
+    logger.info("Data Import page accessed")
+    return render_template("data_import.html")
 
 
 @projects_bp.get("/projects/data-monitoring")

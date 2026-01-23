@@ -136,6 +136,9 @@
         background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
         color: #fff;
       }
+      .api-name.youtube {
+        background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+      }
       .api-name.reddit {
         background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
       }
@@ -207,8 +210,8 @@
           <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
         </div>
         <nav class="menu">
-          <a href="{{ url_for('projects.projects_dashboard') }}">Dashboard</a>
-          <a href="#">Projects</a>
+          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
           <a href="{{ url_for('projects.project_sna') }}" class="active"
             >Analysis</a
           >
@@ -219,20 +222,19 @@
 
       <main class="content">
         <div class="header">
-          <div class="title">API Keys</div>
+          <div class="title">Project SNA</div>
           <div class="header-buttons">
-            <a href="{{ url_for('user.profile') }}">Profile</a>
-            <a href="{{ url_for('user.logout') }}">Log Out</a>
+            <a href="{{ url_for('projects.data_import') }}">Back</a>
           </div>
         </div>
 
         <div class="container">
-          <h1 class="page-title">Project SNA</h1>
+          <h1 class="page-title">API Keys</h1>
 
           <div class="api-section">
             <div class="api-item">
               <div>
-                <div class="api-name">Youtube</div>
+                <div class="api-name youtube">Youtube</div>
                 <div class="api-description">
                   <div class="instruction">
                     To use this API, please follow

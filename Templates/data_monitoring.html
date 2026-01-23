@@ -183,8 +183,8 @@
           <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
         </div>
         <nav class="menu">
-          <a href="{{ url_for('projects.projects_dashboard') }}">Dashboard</a>
-          <a href="#">Projects</a>
+          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
           <a href="{{ url_for('projects.project_sna') }}">Analysis</a>
           <a href="#">Support</a>
           <a href="#">Setting</a>
@@ -195,8 +195,7 @@
         <div class="header">
           <div class="title">Data Monitoring</div>
           <div class="header-buttons">
-            <a href="{{ url_for('user.profile') }}">Profile</a>
-            <a href="{{ url_for('user.logout') }}">Log Out</a>
+            <a href="{{ url_for('projects.project_sna') }}">Back</a>
           </div>
         </div>
 

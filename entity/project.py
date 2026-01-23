@@ -1,110 +1,243 @@
-import json
-import os
-import datetime
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Optional
-
-
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
-DATA_FILE = os.path.join(DATA_DIR, "projects.json")
+from db_config import get_connection
+from bson import ObjectId
 
 
 @dataclass
 class Project:
-    id: int
+    id: str
+    user_id: str
     name: str
     description: str
-    last_opened: Optional[str] = None  # ISO date string
+    last_opened: Optional[datetime] = None
     archived: bool = False
-
-    def touch_opened(self) -> None:
-        self.last_opened = datetime.date.today().isoformat()
+    created_at: Optional[datetime] = None
 
 
 class ProjectRepository:
-    def __init__(self, path: str = DATA_FILE) -> None:
-        self.path = path
-        os.makedirs(os.path.dirname(self.path), exist_ok=True)
-        if not os.path.exists(self.path):
-            self._seed()
+    def __init__(self, user_id: str):
+        self.user_id = user_id
 
-    def _seed(self) -> None:
-        sample = [
-            asdict(Project(id=1, name="Project Name 1", description="Demo project", last_opened=datetime.date.today().isoformat())),
-            asdict(Project(id=2, name="Project Name 2", description="Another project", last_opened=datetime.date.today().isoformat())),
-            asdict(Project(id=3, name="Project Name 3", description="Sample notes", last_opened=datetime.date.today().isoformat())),
-        ]
-        with open(self.path, "w", encoding="utf-8") as f:
-            json.dump(sample, f, indent=2)
-
-    def _read(self) -> List[Project]:
-        with open(self.path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return [Project(**p) for p in data]
-
-    def _write(self, projects: List[Project]) -> None:
-        with open(self.path, "w", encoding="utf-8") as f:
-            json.dump([asdict(p) for p in projects], f, indent=2)
+    def _to_project(self, doc) -> Optional[Project]:
+        """Convert MongoDB document to Project object"""
+        if not doc:
+            return None
+            
+        try:
+            return Project(
+                id=str(doc["_id"]),
+                user_id=str(doc.get("user_id", "")),
+                name=doc.get("name", ""),
+                description=doc.get("description", ""),
+                last_opened=doc.get("last_opened"),
+                archived=doc.get("archived", False),
+                created_at=doc.get("created_at")
+            )
+        except Exception as e:
+            print(f"Error converting document to project: {str(e)}")
+            return None
 
     def list(self, include_archived: bool = False) -> List[Project]:
-        projects = self._read()
-        return [p for p in projects if include_archived or not p.archived]
+        """Get all projects for the current user"""
+        db = get_connection()
+        if db is None:
+            return []
+        
+        try:
+            query = {"user_id": self.user_id}
+            if not include_archived:
+                query["archived"] = {"$ne": True}
+            
+            docs = db.projects.find(query).sort([
+                ("last_opened", -1), 
+                ("created_at", -1)
+            ])
+            
+            projects = []
+            for doc in docs:
+                project = self._to_project(doc)
+                if project:
+                    projects.append(project)
+            return projects
+            
+        except Exception as e:
+            print(f"Error listing projects: {str(e)}")
+            return []
 
     def search(self, query: str) -> List[Project]:
-        q = (query or "").strip().lower()
-        return [p for p in self.list() if q in p.name.lower() or q in p.description.lower()]
+        """Search projects by name or description"""
+        if not query:
+            return self.list()
+            
+        db = get_connection()
+        if db is None:
+            return []
+        
+        try:
+            regex_pattern = {"$regex": query, "$options": "i"}
+            docs = db.projects.find({
+                "user_id": self.user_id,
+                "archived": {"$ne": True},
+                "$or": [
+                    {"name": regex_pattern},
+                    {"description": regex_pattern}
+                ]
+            }).sort("last_opened", -1)
+            
+            projects = []
+            for doc in docs:
+                project = self._to_project(doc)
+                if project:
+                    projects.append(project)
+            return projects
+            
+        except Exception as e:
+            print(f"Error searching projects: {str(e)}")
+            return self.list()
 
-    def create(self, name: str, description: str) -> Project:
-        projects = self._read()
-        next_id = (max((p.id for p in projects), default=0) + 1)
-        project = Project(id=next_id, name=name.strip(), description=description.strip())
-        project.touch_opened()
-        projects.append(project)
-        self._write(projects)
-        return project
+    def get(self, pid: str) -> Optional[Project]:
+        """Get a specific project by ID for the current user"""
+        db = get_connection()
+        if db is None:
+            return None
+        
+        try:
+            try:
+                query_id = ObjectId(pid)
+            except:
+                query_id = pid
+            
+            doc = db.projects.find_one({
+                "_id": query_id,
+                "user_id": self.user_id
+            })
+            
+            return self._to_project(doc)
+            
+        except Exception as e:
+            print(f"Error getting project: {str(e)}")
+            return None
 
-    def get(self, pid: int) -> Optional[Project]:
-        for p in self._read():
-            if p.id == pid:
-                return p
+    def create(self, name: str, description: str) -> Optional[Project]:
+        """Create a new project for the current user"""
+        db = get_connection()
+        if db is None:
+            return None
+        
+        try:
+            now = datetime.utcnow()
+            project_doc = {
+                "user_id": self.user_id,
+                "name": name.strip(),
+                "description": description.strip(),
+                "last_opened": now,
+                "archived": False,
+                "created_at": now
+            }
+            
+            result = db.projects.insert_one(project_doc)
+            
+            # Return the created project
+            return self.get(str(result.inserted_id))
+            
+        except Exception as e:
+            print(f"Error creating project: {str(e)}")
+            return None
+
+    def update(self, project: Project) -> bool:
+        """Update an existing project"""
+        db = get_connection()
+        if db is None:
+            return False
+        
+        try:
+            try:
+                query_id = ObjectId(project.id)
+            except:
+                query_id = project.id
+            
+            result = db.projects.update_one(
+                {"_id": query_id, "user_id": self.user_id},
+                {"$set": {
+                    "name": project.name,
+                    "description": project.description,
+                    "last_opened": project.last_opened,
+                    "archived": project.archived
+                }}
+            )
+            
+            return result.modified_count > 0
+            
+        except Exception as e:
+            print(f"Error updating project: {str(e)}")
+            return False
+
+    def open(self, pid: str) -> Optional[Project]:
+        """Mark a project as opened (update last_opened date)"""
+        db = get_connection()
+        if db is None:
+            return None
+        
+        try:
+            try:
+                query_id = ObjectId(pid)
+            except:
+                query_id = pid
+            
+            db.projects.update_one(
+                {"_id": query_id, "user_id": self.user_id},
+                {"$set": {"last_opened": datetime.utcnow()}}
+            )
+            
+            return self.get(pid)
+            
+        except Exception as e:
+            print(f"Error opening project: {str(e)}")
+            return None
+
+    def rename(self, pid: str, new_name: str) -> Optional[Project]:
+        """Rename a project"""
+        project = self.get(pid)
+        if not project:
+            return None
+        
+        project.name = new_name.strip()
+        if self.update(project):
+            return project
         return None
 
-    def save(self, project: Project) -> None:
-        projects = self._read()
-        for i, p in enumerate(projects):
-            if p.id == project.id:
-                projects[i] = project
-                break
-        self._write(projects)
-
-    def open(self, pid: int) -> Optional[Project]:
-        p = self.get(pid)
-        if not p:
+    def archive(self, pid: str) -> Optional[Project]:
+        """Archive a project"""
+        project = self.get(pid)
+        if not project:
             return None
-        p.touch_opened()
-        self.save(p)
-        return p
+        
+        project.archived = True
+        if self.update(project):
+            return project
+        return None
 
-    def rename(self, pid: int, new_name: str) -> Optional[Project]:
-        p = self.get(pid)
-        if not p:
-            return None
-        p.name = new_name.strip()
-        self.save(p)
-        return p
-
-    def archive(self, pid: int) -> Optional[Project]:
-        p = self.get(pid)
-        if not p:
-            return None
-        p.archived = True
-        self.save(p)
-        return p
-
-    def delete(self, pid: int) -> bool:
-        projects = self._read()
-        filtered = [p for p in projects if p.id != pid]
-        if len(filtered) == len(projects):
+    def delete(self, pid: str) -> bool:
+        """Delete a project"""
+        db = get_connection()
+        if db is None:
             return False
-        self._write(filtered)
-        return True
+        
+        try:
+            try:
+                query_id = ObjectId(pid)
+            except:
+                query_id = pid
+            
+            result = db.projects.delete_one({
+                "_id": query_id,
+                "user_id": self.user_id
+            })
+            
+            return result.deleted_count > 0
+            
+        except Exception as e:
+            print(f"Error deleting project: {str(e)}")
+            return False

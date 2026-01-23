@@ -1,374 +1,749 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin - Users</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Users</title>
+    <style>
+      :root {
+        --navy: #1E3167;
+        --navy-deep: #14294a;
+        --orange: #F24822;
+        --red: #ff3333;
+        --red-dark: #cc0000;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --text-light: rgba(255, 255, 255, 0.9);
+        --text-muted: rgba(255, 255, 255, 0.7);
+        --success-bg: rgba(100, 212, 106, 0.22);
+        --success-border: rgba(100, 212, 106, 0.45);
+        --suspended-bg: rgba(207, 207, 207, 0.18);
+        --suspended-border: rgba(207, 207, 207, 0.4);
+      }
 
-  <style>
-    :root{
-      --navy:#1d2f61;
-      --navy-deep:#14224a;
-      --orange:#ef4a22;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-      /* Top buttons (Image 1 style) */
-      --btn-red:#ff3a3a;
-      --btn-active:#c40000;
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--navy);
+        color: white;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
 
-      /* User cards */
-      --card:#2f3b5a;
-      --card-border: rgba(255,255,255,.10);
+      /* Navigation Bar - With admin tabs on the right */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 3%;
+        background-color: var(--navy);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-      /* status colors */
-      --pill-active-bg: rgba(100,212,106,.22);
-      --pill-active-bd: rgba(100,212,106,.45);
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+      }
 
-      --pill-susp-bg: rgba(207,207,207,.18);
-      --pill-susp-bd: rgba(207,207,207,.40);
+      /* Right-side navigation container */
+      .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
 
-      /* button colors */
-      --btn-suspend: var(--orange);
-      --btn-unsuspend: #cfcfcf;
-    }
+      /* Admin tabs - now on the right side */
+      .admin-nav-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-right: 0.8rem;
+        padding-right: 0.8rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+      }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; margin:0; }
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--navy-deep);
-      overflow-x:hidden;
-    }
+      .nav-tab {
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
 
-    /* Full screen layout */
-    .app{ min-height:100vh; display:flex; flex-direction:column; }
+      .nav-tab:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
 
-    /* ===== HEADER ===== */
-    .header{
-      height:90px;
-      background:var(--navy);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 22px;
-      flex:0 0 auto;
-    }
+      .nav-tab.active {
+        background-color: var(--red);
+        color: black;
+        border-color: var(--red);
+      }
 
-    .logo{
-      width:72px;height:72px;
-      border-radius:50%;
-      background:var(--orange);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-weight:700;
-    }
+      /* Logout button */
+      .nav-logout {
+        text-decoration: none;
+        color: black;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: var(--red);
+        white-space: nowrap;
+      }
 
-    .topnav{
-      display:flex;
-      gap:28px;
-      align-items:center;
-    }
+      .nav-logout:hover {
+        background-color: var(--red-dark);
+        transform: translateY(-2px);
+      }
 
-    .topbtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:150px;
-      height:56px;
-      padding:0 22px;
-      border-radius:10px;
-      background:var(--btn-red);
-      color:#111;
-      font-weight:800;
-      font-size:18px;
-      text-decoration:none;
-      box-shadow:0 8px 0 rgba(0,0,0,.22);
-      transition: .15s;
-      border:0;
-    }
+      /* Main Content Container */
+      .main-container {
+        padding: 2rem 3%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
 
-    .topbtn:hover{
-      transform: translateY(-2px);
-      box-shadow:0 10px 0 rgba(0,0,0,.22);
-    }
-    .topbtn:active{
-      transform: translateY(1px);
-      box-shadow:0 6px 0 rgba(0,0,0,.22);
-    }
-    .topbtn.active{ background:var(--btn-active); }
+      /* Page Header */
+      .page-header {
+        margin-bottom: 2rem;
+      }
 
-    /* ===== CONTENT ===== */
-    .content{
-      flex:1 1 auto;
-      padding: 36px 48px 64px;
-      background: var(--navy-deep);
-    }
+      .page-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
 
-    .page-title{
-      text-align:center;
-      font-size: clamp(44px, 4.8vw, 72px);
-      color:#fff;
-      letter-spacing:2px;
-      margin: 10px 0 26px;
-      font-weight:600;
-    }
+      .page-description {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
 
-    .search-wrap{
-      display:flex;
-      justify-content:center;
-      margin-bottom: 34px;
-    }
-    .search{
-      width: min(860px, 92%);
-      height: 70px;
-      border-radius: 30px;
-      border: 2px solid #bdbdbd;
-      background:#fff;
-      padding: 0 26px;
-      font-size:20px;
-      outline:none;
-      box-shadow: 0 8px 0 rgba(0,0,0,.22);
-    }
+      /* Search Bar - MATCHING PERSONAL DASHBOARD STYLE */
+      .search-container {
+        margin-bottom: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
 
-    /* User cards grid */
-    .grid{
-      width: min(1200px, 96%);
-      margin: 0 auto;
-      display:grid;
-      grid-template-columns: repeat(2, minmax(280px, 1fr));
-      gap: 26px;
-    }
+      .search-form {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+      }
 
-    .user-card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 18px 18px 58px;
-      min-height: 170px;
-      position:relative;
-      color:#fff;
-      box-shadow: 0 10px 0 rgba(0,0,0,.18);
-    }
+      .search-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
 
-    .user-name{
-      font-size:20px;
-      font-weight:800;
-      margin: 2px 0 12px;
-    }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--red);
+        background: rgba(255, 255, 255, 0.15);
+      }
 
-    .row{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      margin: 10px 0;
-      flex-wrap:wrap;
-    }
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+      }
 
-    .label{
-      font-weight:800;
-      min-width:56px;
-      opacity:.95;
-    }
+      .search-btn {
+        padding: 0.8rem 1.5rem;
+        background: var(--red);
+        color: black;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-    /* pill style */
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
-      font-size:14px;
-      line-height:1;
-      white-space:nowrap;
-    }
+      .search-btn:hover {
+        background: var(--red-dark);
+        color: white;
+        transform: translateY(-1px);
+      }
 
-    /* status pill styles */
-    .status-pill.active{
-      background: var(--pill-active-bg);
-      border-color: var(--pill-active-bd);
-    }
-    .status-pill.suspended{
-      background: var(--pill-susp-bg);
-      border-color: var(--pill-susp-bd);
-    }
+      /* Loading State */
+      .loading-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+      }
 
-    .btn-action{
-      position:absolute;
-      right:18px;
-      bottom:16px;
-      height:38px;
-      min-width:110px;
-      padding:0 14px;
-      border-radius:8px;
-      background:var(--btn-suspend);
-      color:#111;
-      font-weight:800;
-      border:0;
-      cursor:pointer;
-      box-shadow:0 6px 0 rgba(0,0,0,.25);
-      transition:.15s;
-    }
-    .btn-action:hover{ transform: translateY(-2px); box-shadow:0 8px 0 rgba(0,0,0,.25); }
-    .btn-action:active{ transform: translateY(1px); box-shadow:0 4px 0 rgba(0,0,0,.25); }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--orange);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
 
-    /* Unsuspend button variant */
-    .btn-action.unsuspend{
-      background: var(--btn-unsuspend);
-      color:#111;
-    }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
 
-    /* Responsive */
-    @media (max-width: 920px){
-      .content{ padding: 28px 18px 48px; }
-      .grid{ grid-template-columns: 1fr; }
-      .topnav{ gap:14px; }
-      .topbtn{ min-width:120px; height:52px; font-size:16px; }
-    }
-  </style>
-</head>
+      /* User Cards Grid - 3 CARDS PER ROW */
+      .users-grid {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
 
-<body>
-  <div class="app">
-    <header class="header">
-      <div class="logo">Logo</div>
+      @media (max-width: 1200px) {
+        .users-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
 
-      <nav class="topnav">
-         <a class="topbtn active" href="{{ url_for('admin_ui.admin_users_page') }}">Users</a>
-         <a class="topbtn" href="{{ url_for('admin_ui.admin_reviews_page') }}">Reviews</a>
-         <a class="topbtn" href="{{ url_for('admin_ui.admin_edit_website_page') }}">Edit Website</a>
-         <a class="topbtn" href="{{ url_for('user.logout') }}">Logout</a>
-</nav>
+      @media (max-width: 768px) {
+        .users-grid {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    </header>
+      /* User Card - Cleaner version of original design */
+      .user-card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02)
+        );
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        min-height: 220px;
+        position: relative;
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
 
-    <main class="content">
-      <div class="page-title">User&nbsp;&nbsp;Management</div>
+      .user-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
 
-      <div class="search-wrap">
-        <input id="searchInput" class="search" type="text" placeholder="Search user..." />
+      .user-name {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin: 0.5rem 0 1rem 0;
+        color: white;
+      }
+
+      .info-row {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+        margin: 0.8rem 0;
+        flex-wrap: wrap;
+      }
+
+      .info-label {
+        font-weight: 700;
+        min-width: 50px;
+        opacity: 0.9;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      /* Pill style - Cleaner version */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        font-size: 0.85rem;
+        line-height: 1;
+        white-space: nowrap;
+        color: var(--text-light);
+      }
+
+      /* Status pill styles */
+      .status-pill.active {
+        background: var(--success-bg);
+        border-color: var(--success-border);
+        color: #64d46a;
+      }
+
+      .status-pill.suspended {
+        background: var(--suspended-bg);
+        border-color: var(--suspended-border);
+        color: #cfcfcf;
+      }
+
+      /* Action Button - Consistent with site design */
+      .btn-action {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        height: 36px;
+        min-width: 100px;
+        padding: 0 1rem;
+        border-radius: 6px;
+        background: var(--orange);
+        color: black;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+      }
+
+      .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(242, 72, 34, 0.3);
+      }
+
+      .btn-action:active {
+        transform: translateY(0);
+      }
+
+      /* Unsuspend button variant */
+      .btn-action.unsuspend {
+        background: #cfcfcf;
+        color: #333;
+      }
+
+      .btn-action.unsuspend:hover {
+        box-shadow: 0 4px 8px rgba(207, 207, 207, 0.3);
+      }
+
+      /* Footer - Consistent with other pages */
+      footer {
+        margin-top: 4rem;
+        padding: 2rem 3%;
+        background-color: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      footer p {
+        color: var(--text-muted);
+        margin: 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .navbar {
+          padding: 1rem 5%;
+          flex-wrap: wrap;
+          gap: 0.8rem;
+        }
+        
+        .logo {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 0.5rem;
+        }
+        
+        .navbar-right {
+          width: 100%;
+          justify-content: center;
+        }
+        
+        .admin-nav-tabs {
+          margin-right: 0.5rem;
+          padding-right: 0.5rem;
+        }
+        
+        .nav-tab {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.85rem;
+        }
+        
+        .nav-logout {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 1.5rem 5%;
+        }
+
+        .page-title {
+          font-size: 1.8rem;
+        }
+
+        .search-form {
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+
+        .search-input,
+        .search-btn {
+          width: 100%;
+        }
+
+        .user-card {
+          padding: 1.2rem;
+          min-height: 200px;
+        }
+
+        .user-name {
+          font-size: 1.2rem;
+        }
+
+        .btn-action {
+          right: 1rem;
+          bottom: 1rem;
+          min-width: 90px;
+          height: 32px;
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar-right {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .admin-nav-tabs {
+          margin-right: 0;
+          padding-right: 0;
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          padding-bottom: 0.5rem;
+          margin-bottom: 0.5rem;
+          width: 100%;
+          justify-content: center;
+        }
+        
+        .nav-tab {
+          flex: 1;
+          text-align: center;
+          padding: 0.6rem;
+        }
+        
+        .user-card {
+          padding: 1rem;
+        }
+
+        .info-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+
+        .info-label {
+          min-width: auto;
+        }
+
+        .pill {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.6rem;
+        }
+      }
+
+      /* Empty State for search results */
+      .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar with Admin Tabs on the Right -->
+    <nav class="navbar">
+      <a href="{{ url_for('admin_ui.admin_home') }}" class="logo">OrbitLink</a>
+      
+      <div class="navbar-right">
+        <!-- Admin tabs now on the right side -->
+        <div class="admin-nav-tabs">
+          <a href="{{ url_for('admin_ui.admin_users_page') }}" class="nav-tab active">Users</a>
+          <a href="{{ url_for('admin_ui.admin_reviews_page') }}" class="nav-tab">Reviews</a>
+          <a href="{{ url_for('admin_ui.admin_edit_website_page') }}" class="nav-tab">Edit Website</a>
+        </div>
+        
+        <!-- Logout button -->
+        <a href="{{ url_for('user.logout') }}" class="nav-logout">Logout</a>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">User Management</h1>
+        <p class="page-description">Manage user accounts and their status</p>
       </div>
 
-      <section id="userGrid" class="grid">
-        <article class="user-card" data-name="Grace Fu">
-          <div class="user-name">Grace Fu</div>
+      <!-- Search Bar - MATCHING PERSONAL DASHBOARD -->
+      <div class="search-container">
+        <form class="search-form" onsubmit="searchUsers(event)">
+          <input
+            id="searchInput"
+            class="search-input"
+            type="text"
+            placeholder="Search users by name or email..."
+            autocomplete="off"
+          />
+          <button type="submit" class="search-btn" id="searchButton">Search</button>
+        </form>
+      </div>
 
-          <div class="row">
-            <div class="label">Role:</div>
-            <div class="pill">Business User</div>
-          </div>
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading users...</p>
+      </div>
 
-          <div class="row">
-            <div class="label">Email:</div>
-            <div class="pill">grace123@yahoo.com</div>
-          </div>
-
-          <div class="row">
-            <div class="label">Status:</div>
-            <div class="pill status-pill" data-status>Active</div>
-          </div>
-
-          <button class="btn-action" type="button" data-action="toggle">Suspend</button>
-        </article>
-
-        <article class="user-card" data-name="Denise Phua">
-          <div class="user-name">Denise Phua</div>
-
-          <div class="row">
-            <div class="label">Role:</div>
-            <div class="pill">Influencer User</div>
-          </div>
-
-          <div class="row">
-            <div class="label">Email:</div>
-            <div class="pill">denise456@gmail.com</div>
-          </div>
-
-          <div class="row">
-            <div class="label">Status:</div>
-            <div class="pill status-pill" data-status>Active</div>
-          </div>
-
-          <button class="btn-action" type="button" data-action="toggle">Suspend</button>
-        </article>
-
-        <article class="user-card" data-name="Rachel Ong">
-          <div class="user-name">Rachel Ong</div>
-
-          <div class="row">
-            <div class="label">Role:</div>
-            <div class="pill">Business User</div>
-          </div>
-
-          <div class="row">
-            <div class="label">Email:</div>
-            <div class="pill">rachel789@hotmail.com</div>
-          </div>
-
-          <div class="row">
-            <div class="label">Status:</div>
-            <div class="pill status-pill" data-status>Suspended</div>
-          </div>
-
-          <button class="btn-action" type="button" data-action="toggle">Unsuspend</button>
-        </article>
+      <!-- Users Grid - 3 CARDS PER ROW -->
+      <section id="usersGrid" class="users-grid" style="display: none;">
+        <!-- Dynamic content will be inserted here -->
       </section>
-    </main>
-  </div>
+    </div>
 
-  <script>
-    // ===== Search (filters by name) =====
-    const input = document.getElementById("searchInput");
-    const cards = Array.from(document.querySelectorAll("#userGrid .user-card"));
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 OrbitLink Admin Panel. All rights reserved.</p>
+      <p>Contact: support@orbitlink.com</p>
+    </footer>
 
-    input.addEventListener("input", () => {
-      const q = input.value.trim().toLowerCase();
-      cards.forEach(card => {
-        const name = (card.dataset.name || "").toLowerCase();
-        card.style.display = name.includes(q) ? "" : "none";
-      });
-    });
+    <script>
+      // Global variable to store all users for search filtering
+      let allUsers = [];
 
-    // ===== Helpers for status UI =====
-    function applyStatusUI(card) {
-      const statusPill = card.querySelector("[data-status]");
-      const btn = card.querySelector("button[data-action='toggle']");
-      if (!statusPill || !btn) return;
+      // DOM elements
+      const usersGrid = document.getElementById('usersGrid');
+      const loadingState = document.getElementById('loadingState');
+      const searchInput = document.getElementById('searchInput');
 
-      const current = statusPill.textContent.trim().toLowerCase();
-
-      // reset classes
-      statusPill.classList.remove("active", "suspended");
-      btn.classList.remove("unsuspend");
-
-      if (current === "suspended") {
-        statusPill.classList.add("suspended");
-        btn.textContent = "Unsuspend";
-        btn.classList.add("unsuspend");
-      } else {
-        statusPill.classList.add("active");
-        btn.textContent = "Suspend";
+      // Fetch users from API
+      async function fetchUsers() {
+        try {
+          const response = await fetch('/api/admin/users');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const users = await response.json();
+          allUsers = users;
+          displayUsers(users);
+        } catch (error) {
+          console.error('Error fetching users:', error);
+          showError('Failed to load users. Please try again.');
+        }
       }
-    }
 
-    // Apply on page load (so Rachel shows correct style immediately)
-    cards.forEach(applyStatusUI);
+      // Search users via API
+      async function searchUsersViaAPI(keyword) {
+        try {
+          const response = await fetch(`/api/admin/users/search?q=${encodeURIComponent(keyword)}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const users = await response.json();
+          displayUsers(users);
+        } catch (error) {
+          console.error('Error searching users:', error);
+          // Fall back to client-side search if API fails
+          searchUsersLocal(keyword);
+        }
+      }
 
-    // ===== Suspend / Unsuspend (front-end functional toggle) =====
-    document.getElementById("userGrid").addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-action='toggle']");
-      if (!btn) return;
+      // Client-side search as fallback
+      function searchUsersLocal(keyword) {
+        const term = keyword.toLowerCase().trim();
+        const filteredUsers = allUsers.filter(user => {
+          const name = (user.name || "").toLowerCase();
+          const email = (user.email || "").toLowerCase();
+          
+          return term === '' || 
+                 name.includes(term) || 
+                 email.includes(term);
+        });
+        displayUsers(filteredUsers);
+      }
 
-      const card = btn.closest(".user-card");
-      const statusPill = card.querySelector("[data-status]");
-      if (!statusPill) return;
+      // Display users in the grid
+      function displayUsers(users) {
+        if (users.length === 0) {
+          usersGrid.innerHTML = `
+            <div class="empty-state">
+              <p>No users found.</p>
+              <p>Try a different search term or check if users are registered.</p>
+            </div>
+          `;
+          usersGrid.style.display = 'grid';
+          loadingState.style.display = 'none';
+          return;
+        }
 
-      const current = statusPill.textContent.trim().toLowerCase();
-      statusPill.textContent = (current === "active") ? "Suspended" : "Active";
+        const userCards = users.map(user => {
+          const isSuspended = user.status.toLowerCase() === 'suspended';
+          const statusClass = isSuspended ? 'suspended' : 'active';
+          
+          return `
+            <article class="user-card" data-user-id="${user.id}">
+              <div class="user-name">${escapeHtml(user.name)}</div>
 
-      applyStatusUI(card);
-    });
-  </script>
-</body>
+              <div class="info-row">
+                <div class="info-label">Email:</div>
+                <div class="pill">${escapeHtml(user.email)}</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">Status:</div>
+                <div class="pill status-pill ${statusClass}" data-status>${escapeHtml(user.status)}</div>
+              </div>
+
+              <button class="btn-action ${isSuspended ? 'unsuspend' : ''}" 
+                      type="button" 
+                      data-action="toggle"
+                      onclick="toggleSuspend(${user.id}, this)">
+                ${isSuspended ? 'Unsuspend' : 'Suspend'}
+              </button>
+            </article>
+          `;
+        }).join('');
+
+        usersGrid.innerHTML = userCards;
+        usersGrid.style.display = 'grid';
+        loadingState.style.display = 'none';
+      }
+
+      // Toggle suspend/unsuspend
+      async function toggleSuspend(userId, button) {
+        if (!confirm('Are you sure you want to change this user\'s status?')) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/admin/users/${userId}/toggle-suspend`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          
+          if (result.ok) {
+            // Update the user card with new status
+            const userCard = button.closest('.user-card');
+            const statusPill = userCard.querySelector('[data-status]');
+            const isNowSuspended = result.user.status.toLowerCase() === 'suspended';
+            
+            // Update status pill
+            statusPill.textContent = result.user.status;
+            statusPill.className = `pill status-pill ${isNowSuspended ? 'suspended' : 'active'}`;
+            
+            // Update button
+            button.textContent = isNowSuspended ? 'Unsuspend' : 'Suspend';
+            button.className = `btn-action ${isNowSuspended ? 'unsuspend' : ''}`;
+            
+            // Update the global users array
+            const userIndex = allUsers.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+              allUsers[userIndex] = result.user;
+            }
+            
+            alert(`User status updated to ${result.user.status}`);
+          } else {
+            alert(`Error: ${result.error || 'Failed to update user status'}`);
+          }
+        } catch (error) {
+          console.error('Error toggling suspend:', error);
+          alert('Failed to update user status. Please try again.');
+        }
+      }
+
+      // Search function
+      function searchUsers(event) {
+        event.preventDefault();
+        const searchTerm = searchInput.value.trim();
+        
+        if (searchTerm) {
+          // Use API search
+          searchUsersViaAPI(searchTerm);
+        } else {
+          // Show all users
+          displayUsers(allUsers);
+        }
+      }
+
+      // Escape HTML to prevent XSS
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Show error message
+      function showError(message) {
+        usersGrid.innerHTML = `
+          <div class="empty-state">
+            <p style="color: #ff3333;">${message}</p>
+            <p>Please refresh the page or check your connection.</p>
+          </div>
+        `;
+        usersGrid.style.display = 'grid';
+        loadingState.style.display = 'none';
+      }
+
+      // Initialize when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        fetchUsers();
+        
+        // Add input event listener for real-time search (optional)
+        let debounceTimer;
+        searchInput.addEventListener('input', () => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            if (searchInput.value.trim()) {
+              searchUsersViaAPI(searchInput.value.trim());
+            } else {
+              displayUsers(allUsers);
+            }
+          }, 300);
+        });
+      });
+    </script>
+  </body>
 </html>
