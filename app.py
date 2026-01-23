@@ -3,6 +3,9 @@ from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
 
+# Set matplotlib backend BEFORE any other imports that might use it
+os.environ['MPLBACKEND'] = 'Agg'
+
 from db_config import init_db, check_database_status
 # Preload sentiment resources at startup
 try:

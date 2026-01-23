@@ -254,7 +254,7 @@
             <div class="card">
               <div class="pie-chart">
                 {% if sentiment and sentiment.pie_chart %}
-                  <img alt="Sentiment Pie Chart" style="max-width:100%" src="data:image/png;base64, {{ sentiment.pie_chart }}" />
+                  <img alt="Sentiment Pie Chart" style="max-width:100%" src="data:image/png;base64,{{ sentiment.pie_chart }}" />
                 {% else %}
                   <div>Pie Chart<br />(Sentiment Distribution)</div>
                 {% endif %}
@@ -266,7 +266,7 @@
             <div class="card">
               <div class="word-cloud">
                 {% if sentiment and sentiment.word_cloud %}
-                  <img alt="Word Cloud" style="max-width:100%" src="data:image/png;base64, {{ sentiment.word_cloud }}" />
+                  <img alt="Word Cloud" style="max-width:100%" src="data:image/png;base64,{{ sentiment.word_cloud }}" />
                 {% else %}
                   Word Cloud<br />(Topic Analysis)
                 {% endif %}
