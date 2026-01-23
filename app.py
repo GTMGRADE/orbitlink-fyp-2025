@@ -4,6 +4,13 @@ import os
 from dotenv import load_dotenv
 
 from db_config import init_db, check_database_status
+# Preload sentiment resources at startup
+try:
+    from services.sentiment_analysis import preload_sentiment_resources
+    preload_sentiment_resources()
+    print("[OK] Sentiment model and wordcloud preloaded.")
+except Exception as e:
+    print(f"[WARN] Failed to preload sentiment resources: {e}")
 
 
 # unregistered user boundaries

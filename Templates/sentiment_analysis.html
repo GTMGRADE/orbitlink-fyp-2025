@@ -244,52 +244,57 @@
           <div class="content-grid">
             <div class="card score-section">
               <div class="score-label">Overall Sentiment</div>
-              <div class="score-value">+55 ▲</div>
+              {% if sentiment and sentiment.overall_score %}
+              <div class="score-value">{{ sentiment.overall_score }}</div>
+              {% else %}
+              <div class="score-value">N/A</div>
+              {% endif %}
             </div>
 
             <div class="card">
               <div class="pie-chart">
-                <div>Pie Chart<br />(Sentiment Distribution)</div>
+                {% if sentiment and sentiment.pie_chart %}
+                  <img alt="Sentiment Pie Chart" style="max-width:100%" src="data:image/png;base64, {{ sentiment.pie_chart }}" />
+                {% else %}
+                  <div>Pie Chart<br />(Sentiment Distribution)</div>
+                {% endif %}
               </div>
             </div>
           </div>
 
           <div class="content-grid">
             <div class="card">
-              <div class="word-cloud">Word Cloud<br />(Topic Analysis)</div>
+              <div class="word-cloud">
+                {% if sentiment and sentiment.word_cloud %}
+                  <img alt="Word Cloud" style="max-width:100%" src="data:image/png;base64, {{ sentiment.word_cloud }}" />
+                {% else %}
+                  Word Cloud<br />(Topic Analysis)
+                {% endif %}
+              </div>
             </div>
           </div>
 
           <div class="comments-section">
-            <h2 class="section-title">Top positive comments :</h2>
+            <h2 class="section-title">Top 5 Liked Comments :</h2>
 
-            <div class="comment-item">
-              <div>
-                <div class="comment-author">James</div>
-                <div class="comment-text">love the posts so much...</div>
-              </div>
-              <div class="comment-date">15:48 Dec/23/2025</div>
-            </div>
-
-            <div class="comment-item">
-              <div>
-                <div class="comment-author">Anna</div>
-                <div class="comment-text">very touched</div>
-              </div>
-              <div class="comment-date">16:45 Dec/10/2025</div>
-            </div>
-
-            <div class="comment-item">
-              <div>
-                <div class="comment-author">Sam</div>
-                <div class="comment-text">
-                  Excellent analysis! These insights are truly valuable and give
-                  me a much deeper understanding of the topic. Thank you for
-                  sharing!
+            {% if sentiment and sentiment.top_like_comments %}
+              {% for c in sentiment.top_like_comments %}
+              <div class="comment-item">
+                <div>
+                  <div class="comment-author">{{ c.author_name }} • {{ c.like_count }} likes</div>
+                  <div class="comment-text">{{ c.text }}</div>
                 </div>
+                <div class="comment-date">{{ c.published_at or '' }}</div>
               </div>
-              <div class="comment-date">21:08/Dec/28/2025</div>
-            </div>
+              {% endfor %}
+            {% else %}
+              <div class="comment-item">
+                <div>
+                  <div class="comment-text">No comments available yet. Run an analysis first.</div>
+                </div>
+                <div class="comment-date"></div>
+              </div>
+            {% endif %}
           </div>
         </div>
       </main>

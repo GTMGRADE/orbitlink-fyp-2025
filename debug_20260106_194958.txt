@@ -1,0 +1,1395 @@
+[19:49:29] Resolving channel URL: https://www.youtube.com/@MechaGaikotsu
+[19:49:29] Matched pattern: handle -> MechaGaikotsu
+[19:49:31] Resolved handle to channel ID: UCowMgqWFV83mFHLKo32_O4w
+[19:49:31] Channel ID: UCowMgqWFV83mFHLKo32_O4w
+[19:49:31] Fetching videos from last 180 days (published after: 2025-07-10T11:49:31.636329Z)
+[19:49:31] Requesting videos 0-50
+[19:49:31] Received 30 video items
+[19:49:32]   Video 1: This Is The Alpha Predator Of Gundam Model Kits!  ... (Comments: 447)
+[19:49:32]   Video 2: HG Strike Rouge Review | MOBILE SUIT GUNDAM SEED... (Comments: 114)
+[19:49:32]   Video 3: The Perfect Blend of Gundam and GM  |  MG 1/100 GU... (Comments: 111)
+[19:49:32]   Video 4: The Best Gundam Kit Of The Year Is A GIANT Bootleg... (Comments: 772)
+[19:49:32]   Video 5: This Is In The Top 10 Weirdest Gundam Designs For ... (Comments: 155)
+[19:49:32]   Video 6: I Love When A Kit Is Way Better Than Expected! |  ... (Comments: 116)
+[19:49:32]   Video 7: HG 1/144 Plutone Black Review |  GUNDAM 00F... (Comments: 128)
+[19:49:32]   Video 8: HG 1/144 Monkey Rodi Review |  GUNDAM IRON BLOODED... (Comments: 140)
+[19:49:32]   Video 9: HG 1/144 Silver Bullet Review |  MOBILE SUIT GUNDA... (Comments: 125)
+[19:49:32]   Video 10: The KING of the Gundam Grunt Suits |  MG 1/100 STA... (Comments: 221)
+[19:49:32]   Video 11: HG Rouei Review  |  MOBILE SUIT GUNDAM IRON BLOODE... (Comments: 92)
+[19:49:32]   Video 12: RG Gundam Avalanche Exia Dash Review  |  MOBILE SU... (Comments: 168)
+[19:49:32]   Video 13: I'm In Polycap Hell... (Comments: 229)
+[19:49:32]   Video 14: HG ZII Zetsu Review | MOBILE SUIT ZETA GUNDAM... (Comments: 99)
+[19:49:32]   Video 15: 🛑STOP🛑 You Need This Kit RIght Now!!! | SNAA DIVIN... (Comments: 412)
+[19:49:32]   Video 16: HG Gundam Double X Review | AFTER WAR GUNDAM X... (Comments: 172)
+[19:49:32]   Video 17: The Weirdest Gundam Model KIt?... (Comments: 214)
+[19:49:32]   Video 18: The Most Beautiful Gundam Model Kit?... (Comments: 251)
+[19:49:32]   Video 19: HG Gundam MK-II (Titans) Review  | MOBILE SUIT ZET... (Comments: 108)
+[19:49:32]   Video 20: Gelgoog? More like Gel-GREAT!  |  HG BOCATA'S GELG... (Comments: 102)
+[19:49:32]   Video 21: God Still Looks Great in 2025!  |  HG GOD GUNDAM R... (Comments: 129)
+[19:49:32]   Video 22: The GQuuuuuuX Evangeli-cannon | HG SAYLA'S LIGHT G... (Comments: 138)
+[19:49:32]   Video 23: Warhammer People Are Invading Gunpla! - And Now I ... (Comments: 943)
+[19:49:32]   Video 24: Still The Thiccest Gundam In Town!  | HG 1/144 GUN... (Comments: 132)
+[19:49:32]   Video 25: I Was NOT Ready For The Gunzilla... (Comments: 581)
+[19:49:32]   Video 26: The Only Gundam To Ever Get Cancelled!  |  HG GUND... (Comments: 180)
+[19:49:32]   Video 27: Introducing the Gund-cycle... (Comments: 164)
+[19:49:32]   Video 28: RE100 Is Back And It's Better Than Ever!... (Comments: 190)
+[19:49:32]   Video 29: THE ICE WHITE EXIA |  HG Transient Gundam Review... (Comments: 167)
+[19:49:32]   Video 30: STOP. Using Gundam AI Right now... (Comments: 445)
+[19:49:32] Total videos fetched: 30
+[19:49:32] 
+=== VIDEO ANALYSIS ===
+[19:49:32] Total videos to analyze: 30
+[19:49:32] 
+--- Video 1/30 ---
+[19:49:32] Title: This Is The Alpha Predator Of Gundam Model Kits!  |  MG 1/100 GUNDAM BARBATOS LU...
+[19:49:32] Video ID: 6qqX2_J_iRM
+[19:49:32] Available comments: 447
+[19:49:32] Analyzing comments for video 6qqX2_J_iRM
+[19:49:32] Requesting comment page (have 0 so far)
+[19:49:33] Received 100 comment threads
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 2 replies
+[19:49:33] Thread has 1 replies
+[19:49:33]   Found channel owner reply to comment!
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 3 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 4 replies
+[19:49:33]   Found channel owner reply to comment!
+[19:49:33] Requesting comment page (have 136 so far)
+[19:49:33] Received 100 comment threads
+[19:49:33] Thread has 3 replies
+[19:49:33] Thread has 2 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 4 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33]   Found channel owner reply to comment!
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Requesting comment page (have 259 so far)
+[19:49:33] Received 84 comment threads
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] Thread has 2 replies
+[19:49:33] Thread has 3 replies
+[19:49:33] Thread has 5 replies
+[19:49:33] Thread has 1 replies
+[19:49:33] No more comment pages
+[19:49:33] Total comments collected for this video: 367
+[19:49:33] Channel replied 3 times in this video
+[19:49:33] Total comments so far: 367
+[19:49:33] 
+--- Video 2/30 ---
+[19:49:33] Title: HG Strike Rouge Review | MOBILE SUIT GUNDAM SEED...
+[19:49:33] Video ID: ZCQ25tJgP-M
+[19:49:33] Available comments: 114
+[19:49:33] Analyzing comments for video ZCQ25tJgP-M
+[19:49:33] Requesting comment page (have 0 so far)
+[19:49:34] Received 78 comment threads
+[19:49:34] Thread has 5 replies
+[19:49:34] Thread has 5 replies
+[19:49:34] Thread has 5 replies
+[19:49:34] Thread has 5 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34]   Found channel owner reply to comment!
+[19:49:34] Thread has 3 replies
+[19:49:34] No more comment pages
+[19:49:34] Total comments collected for this video: 105
+[19:49:34] Channel replied 1 times in this video
+[19:49:34] Total comments so far: 472
+[19:49:34] 
+--- Video 3/30 ---
+[19:49:34] Title: The Perfect Blend of Gundam and GM  |  MG 1/100 GUNRAID REVIEW...
+[19:49:34] Video ID: Qb4yupJ89P4
+[19:49:34] Available comments: 111
+[19:49:34] Analyzing comments for video Qb4yupJ89P4
+[19:49:34] Requesting comment page (have 0 so far)
+[19:49:34] Received 82 comment threads
+[19:49:34] Thread has 5 replies
+[19:49:34] Thread has 3 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 2 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 4 replies
+[19:49:34]   Found channel owner reply to comment!
+[19:49:34] Thread has 1 replies
+[19:49:34] Thread has 1 replies
+[19:49:34] No more comment pages
+[19:49:34] Total comments collected for this video: 104
+[19:49:34] Channel replied 1 times in this video
+[19:49:34] Total comments so far: 576
+[19:49:34] 
+--- Video 4/30 ---
+[19:49:34] Title: The Best Gundam Kit Of The Year Is A GIANT Bootleg Real Grade?  |  FAT CAT GOD G...
+[19:49:34] Video ID: 3C_G-4QAGuY
+[19:49:34] Available comments: 772
+[19:49:34] Analyzing comments for video 3C_G-4QAGuY
+[19:49:34] Requesting comment page (have 0 so far)
+[19:49:35] Received 100 comment threads
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 3 replies
+[19:49:35] Thread has 1 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 3 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 2 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 2 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Thread has 1 replies
+[19:49:35] Requesting comment page (have 164 so far)
+[19:49:35] Received 100 comment threads
+[19:49:35] Thread has 3 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 2 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Thread has 1 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Thread has 2 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 2 replies
+[19:49:35] Requesting comment page (have 276 so far)
+[19:49:35] Received 100 comment threads
+[19:49:35] Thread has 3 replies
+[19:49:35] Thread has 1 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 5 replies
+[19:49:35] Thread has 2 replies
+[19:49:35] Thread has 1 replies
+[19:49:35] Thread has 3 replies
+[19:49:35]   Found channel owner reply to comment!
+[19:49:35] Requesting comment page (have 397 so far)
+[19:49:36] Received 100 comment threads
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 1 replies
+[19:49:36]   Found channel owner reply to comment!
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 2 replies
+[19:49:36] Thread has 2 replies
+[19:49:36]   Found channel owner reply to comment!
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 2 replies
+[19:49:36]   Found channel owner reply to comment!
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 5 replies
+[19:49:36] Thread has 2 replies
+[19:49:36]   Found channel owner reply to comment!
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 2 replies
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 3 replies
+[19:49:36] Thread has 1 replies
+[19:49:36] Thread has 3 replies
+[19:49:36] Thread has 2 replies
+[19:49:36] Thread has 1 replies
+[19:49:36]   Found channel owner reply to comment!
+[19:49:36] Requesting comment page (have 531 so far)
+[19:49:37] Received 89 comment threads
+[19:49:37] Thread has 4 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 2 replies
+[19:49:37]   Found channel owner reply to comment!
+[19:49:37] Thread has 2 replies
+[19:49:37] Thread has 2 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 2 replies
+[19:49:37] Thread has 3 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 5 replies
+[19:49:37]   Found channel owner reply to comment!
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 5 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 2 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 5 replies
+[19:49:37] No more comment pages
+[19:49:37] Total comments collected for this video: 661
+[19:49:37] Channel replied 14 times in this video
+[19:49:37] Total comments so far: 1237
+[19:49:37] 
+--- Video 5/30 ---
+[19:49:37] Title: This Is In The Top 10 Weirdest Gundam Designs For Sure! |  HG Zogok Jaburo Revie...
+[19:49:37] Video ID: 967lZHGyjlw
+[19:49:37] Available comments: 155
+[19:49:37] Analyzing comments for video 967lZHGyjlw
+[19:49:37] Requesting comment page (have 0 so far)
+[19:49:37] Received 100 comment threads
+[19:49:37] Thread has 5 replies
+[19:49:37] Thread has 2 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 3 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Thread has 1 replies
+[19:49:37] Requesting comment page (have 115 so far)
+[19:49:37] Received 30 comment threads
+[19:49:37] No more comment pages
+[19:49:37] Total comments collected for this video: 145
+[19:49:37] Total comments so far: 1382
+[19:49:37] 
+--- Video 6/30 ---
+[19:49:37] Title: I Love When A Kit Is Way Better Than Expected! |  HG FULLARMOR ORIGIN GUNDAM...
+[19:49:37] Video ID: uCsGMorFqac
+[19:49:37] Available comments: 116
+[19:49:37] Analyzing comments for video uCsGMorFqac
+[19:49:37] Requesting comment page (have 0 so far)
+[19:49:38] Received 78 comment threads
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 5 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 4 replies
+[19:49:38] Thread has 3 replies
+[19:49:38] Thread has 4 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 3 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] No more comment pages
+[19:49:38] Total comments collected for this video: 109
+[19:49:38] Total comments so far: 1491
+[19:49:38] 
+--- Video 7/30 ---
+[19:49:38] Title: HG 1/144 Plutone Black Review |  GUNDAM 00F...
+[19:49:38] Video ID: DdF_hB2Lr8k
+[19:49:38] Available comments: 128
+[19:49:38] Analyzing comments for video DdF_hB2Lr8k
+[19:49:38] Requesting comment page (have 0 so far)
+[19:49:38] Received 78 comment threads
+[19:49:38] Thread has 5 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 5 replies
+[19:49:38] Thread has 5 replies
+[19:49:38]   Found channel owner reply to comment!
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 5 replies
+[19:49:38] Thread has 3 replies
+[19:49:38]   Found channel owner reply to comment!
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 2 replies
+[19:49:38]   Found channel owner reply to comment!
+[19:49:38] Thread has 1 replies
+[19:49:38] No more comment pages
+[19:49:38] Total comments collected for this video: 112
+[19:49:38] Channel replied 3 times in this video
+[19:49:38] Total comments so far: 1603
+[19:49:38] 
+--- Video 8/30 ---
+[19:49:38] Title: HG 1/144 Monkey Rodi Review |  GUNDAM IRON BLOODED ORPHANS...
+[19:49:38] Video ID: uW6uAZtOZT0
+[19:49:38] Available comments: 140
+[19:49:38] Analyzing comments for video uW6uAZtOZT0
+[19:49:38] Requesting comment page (have 0 so far)
+[19:49:38] Received 96 comment threads
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 3 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 5 replies
+[19:49:38] Thread has 1 replies
+[19:49:38]   Found channel owner reply to comment!
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 2 replies
+[19:49:38]   Found channel owner reply to comment!
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] No more comment pages
+[19:49:38] Total comments collected for this video: 117
+[19:49:38] Channel replied 2 times in this video
+[19:49:38] Total comments so far: 1720
+[19:49:38] 
+--- Video 9/30 ---
+[19:49:38] Title: HG 1/144 Silver Bullet Review |  MOBILE SUIT GUNDAM VARIATION...
+[19:49:38] Video ID: bm3T7qg0xsw
+[19:49:38] Available comments: 125
+[19:49:38] Analyzing comments for video bm3T7qg0xsw
+[19:49:38] Requesting comment page (have 0 so far)
+[19:49:38] Received 81 comment threads
+[19:49:38] Thread has 5 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 3 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 4 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38]   Found channel owner reply to comment!
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 2 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] Thread has 1 replies
+[19:49:38] No more comment pages
+[19:49:38] Total comments collected for this video: 112
+[19:49:38] Channel replied 1 times in this video
+[19:49:38] Total comments so far: 1832
+[19:49:38] 
+--- Video 10/30 ---
+[19:49:38] Title: The KING of the Gundam Grunt Suits |  MG 1/100 STARK JEGAN REVIEW...
+[19:49:38] Video ID: Q8kF1nsIetQ
+[19:49:38] Available comments: 221
+[19:49:38] Analyzing comments for video Q8kF1nsIetQ
+[19:49:38] Requesting comment page (have 0 so far)
+[19:49:39] Received 100 comment threads
+[19:49:39] Thread has 5 replies
+[19:49:39] Thread has 5 replies
+[19:49:39] Thread has 2 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 5 replies
+[19:49:39] Thread has 3 replies
+[19:49:39] Thread has 2 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Requesting comment page (have 129 so far)
+[19:49:39] Received 48 comment threads
+[19:49:39] Thread has 2 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 3 replies
+[19:49:39] No more comment pages
+[19:49:39] Total comments collected for this video: 188
+[19:49:39] Total comments so far: 2020
+[19:49:39] 
+--- Video 11/30 ---
+[19:49:39] Title: HG Rouei Review  |  MOBILE SUIT GUNDAM IRON BLOODED ORPHANS...
+[19:49:39] Video ID: 9ISbK_qC_no
+[19:49:39] Available comments: 92
+[19:49:39] Analyzing comments for video 9ISbK_qC_no
+[19:49:39] Requesting comment page (have 0 so far)
+[19:49:39] Received 73 comment threads
+[19:49:39] Thread has 4 replies
+[19:49:39] Thread has 2 replies
+[19:49:39] Thread has 3 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] Thread has 2 replies
+[19:49:39] Thread has 2 replies
+[19:49:39] Thread has 1 replies
+[19:49:39] No more comment pages
+[19:49:39] Total comments collected for this video: 91
+[19:49:39] Total comments so far: 2111
+[19:49:39] 
+--- Video 12/30 ---
+[19:49:39] Title: RG Gundam Avalanche Exia Dash Review  |  MOBILE SUIT GUNDAM 00...
+[19:49:39] Video ID: T23PX3E2rmo
+[19:49:39] Available comments: 168
+[19:49:39] Analyzing comments for video T23PX3E2rmo
+[19:49:39] Requesting comment page (have 0 so far)
+[19:49:40] Received 100 comment threads
+[19:49:40] Thread has 3 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 2 replies
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 2 replies
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 2 replies
+[19:49:40] Thread has 5 replies
+[19:49:40]   Found channel owner reply to comment!
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 3 replies
+[19:49:40] Thread has 2 replies
+[19:49:40]   Found channel owner reply to comment!
+[19:49:40] Thread has 4 replies
+[19:49:40]   Found channel owner reply to comment!
+[19:49:40] Requesting comment page (have 150 so far)
+[19:49:40] Received 1 comment threads
+[19:49:40] No more comment pages
+[19:49:40] Total comments collected for this video: 151
+[19:49:40] Channel replied 3 times in this video
+[19:49:40] Total comments so far: 2262
+[19:49:40] 
+--- Video 13/30 ---
+[19:49:40] Title: I'm In Polycap Hell...
+[19:49:40] Video ID: _rX_z1bwWSQ
+[19:49:40] Available comments: 229
+[19:49:40] Analyzing comments for video _rX_z1bwWSQ
+[19:49:40] Requesting comment page (have 0 so far)
+[19:49:40] Received 100 comment threads
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 4 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 5 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 2 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Thread has 1 replies
+[19:49:40] Requesting comment page (have 129 so far)
+[19:49:41] Received 79 comment threads
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 3 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] No more comment pages
+[19:49:41] Total comments collected for this video: 216
+[19:49:41] Total comments so far: 2478
+[19:49:41] 
+--- Video 14/30 ---
+[19:49:41] Title: HG ZII Zetsu Review | MOBILE SUIT ZETA GUNDAM...
+[19:49:41] Video ID: 1I2TUUbcKS4
+[19:49:41] Available comments: 99
+[19:49:41] Analyzing comments for video 1I2TUUbcKS4
+[19:49:41] Requesting comment page (have 0 so far)
+[19:49:41] Received 78 comment threads
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 5 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 2 replies
+[19:49:41] Thread has 3 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 2 replies
+[19:49:41] Thread has 2 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] No more comment pages
+[19:49:41] Total comments collected for this video: 98
+[19:49:41] Total comments so far: 2576
+[19:49:41] 
+--- Video 15/30 ---
+[19:49:41] Title: 🛑STOP🛑 You Need This Kit RIght Now!!! | SNAA DIVINE INVOKER PERCIVAL...
+[19:49:41] Video ID: _QzONSwtwRo
+[19:49:41] Available comments: 412
+[19:49:41] Analyzing comments for video _QzONSwtwRo
+[19:49:41] Requesting comment page (have 0 so far)
+[19:49:41] Received 100 comment threads
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 5 replies
+[19:49:41] Thread has 5 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 5 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Thread has 1 replies
+[19:49:41] Requesting comment page (have 120 so far)
+[19:49:42] Received 100 comment threads
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 5 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Requesting comment page (have 238 so far)
+[19:49:42] Received 79 comment threads
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 2 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 2 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 5 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 1 replies
+[19:49:42]   Found channel owner reply to comment!
+[19:49:42] Thread has 2 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] Thread has 1 replies
+[19:49:42] No more comment pages
+[19:49:42] Total comments collected for this video: 352
+[19:49:42] Channel replied 10 times in this video
+[19:49:42] Total comments so far: 2928
+[19:49:42] 
+--- Video 16/30 ---
+[19:49:42] Title: HG Gundam Double X Review | AFTER WAR GUNDAM X...
+[19:49:42] Video ID: PtzaEucspEs
+[19:49:42] Available comments: 172
+[19:49:42] Analyzing comments for video PtzaEucspEs
+[19:49:42] Requesting comment page (have 0 so far)
+[19:49:43] Received 100 comment threads
+[19:49:43] Thread has 5 replies
+[19:49:43] Thread has 5 replies
+[19:49:43] Thread has 4 replies
+[19:49:43] Thread has 3 replies
+[19:49:43] Thread has 5 replies
+[19:49:43] Thread has 3 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Requesting comment page (have 137 so far)
+[19:49:43] Received 19 comment threads
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] No more comment pages
+[19:49:43] Total comments collected for this video: 160
+[19:49:43] Total comments so far: 3088
+[19:49:43] 
+--- Video 17/30 ---
+[19:49:43] Title: The Weirdest Gundam Model KIt?...
+[19:49:43] Video ID: tFsm2KWza6M
+[19:49:43] Available comments: 214
+[19:49:43] Analyzing comments for video tFsm2KWza6M
+[19:49:43] Requesting comment page (have 0 so far)
+[19:49:43] Received 100 comment threads
+[19:49:43] Thread has 5 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 5 replies
+[19:49:43] Thread has 1 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 5 replies
+[19:49:43] Thread has 4 replies
+[19:49:43] Thread has 2 replies
+[19:49:43] Thread has 3 replies
+[19:49:43] Requesting comment page (have 129 so far)
+[19:49:44] Received 57 comment threads
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 2 replies
+[19:49:44] Thread has 2 replies
+[19:49:44] Thread has 2 replies
+[19:49:44]   Found channel owner reply to comment!
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 2 replies
+[19:49:44] No more comment pages
+[19:49:44] Total comments collected for this video: 197
+[19:49:44] Channel replied 1 times in this video
+[19:49:44] Total comments so far: 3285
+[19:49:44] 
+--- Video 18/30 ---
+[19:49:44] Title: The Most Beautiful Gundam Model Kit?...
+[19:49:44] Video ID: AgjvIV4bleE
+[19:49:44] Available comments: 251
+[19:49:44] Analyzing comments for video AgjvIV4bleE
+[19:49:44] Requesting comment page (have 0 so far)
+[19:49:44] Received 100 comment threads
+[19:49:44] Thread has 5 replies
+[19:49:44] Thread has 3 replies
+[19:49:44] Thread has 5 replies
+[19:49:44] Thread has 4 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 4 replies
+[19:49:44] Thread has 2 replies
+[19:49:44] Thread has 5 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Requesting comment page (have 133 so far)
+[19:49:44] Received 81 comment threads
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 3 replies
+[19:49:44]   Found channel owner reply to comment!
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 5 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] Thread has 2 replies
+[19:49:44] Thread has 1 replies
+[19:49:44] No more comment pages
+[19:49:44] Total comments collected for this video: 232
+[19:49:44] Channel replied 1 times in this video
+[19:49:44] Total comments so far: 3517
+[19:49:44] 
+--- Video 19/30 ---
+[19:49:44] Title: HG Gundam MK-II (Titans) Review  | MOBILE SUIT ZETA GUNDAM...
+[19:49:44] Video ID: Lm2wh7te8qY
+[19:49:44] Available comments: 108
+[19:49:44] Analyzing comments for video Lm2wh7te8qY
+[19:49:44] Requesting comment page (have 0 so far)
+[19:49:45] Received 90 comment threads
+[19:49:45] Thread has 4 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] No more comment pages
+[19:49:45] Total comments collected for this video: 105
+[19:49:45] Total comments so far: 3622
+[19:49:45] 
+--- Video 20/30 ---
+[19:49:45] Title: Gelgoog? More like Gel-GREAT!  |  HG BOCATA'S GELGOOG REVIEW...
+[19:49:45] Video ID: sOONY6Q-FoM
+[19:49:45] Available comments: 102
+[19:49:45] Analyzing comments for video sOONY6Q-FoM
+[19:49:45] Requesting comment page (have 0 so far)
+[19:49:45] Received 62 comment threads
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 5 replies
+[19:49:45] Thread has 1 replies
+[19:49:45]   Found channel owner reply to comment!
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 5 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 3 replies
+[19:49:45] No more comment pages
+[19:49:45] Total comments collected for this video: 95
+[19:49:45] Channel replied 1 times in this video
+[19:49:45] Total comments so far: 3717
+[19:49:45] 
+--- Video 21/30 ---
+[19:49:45] Title: God Still Looks Great in 2025!  |  HG GOD GUNDAM REVIEW...
+[19:49:45] Video ID: eVun9rR8enU
+[19:49:45] Available comments: 129
+[19:49:45] Analyzing comments for video eVun9rR8enU
+[19:49:45] Requesting comment page (have 0 so far)
+[19:49:45] Received 79 comment threads
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 4 replies
+[19:49:45] Thread has 3 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 4 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 2 replies
+[19:49:45]   Found channel owner reply to comment!
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] Thread has 5 replies
+[19:49:45] Thread has 1 replies
+[19:49:45] No more comment pages
+[19:49:45] Total comments collected for this video: 117
+[19:49:45] Channel replied 1 times in this video
+[19:49:45] Total comments so far: 3834
+[19:49:45] 
+--- Video 22/30 ---
+[19:49:45] Title: The GQuuuuuuX Evangeli-cannon | HG SAYLA'S LIGHT GUNCANNON REVIEW...
+[19:49:45] Video ID: S12Y0NtJ_HU
+[19:49:45] Available comments: 138
+[19:49:45] Analyzing comments for video S12Y0NtJ_HU
+[19:49:45] Requesting comment page (have 0 so far)
+[19:49:46] Received 69 comment threads
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 2 replies
+[19:49:46] Thread has 4 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 3 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 3 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 2 replies
+[19:49:46] Thread has 4 replies
+[19:49:46] No more comment pages
+[19:49:46] Total comments collected for this video: 115
+[19:49:46] Total comments so far: 3949
+[19:49:46] 
+--- Video 23/30 ---
+[19:49:46] Title: Warhammer People Are Invading Gunpla! - And Now I know Why!...
+[19:49:46] Video ID: hBTzmZUsuBg
+[19:49:46] Available comments: 943
+[19:49:46] Analyzing comments for video hBTzmZUsuBg
+[19:49:46] Requesting comment page (have 0 so far)
+[19:49:46] Received 100 comment threads
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 3 replies
+[19:49:46] Thread has 2 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 4 replies
+[19:49:46] Thread has 2 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 2 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 3 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 4 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 4 replies
+[19:49:46] Thread has 3 replies
+[19:49:46] Thread has 2 replies
+[19:49:46] Thread has 3 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 5 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Thread has 1 replies
+[19:49:46] Requesting comment page (have 240 so far)
+[19:49:47] Received 100 comment threads
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 3 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 3 replies
+[19:49:47] Thread has 2 replies
+[19:49:47] Thread has 2 replies
+[19:49:47] Thread has 3 replies
+[19:49:47] Requesting comment page (have 357 so far)
+[19:49:47] Received 100 comment threads
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 1 replies
+[19:49:47] Thread has 2 replies
+[19:49:47]   Found channel owner reply to comment!
+[19:49:47] Requesting comment page (have 465 so far)
+[19:49:48] Received 100 comment threads
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 4 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 5 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Requesting comment page (have 588 so far)
+[19:49:48] Received 83 comment threads
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 3 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 5 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 2 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] Thread has 1 replies
+[19:49:48] No more comment pages
+[19:49:48] Total comments collected for this video: 699
+[19:49:48] Channel replied 1 times in this video
+[19:49:48] Total comments so far: 4648
+[19:49:48] 
+--- Video 24/30 ---
+[19:49:48] Title: Still The Thiccest Gundam In Town!  | HG 1/144 GUNDAM VIRTUE REVIEW...
+[19:49:48] Video ID: wQ6j96HX9Oc
+[19:49:48] Available comments: 132
+[19:49:48] Analyzing comments for video wQ6j96HX9Oc
+[19:49:48] Requesting comment page (have 0 so far)
+[19:49:49] Received 89 comment threads
+[19:49:49] Thread has 5 replies
+[19:49:49] Thread has 3 replies
+[19:49:49] Thread has 4 replies
+[19:49:49] Thread has 3 replies
+[19:49:49] Thread has 4 replies
+[19:49:49] Thread has 1 replies
+[19:49:49] Thread has 1 replies
+[19:49:49] Thread has 2 replies
+[19:49:49] Thread has 1 replies
+[19:49:49] Thread has 2 replies
+[19:49:49] Thread has 1 replies
+[19:49:49] Thread has 2 replies
+[19:49:49]   Found channel owner reply to comment!
+[19:49:49] Thread has 1 replies
+[19:49:49] Thread has 3 replies
+[19:49:49] Thread has 2 replies
+[19:49:49] No more comment pages
+[19:49:49] Total comments collected for this video: 124
+[19:49:49] Channel replied 1 times in this video
+[19:49:49] Total comments so far: 4772
+[19:49:49] 
+--- Video 25/30 ---
+[19:49:49] Title: I Was NOT Ready For The Gunzilla...
+[19:49:49] Video ID: zUx1eg5kC3k
+[19:49:49] Available comments: 581
+[19:49:49] Analyzing comments for video zUx1eg5kC3k
+[19:49:49] Requesting comment page (have 0 so far)
+[19:49:51] Received 100 comment threads
+[19:49:51] Thread has 5 replies
+[19:49:51] Thread has 4 replies
+[19:49:51] Thread has 2 replies
+[19:49:51] Thread has 5 replies
+[19:49:51] Thread has 5 replies
+[19:49:51] Thread has 3 replies
+[19:49:51] Thread has 5 replies
+[19:49:51] Thread has 2 replies
+[19:49:51] Thread has 2 replies
+[19:49:51] Thread has 5 replies
+[19:49:51] Thread has 1 replies
+[19:49:51] Thread has 2 replies
+[19:49:51] Thread has 2 replies
+[19:49:51] Thread has 1 replies
+[19:49:51] Thread has 5 replies
+[19:49:51] Thread has 1 replies
+[19:49:51] Thread has 2 replies
+[19:49:51] Requesting comment page (have 152 so far)
+[19:49:52] Received 100 comment threads
+[19:49:52] Thread has 3 replies
+[19:49:52] Thread has 1 replies
+[19:49:52] Thread has 2 replies
+[19:49:52] Requesting comment page (have 258 so far)
+[19:49:53] Received 100 comment threads
+[19:49:53] Thread has 2 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 4 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 3 replies
+[19:49:53] Thread has 5 replies
+[19:49:53] Thread has 4 replies
+[19:49:53] Thread has 2 replies
+[19:49:53] Thread has 2 replies
+[19:49:53] Requesting comment page (have 385 so far)
+[19:49:53] Received 100 comment threads
+[19:49:53] Thread has 1 replies
+[19:49:53]   Found channel owner reply to comment!
+[19:49:53] Thread has 2 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 3 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 1 replies
+[19:49:53] Thread has 5 replies
+[19:49:53] Requesting comment page (have 501 so far)
+[19:49:53] Received 1 comment threads
+[19:49:53] No more comment pages
+[19:49:53] Total comments collected for this video: 502
+[19:49:53] Channel replied 1 times in this video
+[19:49:53] Total comments so far: 5274
+[19:49:53] 
+--- Video 26/30 ---
+[19:49:53] Title: The Only Gundam To Ever Get Cancelled!  |  HG GUNDAM X REVIEW...
+[19:49:53] Video ID: JbzdnYoiKCg
+[19:49:53] Available comments: 180
+[19:49:53] Analyzing comments for video JbzdnYoiKCg
+[19:49:53] Requesting comment page (have 0 so far)
+[19:49:54] Received 100 comment threads
+[19:49:54] Thread has 4 replies
+[19:49:54] Thread has 5 replies
+[19:49:54] Thread has 5 replies
+[19:49:54] Thread has 3 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 2 replies
+[19:49:54] Thread has 2 replies
+[19:49:54] Thread has 3 replies
+[19:49:54] Thread has 2 replies
+[19:49:54] Thread has 5 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 3 replies
+[19:49:54] Thread has 2 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 4 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 5 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 3 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 2 replies
+[19:49:54] Requesting comment page (have 158 so far)
+[19:49:54] Received 10 comment threads
+[19:49:54] Thread has 1 replies
+[19:49:54] Thread has 1 replies
+[19:49:54] No more comment pages
+[19:49:54] Total comments collected for this video: 170
+[19:49:54] Total comments so far: 5444
+[19:49:54] 
+--- Video 27/30 ---
+[19:49:54] Title: Introducing the Gund-cycle...
+[19:49:54] Video ID: C4Se-eLyF7E
+[19:49:54] Available comments: 164
+[19:49:54] Analyzing comments for video C4Se-eLyF7E
+[19:49:54] Requesting comment page (have 0 so far)
+[19:49:55] Received 100 comment threads
+[19:49:55] Thread has 5 replies
+[19:49:55] Thread has 3 replies
+[19:49:55] Thread has 2 replies
+[19:49:55] Thread has 2 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 3 replies
+[19:49:55] Thread has 4 replies
+[19:49:55] Requesting comment page (have 124 so far)
+[19:49:55] Received 25 comment threads
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 2 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] No more comment pages
+[19:49:55] Total comments collected for this video: 155
+[19:49:55] Total comments so far: 5599
+[19:49:55] 
+--- Video 28/30 ---
+[19:49:55] Title: RE100 Is Back And It's Better Than Ever!...
+[19:49:55] Video ID: SGK_69_uec8
+[19:49:55] Available comments: 190
+[19:49:55] Analyzing comments for video SGK_69_uec8
+[19:49:55] Requesting comment page (have 0 so far)
+[19:49:55] Received 100 comment threads
+[19:49:55] Thread has 2 replies
+[19:49:55] Thread has 5 replies
+[19:49:55] Thread has 2 replies
+[19:49:55] Thread has 4 replies
+[19:49:55] Thread has 4 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55]   Found channel owner reply to comment!
+[19:49:55] Thread has 3 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 1 replies
+[19:49:55] Thread has 2 replies
+[19:49:55] Requesting comment page (have 134 so far)
+[19:49:56] Received 23 comment threads
+[19:49:56] Thread has 5 replies
+[19:49:56] Thread has 5 replies
+[19:49:56] Thread has 2 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 3 replies
+[19:49:56] No more comment pages
+[19:49:56] Total comments collected for this video: 173
+[19:49:56] Channel replied 1 times in this video
+[19:49:56] Total comments so far: 5772
+[19:49:56] 
+--- Video 29/30 ---
+[19:49:56] Title: THE ICE WHITE EXIA |  HG Transient Gundam Review...
+[19:49:56] Video ID: CAw3t5Fyuxc
+[19:49:56] Available comments: 167
+[19:49:56] Analyzing comments for video CAw3t5Fyuxc
+[19:49:56] Requesting comment page (have 0 so far)
+[19:49:56] Received 100 comment threads
+[19:49:56] Thread has 5 replies
+[19:49:56] Thread has 2 replies
+[19:49:56] Thread has 4 replies
+[19:49:56]   Found channel owner reply to comment!
+[19:49:56] Thread has 4 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 4 replies
+[19:49:56] Thread has 2 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Requesting comment page (have 127 so far)
+[19:49:56] Received 19 comment threads
+[19:49:56] Thread has 3 replies
+[19:49:56] Thread has 1 replies
+[19:49:56] Thread has 2 replies
+[19:49:56] Thread has 5 replies
+[19:49:56] No more comment pages
+[19:49:56] Total comments collected for this video: 157
+[19:49:56] Channel replied 1 times in this video
+[19:49:56] Total comments so far: 5929
+[19:49:56] 
+--- Video 30/30 ---
+[19:49:56] Title: STOP. Using Gundam AI Right now...
+[19:49:56] Video ID: sPmgjtZixwk
+[19:49:56] Available comments: 445
+[19:49:56] Analyzing comments for video sPmgjtZixwk
+[19:49:56] Requesting comment page (have 0 so far)
+[19:49:57] Received 100 comment threads
+[19:49:57] Thread has 4 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 2 replies
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 4 replies
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 3 replies
+[19:49:57] Thread has 3 replies
+[19:49:57] Thread has 2 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Requesting comment page (have 159 so far)
+[19:49:57] Received 100 comment threads
+[19:49:57] Thread has 5 replies
+[19:49:57] Thread has 2 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Requesting comment page (have 269 so far)
+[19:49:57] Received 92 comment threads
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 2 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 1 replies
+[19:49:57] Thread has 2 replies
+[19:49:57] No more comment pages
+[19:49:57] Total comments collected for this video: 372
+[19:49:57] Total comments so far: 6301
+[19:49:57] 
+=== SUMMARY ===
+[19:49:57] Total comments analyzed: 6301
+[19:49:57] Total channel replies found: 47
+[19:49:57] 
+=== CALCULATING SCORES ===
+[19:49:57] Processing 6301 comments for 3526 unique authors
+[19:49:57] Channel replied to @dorky2958 (now has 1 replies)
+[19:49:57] Channel replied to @williamn2642 (now has 1 replies)
+[19:49:57] Channel replied to @Showa-goj1 (now has 1 replies)
+[19:49:57] Channel replied to @asian8161 (now has 1 replies)
+[19:49:57] Channel replied to @jakstrieder (now has 1 replies)
+[19:49:57] Channel replied to @marcopawns (now has 1 replies)
+[19:49:57] Channel replied to @Mordred_SSR (now has 1 replies)
+[19:49:57] Channel replied to @patrickpascual-s8q (now has 1 replies)
+[19:49:57] Channel replied to @chonwai (now has 1 replies)
+[19:49:57] Channel replied to @domenicoRS22 (now has 1 replies)
+[19:49:57] Channel replied to @EggBalds (now has 1 replies)
+[19:49:57] Channel replied to @amferzzzz (now has 1 replies)
+[19:49:57] Channel replied to @MyNameIsSonsky (now has 1 replies)
+[19:49:57] Channel replied to @weztliee (now has 1 replies)
+[19:49:57] Channel replied to @Joey-y5f (now has 1 replies)
+[19:49:57] Channel replied to @raymenash4366 (now has 1 replies)
+[19:49:57] Channel replied to @MinhPham-fw8xk (now has 1 replies)
+[19:49:57] Channel replied to @Dvinyard69 (now has 1 replies)
+[19:49:57] Channel replied to @starstreak8525 (now has 1 replies)
+[19:49:57] Channel replied to @KnightsofGaming2016 (now has 1 replies)
+[19:49:57] Channel replied to @Junebug89 (now has 1 replies)
+[19:49:57] Channel replied to @Irfan_alkasturi (now has 1 replies)
+[19:49:57] Channel replied to @goldenfoxy1982 (now has 1 replies)
+[19:49:57] Channel replied to @angem.6717 (now has 1 replies)
+[19:49:57] Channel replied to @waume7509 (now has 1 replies)
+[19:49:57] Channel replied to @JarateHunter (now has 1 replies)
+[19:49:57] Channel replied to @patrickpascual-s8q (now has 2 replies)
+[19:49:57] Channel replied to @Irfan_alkasturi (now has 2 replies)
+[19:49:57] Channel replied to @Happylife-pb3uw (now has 1 replies)
+[19:49:57] Channel replied to @Kerath (now has 1 replies)
+[19:49:57] Channel replied to @OtonashiV (now has 1 replies)
+[19:49:57] Channel replied to @ling_tuliling9031 (now has 1 replies)
+[19:49:57] Channel replied to @frxctxlity (now has 1 replies)
+[19:49:57] Channel replied to @LarryDang-f1c (now has 1 replies)
+[19:49:57] Channel replied to @coopers1716 (now has 1 replies)
+[19:49:57] Channel replied to @Iymarra (now has 1 replies)
+[19:49:57] Channel replied to @dim1723 (now has 1 replies)
+[19:49:57] Channel replied to @nguyenminhkhoi1266 (now has 1 replies)
+[19:49:57] Channel replied to @demomanmane1888 (now has 1 replies)
+[19:49:57] Channel replied to @maticlikar147 (now has 1 replies)
+[19:49:57] Channel replied to @alberts6501 (now has 1 replies)
+[19:49:57] Channel replied to @RRankin29 (now has 1 replies)
+[19:49:57] Channel replied to @redfrancisco1637 (now has 1 replies)
+[19:49:57] Channel replied to @irfansudirjo (now has 1 replies)
+[19:49:57] Channel replied to @timoramoan (now has 1 replies)
+[19:49:57] Channel replied to @HarmonyEdge (now has 1 replies)
+[19:49:57] Channel replied to @TheDialogueDungeon88 (now has 1 replies)
+[19:49:57] 
+User: @darkhorse744
+[19:49:57]   Comments: 26, Likes: 153
+[19:49:57]   Replies received: 6
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 14
+[19:49:57]   Total score: 4.28
+[19:49:57] 
+User: @CameronOrton-re3yo
+[19:49:57]   Comments: 27, Likes: 215
+[19:49:57]   Replies received: 12
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 20
+[19:49:57]   Total score: 4.09
+[19:49:57] 
+User: @MechaGaikotsu
+[19:49:57]   Comments: 49, Likes: 185
+[19:49:57]   Replies received: 2
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 19
+[19:49:57]   Total score: 4.80
+[19:49:57] 
+User: @vustvaleo8068
+[19:49:57]   Comments: 29, Likes: 202
+[19:49:57]   Replies received: 17
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 29
+[19:49:57]   Total score: 4.72
+[19:49:57] 
+User: @周健瑜-Xenia
+[19:49:57]   Comments: 21, Likes: 2403
+[19:49:57]   Replies received: 162
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 18
+[19:49:57]   Total score: 7.68
+[19:49:57] 
+User: @Junebug89
+[19:49:57]   Comments: 19, Likes: 32
+[19:49:57]   Replies received: 3
+[19:49:57]   Channel replies: 1
+[19:49:57]   Unique videos: 11
+[19:49:57]   Total score: 3.83
+[19:49:57] 
+User: @shauqiharris2772
+[19:49:57]   Comments: 34, Likes: 142
+[19:49:57]   Replies received: 11
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 26
+[19:49:57]   Total score: 4.26
+[19:49:57] 
+User: @TheDrywallEnjoyer
+[19:49:57]   Comments: 18, Likes: 20
+[19:49:57]   Replies received: 3
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 11
+[19:49:57]   Total score: 3.17
+[19:49:57] 
+User: @ericli542
+[19:49:57]   Comments: 21, Likes: 162
+[19:49:57]   Replies received: 7
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 20
+[19:49:57]   Total score: 3.78
+[19:49:57] 
+User: @Cloneonacat
+[19:49:57]   Comments: 27, Likes: 30
+[19:49:57]   Replies received: 2
+[19:49:57]   Channel replies: 0
+[19:49:57]   Unique videos: 26
+[19:49:57]   Total score: 3.33
+[19:49:58] 
+User: @Bionickpunk
+[19:49:58]   Comments: 17, Likes: 16
+[19:49:58]   Replies received: 0
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 4
+[19:49:58]   Total score: 2.89
+[19:49:58] 
+User: @rx-105xigundam2
+[19:49:58]   Comments: 27, Likes: 2
+[19:49:58]   Replies received: 0
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 11
+[19:49:58]   Total score: 3.68
+[19:49:58] 
+User: @gamerkingdom1442
+[19:49:58]   Comments: 17, Likes: 60
+[19:49:58]   Replies received: 14
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 14
+[19:49:58]   Total score: 3.86
+[19:49:58] 
+User: @joevanreyb.bacuyag8300
+[19:49:58]   Comments: 19, Likes: 35
+[19:49:58]   Replies received: 0
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 13
+[19:49:58]   Total score: 3.20
+[19:49:58] 
+User: @YiminyCricket
+[19:49:58]   Comments: 16, Likes: 4
+[19:49:58]   Replies received: 3
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 11
+[19:49:58]   Total score: 3.27
+[19:49:58] 
+User: @ZeroXSEED
+[19:49:58]   Comments: 18, Likes: 87
+[19:49:58]   Replies received: 1
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 10
+[19:49:58]   Total score: 3.49
+[19:49:58] 
+User: @MatthewLoh-ru1mw
+[19:49:58]   Comments: 25, Likes: 4
+[19:49:58]   Replies received: 0
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 6
+[19:49:58]   Total score: 3.43
+[19:49:58] 
+User: @kakapro39v1
+[19:49:58]   Comments: 20, Likes: 318
+[19:49:58]   Replies received: 21
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 14
+[19:49:58]   Total score: 4.68
+[19:49:58] 
+User: @Irfan_alkasturi
+[19:49:58]   Comments: 16, Likes: 113
+[19:49:58]   Replies received: 12
+[19:49:58]   Channel replies: 2
+[19:49:58]   Unique videos: 11
+[19:49:58]   Total score: 3.85
+[19:49:58] 
+User: @ONIMOT100
+[19:49:58]   Comments: 25, Likes: 47
+[19:49:58]   Replies received: 0
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 1
+[19:49:58]   Total score: 2.16
+[19:49:58] 
+User: @Tremadog102
+[19:49:58]   Comments: 17, Likes: 12
+[19:49:58]   Replies received: 0
+[19:49:58]   Channel replies: 0
+[19:49:58]   Unique videos: 1
+[19:49:58]   Total score: 2.82

@@ -1,0 +1,6 @@
+behavior_cluster,author_channel_id,like_count,like_count,sentiment_vader_compound,persona
+,count,mean,sum,mean,<lambda>
+0,90,0.08888888888888889,8,0.024295555555555553,Casual Viewer
+1,1,72.0,72,0.0,Conversation Starter
+2,23,0.4782608695652174,11,0.1265695652173913,Casual Viewer
+3,186,0.34946236559139787,65,0.22926344086021505,Casual Viewer
