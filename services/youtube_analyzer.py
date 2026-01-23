@@ -11,13 +11,51 @@ import os
 from textblob import TextBlob
 import networkx as nx
 import community as community_louvain
-import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use('Agg')  # Non-interactive backend for server environments
+    import matplotlib.pyplot as plt
+except Exception as e:
+    print(f"[WARNING] Matplotlib import failed: {e}")
+    matplotlib = None
+    plt = None
 import base64
 from io import BytesIO
 import warnings
 warnings.filterwarnings('ignore')
+
+# Import sentiment analysis service with safe fallback
+try:
+    from services.sentiment_analysis import run_sentiment_analysis
+    SENTIMENT_ANALYSIS_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] Sentiment analysis import failed, using fallback: {e}")
+
+    def run_sentiment_analysis(comments):
+        # Fallback returns empty charts and zeroed scores to keep UI alive
+        return {
+            "overall_score": 0,
+            "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
+            "word_cloud": None,
+            "pie_chart": None,
+            "top_like_comments": sorted(
+                [
+                    {
+                        "text": (c.get("text") or ""),
+                        "author_name": c.get("author_name", "Unknown"),
+                        "like_count": c.get("like_count", 0),
+                        "published_at": c.get("published_at"),
+                        "label": "neutral",
+                        "score": 0,
+                    }
+                    for c in comments if c.get("text")
+                ],
+                key=lambda x: x.get("like_count", 0),
+                reverse=True,
+            )[:5],
+        }
+
+    SENTIMENT_ANALYSIS_AVAILABLE = False
 
 class YouTubeAnalyzer:
     def __init__(self, api_key):
@@ -604,7 +642,8 @@ class YouTubeAnalyzer:
                         fontsize=16, fontweight='bold', pad=20)
             ax.axis('off')
             
-            # Add legend for communities
+            # Add legend for communities            <!-- ...existing code... -->
+            
             legend_elements = [plt.Line2D([0], [0], marker='o', color='w', 
                                          markerfacecolor=community_colors[comm], 
                                          markersize=10, label=f'Community {comm}')
@@ -680,15 +719,39 @@ class YouTubeAnalyzer:
             
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data)
             
+            # Run sentiment analysis
+            if progress_callback:
+                progress_callback('Running sentiment analysis...', 94)
+            
+            sentiment_analysis_result = None
+            if all_comments:
+                try:
+                    print(f"[YOUTUBE_ANALYZER] Channel: Running sentiment analysis on {len(all_comments)} comments...")
+                    sentiment_analysis_result = run_sentiment_analysis(all_comments)
+                    print(f"[YOUTUBE_ANALYZER] Channel: Sentiment complete. Score: {sentiment_analysis_result.get('overall_score')}")
+                    print(f"[YOUTUBE_ANALYZER] Channel: Word cloud exists: {bool(sentiment_analysis_result.get('word_cloud'))}")
+                    print(f"[YOUTUBE_ANALYZER] Channel: Top comments: {len(sentiment_analysis_result.get('top_like_comments', []))}")
+                except Exception as e:
+                    print(f"[YOUTUBE_ANALYZER] Channel: Sentiment analysis error: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    sentiment_analysis_result = {
+                        "overall_score": 0,
+                        "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
+                        "word_cloud": None,
+                        "pie_chart": None,
+                        "top_like_comments": [],
+                    }
+            
             # Detect communities
             if progress_callback:
-                progress_callback('Detecting communities...', 92)
+                progress_callback('Detecting communities...', 96)
             
             community_data = self.detect_communities(all_comments, all_edges)
             
             # Generate network visualization
             if progress_callback:
-                progress_callback('Generating network visualization...', 96)
+                progress_callback('Generating network visualization...', 98)
             
             network_viz = None
             if community_data.get('user_to_community'):
@@ -707,6 +770,7 @@ class YouTubeAnalyzer:
                 'videos_analyzed': len(videos_data),
                 'total_comments': len(all_comments),
                 'influencers': influencers[:20],
+                'sentiment_analysis': sentiment_analysis_result,
                 'community_detection': community_data,
                 'analysis_time': datetime.now().isoformat(),
                 'analysis_type': 'channel'
@@ -771,15 +835,39 @@ class YouTubeAnalyzer:
             
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data, min_comments=1)
             
+            # Run sentiment analysis
+            if progress_callback:
+                progress_callback('Running sentiment analysis...', 82)
+            
+            sentiment_analysis_result = None
+            if all_comments:
+                try:
+                    print(f"[YOUTUBE_ANALYZER] Video: Running sentiment analysis on {len(all_comments)} comments...")
+                    sentiment_analysis_result = run_sentiment_analysis(all_comments)
+                    print(f"[YOUTUBE_ANALYZER] Video: Sentiment complete. Score: {sentiment_analysis_result.get('overall_score')}")
+                    print(f"[YOUTUBE_ANALYZER] Video: Word cloud exists: {bool(sentiment_analysis_result.get('word_cloud'))}")
+                    print(f"[YOUTUBE_ANALYZER] Video: Top comments: {len(sentiment_analysis_result.get('top_like_comments', []))}")
+                except Exception as e:
+                    print(f"[YOUTUBE_ANALYZER] Video: Sentiment analysis error: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    sentiment_analysis_result = {
+                        "overall_score": 0,
+                        "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
+                        "word_cloud": None,
+                        "pie_chart": None,
+                        "top_like_comments": [],
+                    }
+            
             # Detect communities
             if progress_callback:
-                progress_callback('Detecting communities...', 85)
+                progress_callback('Detecting communities...', 88)
             
             community_data = self.detect_communities(all_comments, all_edges)
             
             # Generate network visualization
             if progress_callback:
-                progress_callback('Generating network visualization...', 92)
+                progress_callback('Generating network visualization...', 95)
             
             network_viz = None
             if community_data.get('user_to_community'):
@@ -799,6 +887,7 @@ class YouTubeAnalyzer:
                 'videos_analyzed': 1,
                 'total_comments': len(all_comments),
                 'influencers': influencers[:20],
+                'sentiment_analysis': sentiment_analysis_result,
                 'community_detection': community_data,
                 'analysis_time': datetime.now().isoformat(),
                 'analysis_type': 'video'

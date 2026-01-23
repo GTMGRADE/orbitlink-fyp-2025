@@ -2,8 +2,8 @@ import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session
 import json
 from flask import jsonify
-from controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
-from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+from Controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
+from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ def get_user_id():
 
 def create_projects_controller():
     """Create a projects controller for the current user"""
-    from controller.registeredUser_controller.projects_controller import ProjectsController
+    from Controller.registeredUser_controller.projects_controller import ProjectsController
     user_id = get_user_id()
     if not user_id:
         return None
@@ -147,11 +147,44 @@ def project_sna():
 @projects_bp.get("/projects/sentiment-analysis")
 def sentiment_analysis():
     # Check if user is logged in
-    if not get_user_id():
+    user_id = get_user_id()
+    if not user_id:
         return redirect(url_for("user.login_get"))
+
+    # Try to fetch sentiment from current session for a given project
+    pid = request.args.get("project_id") or request.args.get("pid")
+    print(f"[ROUTE] Sentiment analysis requested for project_id: {pid}")
     
-    logger.info("Sentiment Analysis page accessed")
-    return render_template("sentiment_analysis.html")
+    sentiment = None
+    if pid:
+        try:
+            controller = AnalysisSessionController(user_id, pid)
+            session_data = controller.get_current_session()
+            
+            if session_data:
+                print(f"[ROUTE] Session data found. Keys: {list(session_data.keys())}")
+                if session_data.get("analysis_data"):
+                    print(f"[ROUTE] Analysis data keys: {list(session_data['analysis_data'].keys())}")
+                    sentiment = session_data["analysis_data"].get("sentiment_analysis")
+                    if sentiment:
+                        print(f"[ROUTE] Sentiment found. Keys: {list(sentiment.keys())}")
+                        print(f"[ROUTE] Overall score: {sentiment.get('overall_score')}")
+                    else:
+                        print(f"[ROUTE] WARNING: No sentiment_analysis in analysis_data")
+                else:
+                    print(f"[ROUTE] WARNING: No analysis_data in session")
+            else:
+                print(f"[ROUTE] WARNING: No session data found for project {pid}")
+        except Exception as e:
+            logger.warning("Failed to load sentiment for project %s: %s", pid, e)
+            print(f"[ROUTE] Exception: {e}")
+            import traceback
+            traceback.print_exc()
+    else:
+        print(f"[ROUTE] WARNING: No project_id provided")
+
+    logger.info("Sentiment Analysis page accessed (project_id=%s)", pid or "none")
+    return render_template("sentiment_analysis.html", sentiment=sentiment)
 
 
 @projects_bp.get("/projects/detect-communities")
