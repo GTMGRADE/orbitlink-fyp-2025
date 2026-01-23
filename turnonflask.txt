@@ -1,5 +1,5 @@
 
-cd /d e:\Users\User\Downloads\FYP\codingPortion
+* cd /d e:\Users\User\Downloads\FYP\codingPortion
 python app.py
 
 log in as Business (bizreg/bizpass) and Influencer (infreg/infpass)
