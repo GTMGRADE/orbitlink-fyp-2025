@@ -1,6 +1,10 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session
+<<<<<<< HEAD
 from controller.registeredUser_controller.user_controller import user_controller
+=======
+from Controller.registeredUser_controller.user_controller import user_controller
+>>>>>>> development
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +65,7 @@ def profile():
     try:
         # Get user directly from database
         from db_config import get_connection
+<<<<<<< HEAD
         conn = get_connection()
         if not conn:
             return redirect(url_for("user.login_get"))
@@ -79,6 +84,34 @@ def profile():
         if not user_data:
             return redirect(url_for("user.login_get"))
         
+=======
+        from bson import ObjectId
+        
+        db = get_connection()
+        if db is None:
+            return redirect(url_for("user.login_get"))
+        
+        # Convert user_id to ObjectId if needed
+        try:
+            query_id = ObjectId(user_id)
+        except:
+            query_id = user_id
+        
+        user_doc = db.users.find_one({"_id": query_id})
+        
+        if not user_doc:
+            return redirect(url_for("user.login_get"))
+        
+        # Convert to dictionary format expected by template
+        user_data = {
+            'id': str(user_doc['_id']),
+            'username': user_doc.get('username', ''),
+            'email': user_doc.get('email', ''),
+            'created_at': user_doc.get('created_at'),
+            'status': user_doc.get('status', 'active')
+        }
+        
+>>>>>>> development
         message = request.args.get("message")
         logger.info("Profile page accessed by user: %s", user_data['username'])
         return render_template("profile.html", user=user_data, message=message)

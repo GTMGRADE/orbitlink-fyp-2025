@@ -1,8 +1,15 @@
 from flask import Blueprint, jsonify, session, request
+<<<<<<< HEAD
 from controller.admin_controller.admin_view_user_accounts_controller import AdminViewUserAccountsController
 from controller.admin_controller.admin_search_user_accounts_controller import AdminSearchUserAccountsController
 from controller.admin_controller.admin_suspend_user_account_controller import AdminSuspendUserAccountController
 from controller.admin_controller.admin_view_feedback_controller import AdminViewFeedbackController
+=======
+from Controller.admin_controller.admin_view_user_accounts_controller import AdminViewUserAccountsController
+from Controller.admin_controller.admin_search_user_accounts_controller import AdminSearchUserAccountsController
+from Controller.admin_controller.admin_suspend_user_account_controller import AdminSuspendUserAccountController
+from Controller.admin_controller.admin_view_feedback_controller import AdminViewFeedbackController
+>>>>>>> development
 
 admin_api_bp = Blueprint("admin_api", __name__)
 

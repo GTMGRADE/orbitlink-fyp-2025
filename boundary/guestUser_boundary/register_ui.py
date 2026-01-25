@@ -1,8 +1,13 @@
 # boundary/guestUser_boundary/register_ui.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 import logging
+<<<<<<< HEAD
 from controller.guestUser_controller.register_controller import RegisterController
 from controller.guestUser_controller.contact_controller import ContactController
+=======
+from Controller.guestUser_controller.register_controller import RegisterController
+from Controller.guestUser_controller.contact_controller import ContactController
+>>>>>>> development
 
 logger = logging.getLogger(__name__)
 

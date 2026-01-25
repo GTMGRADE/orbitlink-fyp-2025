@@ -1,5 +1,9 @@
 from flask import Blueprint, render_template
+<<<<<<< HEAD
 from controller.guestUser_controller.reviews_controller import ReviewsController
+=======
+from Controller.guestUser_controller.reviews_controller import ReviewsController
+>>>>>>> development
 import logging
 
 logger = logging.getLogger(__name__)

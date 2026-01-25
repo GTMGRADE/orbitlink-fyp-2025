@@ -73,6 +73,13 @@ class User:
         self.email = email
         self.username = username
         self.password = password  
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        self.role = role
+=======
+>>>>>>> feature/Simon
+>>>>>>> development
         self.created_at = created_at
         self.status = status
     

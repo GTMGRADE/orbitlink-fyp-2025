@@ -9,9 +9,68 @@ from datetime import datetime, timedelta
 from collections import Counter, defaultdict
 import os
 from textblob import TextBlob
+<<<<<<< HEAD
 import warnings
 warnings.filterwarnings('ignore')
 
+=======
+import networkx as nx
+import community as community_louvain
+
+# Set matplotlib backend BEFORE importing matplotlib
+os.environ['MPLBACKEND'] = 'Agg'
+
+try:
+    import matplotlib
+    matplotlib.use('Agg')  # Non-interactive backend for server environments
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] Matplotlib import failed: {e}")
+    import traceback
+    traceback.print_exc()
+    MATPLOTLIB_AVAILABLE = False
+    matplotlib = None
+    plt = None
+import base64
+from io import BytesIO
+import warnings
+warnings.filterwarnings('ignore')
+
+# Import sentiment analysis service with safe fallback
+try:
+    from services.sentiment_analysis import run_sentiment_analysis
+    SENTIMENT_ANALYSIS_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] Sentiment analysis import failed, using fallback: {e}")
+
+    def run_sentiment_analysis(comments):
+        # Fallback returns empty charts and zeroed scores to keep UI alive
+        return {
+            "overall_score": 0,
+            "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
+            "word_cloud": None,
+            "pie_chart": None,
+            "top_like_comments": sorted(
+                [
+                    {
+                        "text": (c.get("text") or ""),
+                        "author_name": c.get("author_name", "Unknown"),
+                        "like_count": c.get("like_count", 0),
+                        "published_at": c.get("published_at"),
+                        "label": "neutral",
+                        "score": 0,
+                    }
+                    for c in comments if c.get("text")
+                ],
+                key=lambda x: x.get("like_count", 0),
+                reverse=True,
+            )[:5],
+        }
+
+    SENTIMENT_ANALYSIS_AVAILABLE = False
+
+>>>>>>> development
 class YouTubeAnalyzer:
     def __init__(self, api_key):
         """Initialize YouTube API with provided API key"""
@@ -455,6 +514,180 @@ class YouTubeAnalyzer:
         
         return sorted(influencers, key=lambda x: x['total_score'], reverse=True)
     
+<<<<<<< HEAD
+=======
+    def detect_communities(self, all_comments, reply_edges):
+        """Detect communities using Louvain method"""
+        try:
+            # Build interaction graph
+            G = nx.Graph()
+            
+            # Add nodes (all commenters)
+            unique_users = set(comment['author_id'] for comment in all_comments)
+            for user_id in unique_users:
+                user_name = next((c['author_name'] for c in all_comments if c['author_id'] == user_id), 'Unknown')
+                G.add_node(user_id, name=user_name)
+            
+            # Add edges (reply interactions)
+            for edge in reply_edges:
+                if G.has_node(edge['from']) and G.has_node(edge['to']):
+                    if G.has_edge(edge['from'], edge['to']):
+                        G[edge['from']][edge['to']]['weight'] += 1
+                    else:
+                        G.add_edge(edge['from'], edge['to'], weight=1)
+            
+            # If graph is too small or disconnected, return empty result
+            if G.number_of_nodes() < 3 or G.number_of_edges() < 2:
+                return {
+                    'communities': [],
+                    'modularity': 0,
+                    'num_communities': 0,
+                    'user_to_community': {}
+                }
+            
+            # Detect communities using Louvain method
+            user_to_community = community_louvain.best_partition(G)
+            modularity = community_louvain.modularity(user_to_community, G)
+            
+            # Calculate community statistics
+            community_stats = defaultdict(lambda: {
+                'members': [],
+                'member_names': [],
+                'total_comments': 0,
+                'total_likes': 0,
+                'avg_sentiment': 0,
+                'sentiment_count': 0
+            })
+            
+            for comment in all_comments:
+                author_id = comment['author_id']
+                if author_id in user_to_community:
+                    comm_id = user_to_community[author_id]
+                    stats = community_stats[comm_id]
+                    
+                    if author_id not in stats['members']:
+                        stats['members'].append(author_id)
+                        stats['member_names'].append(comment['author_name'])
+                    
+                    stats['total_comments'] += 1
+                    stats['total_likes'] += comment['like_count']
+                    stats['avg_sentiment'] = (stats['avg_sentiment'] * stats['sentiment_count'] + 
+                                             comment['sentiment_polarity']) / (stats['sentiment_count'] + 1)
+                    stats['sentiment_count'] += 1
+            
+            # Format communities list
+            communities = []
+            for comm_id, stats in sorted(community_stats.items(), key=lambda x: len(x[1]['members']), reverse=True):
+                communities.append({
+                    'community_id': comm_id,
+                    'size': len(stats['members']),
+                    'total_comments': stats['total_comments'],
+                    'total_likes': stats['total_likes'],
+                    'avg_sentiment': round(stats['avg_sentiment'], 3),
+                    'top_members': stats['member_names'][:5]
+                })
+            
+            return {
+                'communities': communities,
+                'modularity': round(modularity, 3),
+                'num_communities': len(communities),
+                'user_to_community': user_to_community
+            }
+            
+        except Exception as e:
+            print(f"Error detecting communities: {e}")
+            return {
+                'communities': [],
+                'modularity': 0,
+                'num_communities': 0,
+                'user_to_community': {}
+            }
+    
+    def generate_community_network_visualization(self, all_comments, reply_edges, user_to_community):
+        """Generate network visualization with communities colored"""
+        try:
+            if not MATPLOTLIB_AVAILABLE or plt is None:
+                print("[WARNING] Matplotlib not available for community visualization")
+                return None
+            
+            if not user_to_community or len(user_to_community) == 0:
+                return None
+            
+            # Build interaction graph
+            G = nx.Graph()
+            
+            # Add nodes with community assignments
+            unique_users = set(comment['author_id'] for comment in all_comments)
+            for user_id in unique_users:
+                if user_id in user_to_community:
+                    user_name = next((c['author_name'] for c in all_comments if c['author_id'] == user_id), 'Unknown')
+                    G.add_node(user_id, name=user_name, community=user_to_community[user_id])
+            
+            # Add edges
+            for edge in reply_edges:
+                if G.has_node(edge['from']) and G.has_node(edge['to']):
+                    if G.has_edge(edge['from'], edge['to']):
+                        G[edge['from']][edge['to']]['weight'] += 1
+                    else:
+                        G.add_edge(edge['from'], edge['to'], weight=1)
+            
+            if G.number_of_nodes() < 2:
+                return None
+            
+            # Create figure
+            fig, ax = plt.subplots(figsize=(14, 10))
+            
+            # Use spring layout for better visualization
+            pos = nx.spring_layout(G, k=0.5, iterations=50, seed=42)
+            
+            # Get unique communities and assign colors
+            communities = set(user_to_community.values())
+            colors = plt.cm.tab20(np.linspace(0, 1, len(communities)))
+            community_colors = {comm: colors[i] for i, comm in enumerate(sorted(communities))}
+            
+            # Assign colors to nodes based on community
+            node_colors = [community_colors[user_to_community.get(node, 0)] for node in G.nodes()]
+            
+            # Calculate node sizes based on degree
+            degrees = dict(G.degree())
+            node_sizes = [100 + degrees.get(node, 0) * 20 for node in G.nodes()]
+            
+            # Draw network
+            nx.draw_networkx_edges(G, pos, alpha=0.2, width=0.5, ax=ax)
+            nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=node_sizes, 
+                                  alpha=0.7, linewidths=0.5, edgecolors='white', ax=ax)
+            
+            # Add title
+            ax.set_title(f'Community Network Structure\n{G.number_of_nodes()} users in {len(communities)} communities',
+                        fontsize=16, fontweight='bold', pad=20)
+            ax.axis('off')
+            
+            # Add legend for communities            <!-- ...existing code... -->
+            
+            legend_elements = [plt.Line2D([0], [0], marker='o', color='w', 
+                                         markerfacecolor=community_colors[comm], 
+                                         markersize=10, label=f'Community {comm}')
+                             for comm in sorted(list(communities)[:10])]  # Show top 10 communities
+            ax.legend(handles=legend_elements, loc='upper right', framealpha=0.9)
+            
+            plt.tight_layout()
+            
+            # Convert to base64 string
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight', facecolor='white')
+            buffer.seek(0)
+            image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+            plt.close(fig)
+            
+            return image_base64
+            
+        except Exception as e:
+            print(f"Error generating community visualization: {e}")
+            import traceback
+            traceback.print_exc()
+            return None
+    
+>>>>>>> development
     def analyze_channel(self, channel_url, progress_callback=None):
         """Analyze a YouTube channel"""
         try:
@@ -503,10 +736,61 @@ class YouTubeAnalyzer:
             
             # Calculate influencer scores
             if progress_callback:
+<<<<<<< HEAD
                 progress_callback('Calculating influencer scores...', 90)
             
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data)
             
+=======
+                progress_callback('Calculating influencer scores...', 85)
+            
+            influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data)
+            
+            # Run sentiment analysis
+            if progress_callback:
+                progress_callback('Running sentiment analysis...', 94)
+            
+            sentiment_analysis_result = None
+            if all_comments:
+                try:
+                    print(f"[YOUTUBE_ANALYZER] Channel: Running sentiment analysis on {len(all_comments)} comments...")
+                    sentiment_analysis_result = run_sentiment_analysis(all_comments)
+                    print(f"[YOUTUBE_ANALYZER] Channel: Sentiment complete. Score: {sentiment_analysis_result.get('overall_score')}")
+                    print(f"[YOUTUBE_ANALYZER] Channel: Word cloud exists: {bool(sentiment_analysis_result.get('word_cloud'))}")
+                    print(f"[YOUTUBE_ANALYZER] Channel: Top comments: {len(sentiment_analysis_result.get('top_like_comments', []))}")
+                except Exception as e:
+                    print(f"[YOUTUBE_ANALYZER] Channel: Sentiment analysis error: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    sentiment_analysis_result = {
+                        "overall_score": 0,
+                        "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
+                        "word_cloud": None,
+                        "pie_chart": None,
+                        "top_like_comments": [],
+                    }
+            
+            # Detect communities
+            if progress_callback:
+                progress_callback('Detecting communities...', 96)
+            
+            community_data = self.detect_communities(all_comments, all_edges)
+            
+            # Generate network visualization
+            if progress_callback:
+                progress_callback('Generating network visualization...', 98)
+            
+            network_viz = None
+            if community_data.get('user_to_community'):
+                network_viz = self.generate_community_network_visualization(
+                    all_comments, all_edges, community_data['user_to_community']
+                )
+            
+            # Add visualization to community data
+            if network_viz:
+                community_data['network_visualization'] = network_viz
+            
+>>>>>>> development
             # Prepare result data
             result_data = {
                 'success': True,
@@ -514,6 +798,11 @@ class YouTubeAnalyzer:
                 'videos_analyzed': len(videos_data),
                 'total_comments': len(all_comments),
                 'influencers': influencers[:20],
+<<<<<<< HEAD
+=======
+                'sentiment_analysis': sentiment_analysis_result,
+                'community_detection': community_data,
+>>>>>>> development
                 'analysis_time': datetime.now().isoformat(),
                 'analysis_type': 'channel'
             }
@@ -573,10 +862,61 @@ class YouTubeAnalyzer:
             
             # Calculate influencer scores (lower min_comments for single video)
             if progress_callback:
+<<<<<<< HEAD
                 progress_callback('Calculating influencer scores...', 80)
             
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data, min_comments=1)
             
+=======
+                progress_callback('Calculating influencer scores...', 75)
+            
+            influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data, min_comments=1)
+            
+            # Run sentiment analysis
+            if progress_callback:
+                progress_callback('Running sentiment analysis...', 82)
+            
+            sentiment_analysis_result = None
+            if all_comments:
+                try:
+                    print(f"[YOUTUBE_ANALYZER] Video: Running sentiment analysis on {len(all_comments)} comments...")
+                    sentiment_analysis_result = run_sentiment_analysis(all_comments)
+                    print(f"[YOUTUBE_ANALYZER] Video: Sentiment complete. Score: {sentiment_analysis_result.get('overall_score')}")
+                    print(f"[YOUTUBE_ANALYZER] Video: Word cloud exists: {bool(sentiment_analysis_result.get('word_cloud'))}")
+                    print(f"[YOUTUBE_ANALYZER] Video: Top comments: {len(sentiment_analysis_result.get('top_like_comments', []))}")
+                except Exception as e:
+                    print(f"[YOUTUBE_ANALYZER] Video: Sentiment analysis error: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    sentiment_analysis_result = {
+                        "overall_score": 0,
+                        "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
+                        "word_cloud": None,
+                        "pie_chart": None,
+                        "top_like_comments": [],
+                    }
+            
+            # Detect communities
+            if progress_callback:
+                progress_callback('Detecting communities...', 88)
+            
+            community_data = self.detect_communities(all_comments, all_edges)
+            
+            # Generate network visualization
+            if progress_callback:
+                progress_callback('Generating network visualization...', 95)
+            
+            network_viz = None
+            if community_data.get('user_to_community'):
+                network_viz = self.generate_community_network_visualization(
+                    all_comments, all_edges, community_data['user_to_community']
+                )
+            
+            # Add visualization to community data
+            if network_viz:
+                community_data['network_visualization'] = network_viz
+            
+>>>>>>> development
             # Prepare result data
             result_data = {
                 'success': True,
@@ -585,6 +925,11 @@ class YouTubeAnalyzer:
                 'videos_analyzed': 1,
                 'total_comments': len(all_comments),
                 'influencers': influencers[:20],
+<<<<<<< HEAD
+=======
+                'sentiment_analysis': sentiment_analysis_result,
+                'community_detection': community_data,
+>>>>>>> development
                 'analysis_time': datetime.now().isoformat(),
                 'analysis_type': 'video'
             }
