@@ -1,7 +1,9 @@
+# print("hello world")
 from flask import Flask
 from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
+load_dotenv()
 
 # Set matplotlib backend BEFORE any other imports that might use it
 os.environ['MPLBACKEND'] = 'Agg'

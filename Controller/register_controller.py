@@ -15,6 +15,7 @@ class RegisterController:
         Returns: (success, message, user_data)
         """
         try:
+            # Check database connection using 'is not None' instead of truthy evaluation
             if self.db is None:
                 return False, "Database connection error", None
             
@@ -61,8 +62,9 @@ class RegisterController:
             return True, "Registration successful", formatted_user
             
         except Exception as e:
-            logger.error(f"Error registering user: {str(e)}")
-            return False, f"Registration failed: {str(e)}", None
+            error_msg = type(e).__name__ + ": " + str(e)
+            logger.error(f"Error registering user: {error_msg}")
+            return False, f"Registration failed: {error_msg}", None
     
     def get_register_page_data(self):
         """Get data for the register page"""
