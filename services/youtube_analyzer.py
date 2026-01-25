@@ -9,11 +9,6 @@ from datetime import datetime, timedelta
 from collections import Counter, defaultdict
 import os
 from textblob import TextBlob
-<<<<<<< HEAD
-import warnings
-warnings.filterwarnings('ignore')
-
-=======
 import networkx as nx
 import community as community_louvain
 
@@ -70,7 +65,6 @@ except Exception as e:
 
     SENTIMENT_ANALYSIS_AVAILABLE = False
 
->>>>>>> development
 class YouTubeAnalyzer:
     def __init__(self, api_key):
         """Initialize YouTube API with provided API key"""
@@ -514,8 +508,6 @@ class YouTubeAnalyzer:
         
         return sorted(influencers, key=lambda x: x['total_score'], reverse=True)
     
-<<<<<<< HEAD
-=======
     def detect_communities(self, all_comments, reply_edges):
         """Detect communities using Louvain method"""
         try:
@@ -687,7 +679,6 @@ class YouTubeAnalyzer:
             traceback.print_exc()
             return None
     
->>>>>>> development
     def analyze_channel(self, channel_url, progress_callback=None):
         """Analyze a YouTube channel"""
         try:
@@ -736,12 +727,6 @@ class YouTubeAnalyzer:
             
             # Calculate influencer scores
             if progress_callback:
-<<<<<<< HEAD
-                progress_callback('Calculating influencer scores...', 90)
-            
-            influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data)
-            
-=======
                 progress_callback('Calculating influencer scores...', 85)
             
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data)
@@ -790,7 +775,6 @@ class YouTubeAnalyzer:
             if network_viz:
                 community_data['network_visualization'] = network_viz
             
->>>>>>> development
             # Prepare result data
             result_data = {
                 'success': True,
@@ -798,11 +782,8 @@ class YouTubeAnalyzer:
                 'videos_analyzed': len(videos_data),
                 'total_comments': len(all_comments),
                 'influencers': influencers[:20],
-<<<<<<< HEAD
-=======
                 'sentiment_analysis': sentiment_analysis_result,
                 'community_detection': community_data,
->>>>>>> development
                 'analysis_time': datetime.now().isoformat(),
                 'analysis_type': 'channel'
             }
@@ -862,12 +843,6 @@ class YouTubeAnalyzer:
             
             # Calculate influencer scores (lower min_comments for single video)
             if progress_callback:
-<<<<<<< HEAD
-                progress_callback('Calculating influencer scores...', 80)
-            
-            influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data, min_comments=1)
-            
-=======
                 progress_callback('Calculating influencer scores...', 75)
             
             influencers = self.calculate_influencer_scores(all_comments, all_edges, videos_data, min_comments=1)
@@ -916,7 +891,6 @@ class YouTubeAnalyzer:
             if network_viz:
                 community_data['network_visualization'] = network_viz
             
->>>>>>> development
             # Prepare result data
             result_data = {
                 'success': True,
@@ -925,11 +899,8 @@ class YouTubeAnalyzer:
                 'videos_analyzed': 1,
                 'total_comments': len(all_comments),
                 'influencers': influencers[:20],
-<<<<<<< HEAD
-=======
                 'sentiment_analysis': sentiment_analysis_result,
                 'community_detection': community_data,
->>>>>>> development
                 'analysis_time': datetime.now().isoformat(),
                 'analysis_type': 'video'
             }

@@ -1,10 +1,10 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session
-<<<<<<< HEAD
-from controller.registeredUser_controller.user_controller import user_controller
-=======
+# <<<<<<< HEAD
 from Controller.registeredUser_controller.user_controller import user_controller
->>>>>>> development
+# =======
+from Controller.registeredUser_controller.user_controller import user_controller
+# >>>>>>> development
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ def profile():
     try:
         # Get user directly from database
         from db_config import get_connection
-<<<<<<< HEAD
+# <<<<<<< HEAD
         conn = get_connection()
         if not conn:
             return redirect(url_for("user.login_get"))
@@ -84,7 +84,7 @@ def profile():
         if not user_data:
             return redirect(url_for("user.login_get"))
         
-=======
+# =======
         from bson import ObjectId
         
         db = get_connection()
@@ -111,7 +111,7 @@ def profile():
             'status': user_doc.get('status', 'active')
         }
         
->>>>>>> development
+# >>>>>>> development
         message = request.args.get("message")
         logger.info("Profile page accessed by user: %s", user_data['username'])
         return render_template("profile.html", user=user_data, message=message)

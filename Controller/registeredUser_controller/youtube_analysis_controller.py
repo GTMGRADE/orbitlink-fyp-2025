@@ -3,11 +3,7 @@ import os
 import json
 from datetime import datetime
 from services.youtube_analyzer import YouTubeAnalyzer
-<<<<<<< HEAD
-from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
-=======
 from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
->>>>>>> development
 from db_config import get_connection
 
 class YouTubeAnalysisController:
@@ -53,21 +49,11 @@ class YouTubeAnalysisController:
     
     def save_analysis_result(self, input_url, result):
         """Save analysis results to database with project-specific storage"""
-<<<<<<< HEAD
-        conn = get_connection()
-        if not conn:
-            return
-        
-        try:
-            cursor = conn.cursor()
-            
-=======
         db = get_connection()
         if db is None:
             return
         
         try:
->>>>>>> development
             # Get title based on analysis type
             if result.get('analysis_type') == 'video':
                 title = result.get('video_metadata', {}).get('title', 'Video Analysis')
@@ -76,21 +62,6 @@ class YouTubeAnalysisController:
                 title = result.get('channel_metadata', {}).get('title', 'Channel Analysis')
                 channel_title = title
             
-<<<<<<< HEAD
-            # Insert analysis result with project_id
-            cursor.execute("""
-                INSERT INTO youtube_analysis (user_id, project_id, channel_url, channel_title, analysis_data)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (
-                self.user_id,
-                self.project_id,
-                input_url,
-                channel_title,
-                json.dumps(result)
-            ))
-            
-            conn.commit()
-=======
             # Insert analysis result with project_id using MongoDB
             analysis_doc = {
                 "user_id": self.user_id,
@@ -102,20 +73,12 @@ class YouTubeAnalysisController:
             }
             
             db.youtube_analysis.insert_one(analysis_doc)
->>>>>>> development
             print(f"Analysis saved to database for project_id: {self.project_id}")
             
         except Exception as e:
             print(f"Error saving analysis to database: {e}")
-<<<<<<< HEAD
-            conn.rollback()
-        finally:
-            cursor.close()
-            conn.close()
-=======
             import traceback
             traceback.print_exc()
->>>>>>> development
     
     def save_to_session_storage(self, input_url, result_data):
         """Save analysis to session storage for immediate frontend access"""
@@ -128,8 +91,6 @@ class YouTubeAnalysisController:
             else:
                 title = result_data.get('channel_metadata', {}).get('title', 'Channel Analysis')
             
-<<<<<<< HEAD
-=======
             # 檢查 sentiment_analysis 是否存在
             if 'sentiment_analysis' in result_data:
                 print(f"[CONTROLLER] Sentiment data found in result_data")
@@ -150,44 +111,20 @@ class YouTubeAnalysisController:
                 print(f"[CONTROLLER] WARNING: No sentiment_analysis in result_data")
                 print(f"[CONTROLLER] Available keys: {list(result_data.keys())}")
             
->>>>>>> development
             session_controller.save_analysis_session(
                 input_url,
                 title,
                 result_data
             )
-<<<<<<< HEAD
-            print(f"Analysis saved to session storage for project_id: {self.project_id}")
-        except Exception as e:
-            print(f"Error saving to session storage: {e}")
-=======
             print(f"[CONTROLLER] Analysis saved to session storage for project_id: {self.project_id}")
         except Exception as e:
             print(f"[CONTROLLER] Error saving to session storage: {e}")
             import traceback
             traceback.print_exc()
->>>>>>> development
     
     # ... rest of your existing methods remain the same ...
     def get_recent_analyses(self, limit=5):
         """Get recent analyses for this specific project"""
-<<<<<<< HEAD
-        conn = get_connection()
-        if not conn:
-            return []
-        
-        try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT id, channel_url, channel_title, created_at 
-                FROM youtube_analysis 
-                WHERE user_id = %s AND project_id = %s 
-                ORDER BY created_at DESC 
-                LIMIT %s
-            """, (self.user_id, self.project_id, limit))
-            
-            analyses = cursor.fetchall()
-=======
         db = get_connection()
         if db is None:
             return []
@@ -202,35 +139,12 @@ class YouTubeAnalysisController:
                 analysis['id'] = str(analysis['_id'])
                 del analysis['_id']
             
->>>>>>> development
             print(f"Fetched {len(analyses)} analyses for project_id: {self.project_id}")
             return analyses
             
         except Exception as e:
             print(f"Error fetching analyses: {e}")
             return []
-<<<<<<< HEAD
-        finally:
-            cursor.close()
-            conn.close()
-    
-    def get_analysis_by_id(self, analysis_id):
-        """Get specific analysis by ID, ensuring it belongs to this project"""
-        conn = get_connection()
-        if not conn:
-            return None
-        
-        try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT * FROM youtube_analysis 
-                WHERE id = %s AND user_id = %s AND project_id = %s
-            """, (analysis_id, self.user_id, self.project_id))
-            
-            result = cursor.fetchone()
-            if result and result['analysis_data']:
-                result['analysis_data'] = json.loads(result['analysis_data'])
-=======
     
     def get_analysis_by_id(self, analysis_id):
         """Get specific analysis by ID, ensuring it belongs to this project"""
@@ -256,7 +170,6 @@ class YouTubeAnalysisController:
             if result:
                 result['id'] = str(result['_id'])
                 del result['_id']
->>>>>>> development
                 print(f"Retrieved analysis {analysis_id} for project_id: {self.project_id}")
             
             return result
@@ -264,12 +177,6 @@ class YouTubeAnalysisController:
         except Exception as e:
             print(f"Error fetching analysis: {e}")
             return None
-<<<<<<< HEAD
-        finally:
-            cursor.close()
-            conn.close()
-=======
->>>>>>> development
     
     def get_current_analysis_session(self):
         """Get current analysis session for this project"""
@@ -294,24 +201,6 @@ class YouTubeAnalysisController:
     
     def get_all_project_analyses(self):
         """Get all analyses for this project (for project overview)"""
-<<<<<<< HEAD
-        conn = get_connection()
-        if not conn:
-            return []
-        
-        try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT id, channel_url, channel_title, created_at,
-                       JSON_EXTRACT(analysis_data, '$.videos_analyzed') as videos_analyzed,
-                       JSON_EXTRACT(analysis_data, '$.total_comments') as total_comments
-                FROM youtube_analysis 
-                WHERE user_id = %s AND project_id = %s 
-                ORDER BY created_at DESC
-            """, (self.user_id, self.project_id))
-            
-            analyses = cursor.fetchall()
-=======
         db = get_connection()
         if db is None:
             return []
@@ -332,17 +221,9 @@ class YouTubeAnalysisController:
                     analysis['videos_analyzed'] = data.get('videos_analyzed')
                     analysis['total_comments'] = data.get('total_comments')
             
->>>>>>> development
             print(f"Fetched all {len(analyses)} analyses for project_id: {self.project_id}")
             return analyses
             
         except Exception as e:
             print(f"Error fetching all analyses: {e}")
-<<<<<<< HEAD
             return []
-        finally:
-            cursor.close()
-            conn.close()
-=======
-            return []
->>>>>>> development
