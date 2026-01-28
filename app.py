@@ -28,6 +28,9 @@ from boundary.guestUser_boundary.register_ui import register_bp
 from boundary.registeredUser_boundary.user_ui import user_bp
 from boundary.registeredUser_boundary.projects_ui import projects_bp
 
+from boundary.registeredUser_boundary.review_ui import review_bp
+from boundary.registeredUser_boundary.contact_support_ui import contact_support_bp
+
 
 # admin user boundaries
 from boundary.admin_boundary.admin_api_boundary import admin_api_bp
@@ -58,6 +61,9 @@ app.register_blueprint(user_bp)
 app.register_blueprint(projects_bp)
 app.register_blueprint(admin_api_bp)
 app.register_blueprint(admin_ui_bp)
+
+app.register_blueprint(review_bp)
+app.register_blueprint(contact_support_bp)
 
 # YouTube API configuration
 app.config['YOUTUBE_API_KEY'] = os.getenv('YOUTUBE_API_KEY')
