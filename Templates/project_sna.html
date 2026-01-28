@@ -680,12 +680,8 @@
                 <p class="analysis-desc">Analyze opinions and track sentiment shifts over time to understand public perception</p>
                 <a href="{{ url_for('projects.sentiment_analysis') }}" 
                    class="analysis-link disabled" 
-<<<<<<< HEAD
-                   id="sentimentLink">Open Analysis</a>
-=======
                    id="sentimentLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
->>>>>>> development
               </div>
 
               <!-- Data Monitoring Card -->
@@ -694,12 +690,8 @@
                 <p class="analysis-desc">Track follower dynamics, post performance, and engagement metrics in real-time</p>
                 <a href="{{ url_for('projects.data_monitoring') }}" 
                    class="analysis-link disabled" 
-<<<<<<< HEAD
-                   id="monitoringLink">Open Analysis</a>
-=======
                    id="monitoringLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
->>>>>>> development
               </div>
 
               <!-- Historical Analysis Card -->
@@ -708,12 +700,8 @@
                 <p class="analysis-desc">Analyze long-term trends, follower growth, and historical campaign performance</p>
                 <a href="{{ url_for('projects.historical_analysis') }}" 
                    class="analysis-link disabled" 
-<<<<<<< HEAD
-                   id="historicalLink">Open Analysis</a>
-=======
                    id="historicalLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
->>>>>>> development
               </div>
 
               <!-- Influencer Detection Card -->
@@ -722,12 +710,8 @@
                 <p class="analysis-desc">Identify key influencers and high-impact accounts driving conversations</p>
                 <a href="{{ url_for('projects.identify_influencers') }}" 
                    class="analysis-link disabled" 
-<<<<<<< HEAD
-                   id="influencersLink">Open Analysis</a>
-=======
                    id="influencersLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
->>>>>>> development
               </div>
 
               <!-- Community Detection Card -->
@@ -736,12 +720,8 @@
                 <p class="analysis-desc">Detect subgroups and analyze information flows between different community segments</p>
                 <a href="{{ url_for('projects.detect_communities') }}" 
                    class="analysis-link disabled" 
-<<<<<<< HEAD
-                   id="communitiesLink">Open Analysis</a>
-=======
                    id="communitiesLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
->>>>>>> development
               </div>
             </div>
           </div>
@@ -963,12 +943,6 @@
           }
           
           const currentProjectId = projectId || getCurrentProjectId();
-<<<<<<< HEAD
-          if (currentProjectId) {
-              const currentHref = linkElement.getAttribute('href');
-              const separator = currentHref.includes('?') ? '&' : '?';
-              linkElement.setAttribute('href', `${currentHref}${separator}project_id=${currentProjectId}`);
-=======
           console.log(`[addProjectIdToLink] Element: ${linkElement.id}, Project ID: ${currentProjectId}`);
           
           if (currentProjectId) {
@@ -977,7 +951,6 @@
               const newHref = `${currentHref}${separator}project_id=${currentProjectId}`;
               linkElement.setAttribute('href', newHref);
               console.log(`[addProjectIdToLink] Updated href to: ${newHref}`);
->>>>>>> development
               
               // Store in localStorage for the analysis page to use
               localStorage.setItem('currentProjectId', currentProjectId);

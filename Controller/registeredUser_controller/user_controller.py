@@ -155,9 +155,9 @@ class UserController:
             except:
                 query_id = user_id
             
+            # Query only by _id (do not filter by role)
+            # Regular users don't have a role field, so we just match by ID
             query = {"_id": query_id}
-            if user_type:
-                query["role"] = user_type
             
             user_data = db.users.find_one(query)
             
