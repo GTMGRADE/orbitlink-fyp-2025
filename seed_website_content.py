@@ -80,7 +80,7 @@ def seed_website_content():
                 "content": json.dumps({
                     "email": "support@orbitlink.com",
                     "phone": "+1 (555) 123-4567",
-                    "phone_hours": "Mon-Fri from 12pm to 6pm",
+                    "phone_hours": "Mon-Fri from 9am to 6pm",
                     "response_time": "We reply within 24 hours",
                     "about_us": "Any Questions or remarks? Write us a message"
                 })
