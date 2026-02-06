@@ -1,0 +1,27 @@
+@startuml
+
+' Class definitions at top
+class ":ProfileUI" {
+}
+
+class ":UserController" {
+  BusinessUser get_user(user_type, user_id)
+}
+
+class ":BusinessUser" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ProfileUI" as ProfileUI
+participant ":UserController" as UserController
+participant ":BusinessUser" as BusinessUser
+
+User -> ProfileUI: View Profile
+ProfileUI -> UserController: get_user(user_type, user_id)
+UserController -> BusinessUser: retrieve user data
+BusinessUser --> UserController: user data
+UserController --> ProfileUI: BusinessUser object
+ProfileUI --> User: Display Profile
+
+@enduml

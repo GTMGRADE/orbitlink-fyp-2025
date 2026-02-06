@@ -1,0 +1,17 @@
+@startuml
+
+' Class definitions at top
+class ":ExportUI" {
+  void export_graph(format)
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ExportUI" as ExportUI
+
+User -> ExportUI: Select PDF export
+ExportUI -> ExportUI: export_graph("PDF")
+ExportUI -> ExportUI: Generate PDF
+ExportUI --> User: Download PDF file
+
+@enduml

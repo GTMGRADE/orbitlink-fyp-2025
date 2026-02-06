@@ -1,0 +1,15 @@
+@startuml
+
+' Class definitions at top
+class ":UserUI" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":UserUI" as UserUI
+
+User -> UserUI: Click Logout
+UserUI -> UserUI: Clear session
+UserUI --> User: Redirect to login page
+
+@enduml

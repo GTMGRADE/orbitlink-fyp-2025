@@ -1,0 +1,16 @@
+@startuml
+
+' Class definitions at top
+class ":NetworkGraphUI" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":NetworkGraphUI" as NetworkGraphUI
+
+User -> NetworkGraphUI: Request network graph
+NetworkGraphUI -> NetworkGraphUI: Load graph data
+NetworkGraphUI -> NetworkGraphUI: Render visualization
+NetworkGraphUI --> User: Display network graph
+
+@enduml

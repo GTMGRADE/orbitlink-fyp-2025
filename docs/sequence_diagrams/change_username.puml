@@ -1,0 +1,27 @@
+@startuml
+
+' Class definitions at top
+class ":ChangeUsernameUI" {
+}
+
+class ":UserController" {
+  void change_username(user, new_username)
+}
+
+class ":BusinessUser" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ChangeUsernameUI" as ChangeUsernameUI
+participant ":UserController" as UserController
+participant ":BusinessUser" as BusinessUser
+
+User -> ChangeUsernameUI: Enter new username
+ChangeUsernameUI -> UserController: change_username(user, new_username)
+UserController -> BusinessUser: update username
+BusinessUser --> UserController: success
+UserController --> ChangeUsernameUI: confirmation
+ChangeUsernameUI --> User: Display success message
+
+@enduml

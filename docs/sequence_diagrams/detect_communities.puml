@@ -1,0 +1,21 @@
+@startuml
+
+' Class definitions at top
+class ":DetectCommunitiesUI" {
+}
+
+class ":ProjectsController" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":DetectCommunitiesUI" as DetectCommunitiesUI
+participant ":ProjectsController" as ProjectsController
+
+User -> DetectCommunitiesUI: Request community detection
+DetectCommunitiesUI -> ProjectsController: detect_communities()
+ProjectsController -> ProjectsController: Run detection algorithm
+ProjectsController --> DetectCommunitiesUI: community results
+DetectCommunitiesUI --> User: Display detected communities
+
+@enduml

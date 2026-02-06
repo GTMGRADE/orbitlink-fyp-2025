@@ -1,0 +1,29 @@
+@startuml
+
+' Class definitions at top
+class ":ProfileUI" {
+}
+
+class ":UserController" {
+  bool delete_user(user_id)
+}
+
+class ":BusinessUser" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ProfileUI" as ProfileUI
+participant ":UserController" as UserController
+participant ":BusinessUser" as BusinessUser
+
+User -> ProfileUI: Request account deletion
+ProfileUI -> ProfileUI: Confirm deletion
+User -> ProfileUI: Confirm
+ProfileUI -> UserController: delete_user(user_id)
+UserController -> BusinessUser: delete user record
+BusinessUser --> UserController: deletion result
+UserController --> ProfileUI: boolean result
+ProfileUI --> User: Display confirmation
+
+@enduml

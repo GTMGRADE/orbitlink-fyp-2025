@@ -1,0 +1,39 @@
+@startuml
+
+' Class definitions at top
+class ":ProjectsListUI" {
+}
+
+class ":ProjectsController" {
+  dict[string, Any] view_all(query)
+}
+
+class ":ProjectRepository" {
+  List[Project] search(query)
+  List[Project] list(include_archived)
+}
+
+class ":Project" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ProjectsListUI" as ProjectsListUI
+participant ":ProjectsController" as ProjectsController
+participant ":ProjectRepository" as ProjectRepository
+participant ":Project" as Project
+
+User -> ProjectsListUI: View all projects
+ProjectsListUI -> ProjectsController: view_all(query)
+alt query provided
+    ProjectsController -> ProjectRepository: search(query)
+else no query
+    ProjectsController -> ProjectRepository: list(include_archived)
+end
+ProjectRepository -> Project: retrieve projects
+Project --> ProjectRepository: project list
+ProjectRepository --> ProjectsController: List[Project]
+ProjectsController --> ProjectsListUI: dict with projects
+ProjectsListUI --> User: Display project list
+
+@enduml

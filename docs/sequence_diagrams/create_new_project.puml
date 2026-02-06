@@ -1,0 +1,37 @@
+@startuml
+
+' Class definitions at top
+class ":ProjectsCreateUI" {
+}
+
+class ":ProjectsController" {
+  Project create(name, description)
+}
+
+class ":ProjectRepository" {
+  Project create(name, description)
+}
+
+class ":Project" {
+  void touch_opened()
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ProjectsCreateUI" as ProjectsCreateUI
+participant ":ProjectsController" as ProjectsController
+participant ":ProjectRepository" as ProjectRepository
+participant ":Project" as Project
+
+User -> ProjectsCreateUI: Enter project details
+ProjectsCreateUI -> ProjectsController: create(name, description)
+ProjectsController -> ProjectRepository: create(name, description)
+ProjectRepository -> Project: new Project instance
+Project --> ProjectRepository: Project object
+ProjectRepository --> ProjectsController: Project object
+ProjectsController -> Project: touch_opened()
+Project --> ProjectsController: success
+ProjectsController --> ProjectsCreateUI: Project object
+ProjectsCreateUI --> User: Display new project
+
+@enduml

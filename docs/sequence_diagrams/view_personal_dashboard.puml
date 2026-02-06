@@ -1,0 +1,34 @@
+@startuml
+
+' Class definitions at top
+class ":ProjectsDashboardUI" {
+}
+
+class ":ProjectsController" {
+  dict[string, Any] view_recent()
+}
+
+class ":ProjectRepository" {
+  List[Project] list(include_archived)
+}
+
+class ":Project" {
+}
+
+' Actor and sequence flow
+actor "Business User" as User
+participant ":ProjectsDashboardUI" as ProjectsDashboardUI
+participant ":ProjectsController" as ProjectsController
+participant ":ProjectRepository" as ProjectRepository
+participant ":Project" as Project
+
+User -> ProjectsDashboardUI: View Dashboard
+ProjectsDashboardUI -> ProjectsController: view_recent()
+ProjectsController -> ProjectRepository: list(include_archived=False)
+ProjectRepository -> Project: get recent projects
+Project --> ProjectRepository: project list
+ProjectRepository --> ProjectsController: List[Project]
+ProjectsController --> ProjectsDashboardUI: dict with recent projects
+ProjectsDashboardUI --> User: Display dashboard
+
+@enduml
