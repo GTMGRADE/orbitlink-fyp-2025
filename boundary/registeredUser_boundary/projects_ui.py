@@ -140,11 +140,8 @@ def project_sna():
     if not get_user_id():
         return redirect(url_for("user.login_get"))
     
-    # Get project_id from query params if provided
-    project_id = request.args.get("project_id") or request.args.get("pid")
-    
-    logger.info("Project SNA page accessed (project_id=%s)", project_id or "none")
-    return render_template("project_sna.html", project_id=project_id)
+    logger.info("Project SNA page accessed")
+    return render_template("project_sna.html")
 
 
 @projects_bp.get("/projects/sentiment-analysis")
@@ -172,12 +169,6 @@ def sentiment_analysis():
                     if sentiment:
                         print(f"[ROUTE] Sentiment found. Keys: {list(sentiment.keys())}")
                         print(f"[ROUTE] Overall score: {sentiment.get('overall_score')}")
-                        print(f"[ROUTE] Pie chart exists: {bool(sentiment.get('pie_chart'))}")
-                        print(f"[ROUTE] Word cloud exists: {bool(sentiment.get('word_cloud'))}")
-                        if sentiment.get('pie_chart'):
-                            print(f"[ROUTE] Pie chart size: {len(sentiment.get('pie_chart', ''))} bytes")
-                        if sentiment.get('word_cloud'):
-                            print(f"[ROUTE] Word cloud size: {len(sentiment.get('word_cloud', ''))} bytes")
                     else:
                         print(f"[ROUTE] WARNING: No sentiment_analysis in analysis_data")
                 else:
@@ -193,7 +184,6 @@ def sentiment_analysis():
         print(f"[ROUTE] WARNING: No project_id provided")
 
     logger.info("Sentiment Analysis page accessed (project_id=%s)", pid or "none")
-    print(f"[ROUTE] Final sentiment object being passed to template: {sentiment is not None}")
     return render_template("sentiment_analysis.html", sentiment=sentiment)
 
 

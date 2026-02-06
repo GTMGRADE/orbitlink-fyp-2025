@@ -55,7 +55,7 @@ def init_db():
             sys.exit(1)
         
         # Create collections (MongoDB equivalent of tables)
-        collections = ['users', 'projects', 'youtube_analysis', 'reviews']
+        collections = ['users', 'projects', 'youtube_analysis', 'website_content']
         
         for collection_name in collections:
             if collection_name not in db.list_collection_names():
@@ -79,10 +79,9 @@ def init_db():
         db.youtube_analysis.create_index([("created_at", -1)], name="idx_youtube_created_at")
         print("✓ Indexes created for youtube_analysis collection")
         
-        # Create indexes for reviews collection
-        db.reviews.create_index("username", name="idx_reviews_username")
-        db.reviews.create_index([("created_at", -1)], name="idx_reviews_created_at")
-        print("✓ Indexes created for reviews collection")
+        # Create indexes for website_content collection
+        db.website_content.create_index("page_id", unique=True, name="idx_website_content_page_id")
+        print("✓ Indexes created for website_content collection")
         
         print("\n✅ Database initialization completed successfully!")
         return True
@@ -90,6 +89,7 @@ def init_db():
     except Exception as e:
         print(f"❌ Error initializing database: {e}")
         return False
+
 
 
 def check_database_status():
@@ -101,7 +101,7 @@ def check_database_status():
     
     try:
         # Check all required collections exist
-        collections = ['users', 'projects', 'youtube_analysis', 'reviews']
+        collections = ['users', 'projects', 'youtube_analysis', 'website_content']
         existing_collections = db.list_collection_names()
         
         for collection in collections:
@@ -113,8 +113,8 @@ def check_database_status():
                 return False
         
         # Check indexes
-        print("\n📊 Reviews collection indexes:")
-        indexes = db.reviews.list_indexes()
+        print("\n📊 youtube_analysis indexes:")
+        indexes = db.youtube_analysis.list_indexes()
         for idx in indexes:
             print(f"  - {idx['name']}: {idx.get('key', {})}")
         

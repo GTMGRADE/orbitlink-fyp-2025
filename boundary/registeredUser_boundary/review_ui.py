@@ -1,4 +1,3 @@
-# boundary/registeredUser_boundary/review_ui.py
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
 from Controller.registeredUser_controller.review_controller import ReviewController
@@ -79,4 +78,3 @@ def submit_review():
             "success": False,
             "message": message
         }), 400
-    

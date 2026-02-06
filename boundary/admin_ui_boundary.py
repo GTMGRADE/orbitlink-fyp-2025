@@ -1,8 +1,7 @@
 # boundary/admin_ui_boundary.py
 from flask import Blueprint, render_template, redirect, url_for, request, session, jsonify
-from Controller.admin_controller.admin_edit_website_content_controller import AdminEditWebsiteContentController
+from Controller.admin_edit_website_content_controller import AdminEditWebsiteContentController
 from entity.website_content_entity import WebsiteContentEntity
-import json
 
 admin_ui_bp = Blueprint("admin_ui", __name__)
 
@@ -10,6 +9,7 @@ def is_admin_logged_in() -> bool:
     return session.get("user_type") == "admin"
 
 
+# DEBUG: check what session you really have
 @admin_ui_bp.get("/admin/debug-session")
 def admin_debug_session():
     return jsonify(dict(session))
@@ -53,15 +53,6 @@ def admin_edit_website_page():
     if page is None:
         return render_template("admin_web_editor.html", error="Page not found.", page_id=page_id)
 
-    # Pretty-print JSON content for editor textarea if possible
-    try:
-        raw = page.get('content')
-        if isinstance(raw, str):
-            parsed = json.loads(raw)
-            page['content'] = json.dumps(parsed, indent=2, ensure_ascii=False)
-    except Exception:
-        pass
-
     return render_template("admin_web_editor.html", page=page)
 
 
@@ -77,15 +68,7 @@ def admin_edit_website_submit():
     result = controller.handle(page_id, updated_content)
 
     if result.get("ok"):
-        page = result["page"]
-        try:
-            raw = page.get('content')
-            if isinstance(raw, str):
-                parsed = json.loads(raw)
-                page['content'] = json.dumps(parsed, indent=2, ensure_ascii=False)
-        except Exception:
-            pass
-        return render_template("admin_web_editor.html", success="Updated!", page=page)
+        return render_template("admin_web_editor.html", success="Updated!", page=result["page"])
 
     page = WebsiteContentEntity.get_content(page_id)
     return render_template(

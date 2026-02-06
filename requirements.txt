@@ -1,21 +1,5 @@
 bcrypt==5.0.0
 blinker==1.9.0
-<<<<<<< HEAD
-click==8.3.1
-colorama==0.4.6
-Flask==3.1.2
-itsdangerous==2.2.0
-Jinja2==3.1.6
-MarkupSafe==3.0.3
-mysql-connector-python==9.5.0
-psycopg2-binary==2.9.11
-python-dotenv==1.2.1
-Werkzeug==3.1.4
-<<<<<<< HEAD
-Flask-Mail==0.9.1
-python-dotenv==1.0.0
-=======
-=======
 CacheControl==0.14.4
 certifi==2026.1.4
 cffi==2.0.0
@@ -96,5 +80,3 @@ wordcloud==1.9.5
 
 numpy==1.26.4
 pandas==2.1.4
->>>>>>> feature/Simon
->>>>>>> development

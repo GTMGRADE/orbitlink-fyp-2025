@@ -98,12 +98,6 @@ class YouTubeAnalysisController:
                 if sentiment:
                     print(f"[CONTROLLER] Sentiment keys: {list(sentiment.keys())}")
                     print(f"[CONTROLLER] Overall score: {sentiment.get('overall_score')}")
-                    print(f"[CONTROLLER] Pie chart exists: {bool(sentiment.get('pie_chart'))}")
-                    print(f"[CONTROLLER] Word cloud exists: {bool(sentiment.get('word_cloud'))}")
-                    if sentiment.get('pie_chart'):
-                        print(f"[CONTROLLER] Pie chart size: {len(sentiment.get('pie_chart', ''))} bytes")
-                    if sentiment.get('word_cloud'):
-                        print(f"[CONTROLLER] Word cloud size: {len(sentiment.get('word_cloud', ''))} bytes")
                     print(f"[CONTROLLER] Top comments: {len(sentiment.get('top_like_comments', []))}")
                 else:
                     print(f"[CONTROLLER] WARNING: sentiment_analysis is None")

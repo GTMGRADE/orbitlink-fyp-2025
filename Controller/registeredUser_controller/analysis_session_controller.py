@@ -17,11 +17,6 @@ class AnalysisSessionController:
         try:
             from datetime import datetime
             
-            # Verify sentiment_analysis is in the data
-            if 'sentiment_analysis' in analysis_data:
-                sa = analysis_data['sentiment_analysis']
-                print(f"[SESSION_CONTROLLER] Saving sentiment analysis with pie_chart: {bool(sa.get('pie_chart'))}, word_cloud: {bool(sa.get('word_cloud'))}")
-            
             # Check if session already exists for this project
             existing = db.analysis_sessions.find_one({
                 "user_id": self.user_id,
@@ -43,12 +38,10 @@ class AnalysisSessionController:
                     {"_id": existing["_id"]},
                     {"$set": session_doc}
                 )
-                print(f"[SESSION_CONTROLLER] Updated existing session for project {self.project_id}")
             else:
                 # Create new session
                 session_doc["created_at"] = datetime.utcnow()
                 db.analysis_sessions.insert_one(session_doc)
-                print(f"[SESSION_CONTROLLER] Created new session for project {self.project_id}")
             
             return True
             
@@ -71,17 +64,6 @@ class AnalysisSessionController:
             if session:
                 session['id'] = str(session['_id'])
                 del session['_id']
-                
-                # Log sentiment data in session
-                if 'analysis_data' in session and 'sentiment_analysis' in session['analysis_data']:
-                    sa = session['analysis_data']['sentiment_analysis']
-                    print(f"[SESSION_CONTROLLER] Retrieved session with sentiment analysis")
-                    print(f"[SESSION_CONTROLLER]   pie_chart: {bool(sa.get('pie_chart'))}")
-                    print(f"[SESSION_CONTROLLER]   word_cloud: {bool(sa.get('word_cloud'))}")
-                    if sa.get('pie_chart'):
-                        print(f"[SESSION_CONTROLLER]   pie_chart size: {len(sa.get('pie_chart', ''))} bytes")
-                    if sa.get('word_cloud'):
-                        print(f"[SESSION_CONTROLLER]   word_cloud size: {len(sa.get('word_cloud', ''))} bytes")
             
             return session
             

@@ -1,11 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
-# <<<<<<< HEAD
 from Controller.guestUser_controller.landing_controller import LandingPageController
 from Controller.guestUser_controller.contact_controller import ContactController
-# =======
-from Controller.guestUser_controller.landing_controller import LandingPageController
-from Controller.guestUser_controller.contact_controller import ContactController
-# >>>>>>> development
 import logging
 
 logger = logging.getLogger(__name__)

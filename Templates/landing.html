@@ -8,19 +8,6 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      :root {
-        --navy: #1E3167;
-        --navy-deep: #14294a;
-        --orange: #F24822;
-        --card-bg: rgba(255, 255, 255, 0.05);
-        --card-border: rgba(255, 255, 255, 0.1);
-        --text-light: rgba(255, 255, 255, 0.9);
-        --text-muted: rgba(255, 255, 255, 0.7);
-        --glass-bg: rgba(255, 255, 255, 0.07);
-        --glass-border: rgba(255, 255, 255, 0.12);
-      }
-
-        html { scroll-behavior: smooth; scroll-padding-top: 85px; }
         * {
             margin: 0;
             padding: 0;
@@ -35,8 +22,22 @@
             min-height: 100vh;
         }
         
+        :root {
+            --navy: #1E3167;
+            --navy-deep: #14294a;
+            --orange: #F24822;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-light: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 85px; }
+        
         .navbar {
-            position: sticky; /* make it sticky */
+            position: sticky;
             top: 0;
             z-index: 1000;
             display: flex;
@@ -52,17 +53,15 @@
             font-weight: bold;
             color: white;
             margin-left: 10px;
-            text-decoration: none; /* remove underline */
+            text-decoration: none;
         }
         
-        /* NAVIGATION */
         .nav-links {
             display: flex;
             gap: 0.8rem;
             align-items: center;
         }
 
-        /* Base style for all nav buttons - unified red, professional look */
         .nav-links a {
             text-decoration: none;
             color: #000;
@@ -70,7 +69,7 @@
             padding: 0.55rem 1rem;
             border-radius: 8px;
             transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
-            background: #ff3333; /* standardized red for all nav buttons */
+            background: #ff3333;
             margin-right: 4px;
             font-size: 0.95rem;
             border: none;
@@ -81,18 +80,17 @@
 
         .nav-links a:hover {
             transform: translateY(-3px);
-            text-decoration: none; /* remove underline on hover */
+            text-decoration: none;
             color: #000;
             background-color: #cc0000;
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
-        /* Slightly larger padding for primary CTA (Sign Up) */
         .nav-links a.primary {
             padding: 0.6rem 1.2rem;
         }
 
-        /* --- Hamburger + side menu styles --- */
+        /* Hamburger + side menu styles */
         .menu-btn {
             display: inline-flex;
             flex-direction: column;
@@ -122,7 +120,7 @@
             height: 100vh;
             width: 320px;
             max-width: 90vw;
-            background: rgba(30,49,103,0.93); /* slightly transparent navy */
+            background: rgba(30,49,103,0.93);
             backdrop-filter: blur(6px);
             box-shadow: -20px 0 40px rgba(0,0,0,0.4);
             transform: translateX(104%);
@@ -168,7 +166,6 @@
         }
 
         @media (min-width: 761px) {
-            /* still allow compact menu on desktop if desired */
             .nav-links { display: none; }
         }
         
@@ -927,8 +924,8 @@
     <div id="about" class="hero-container">
         <section class="hero-section">
             <div class="hero-content">
-                <h1>Analyze Social Networks with Smart Analytics</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <h1>{{ page_title or 'Analyze Social Networks with Smart Analytics' }}</h1>
+                <p>{{ description or 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.' }}</p>
                 <a href="#plans" class="btn">Learn More</a>
             </div>
             <div class="hero-image">
@@ -946,26 +943,36 @@
     <!-- SIMPLE Features Section -->
     <h2 id="features" class="section-title">Key Features</h2>
     <div class="features-grid-simple">
-        <div class="feature-simple">
-            <div class="feature-icon-simple">📊</div>
-            <h3>Sentiment Analysis</h3>
-            <p>Analyze opinions and track sentiment shifts over time to understand public perception</p>
-        </div>
-        <div class="feature-simple">
-            <div class="feature-icon-simple">👑</div>
-            <h3>Influencer Detection</h3>
-            <p>Identify key influencers and high-impact accounts driving conversations in your network</p>
-        </div>
-        <div class="feature-simple">
-            <div class="feature-icon-simple">🔄</div>
-            <h3>Community Clustering</h3>
-            <p>Detect subgroups and analyze information flows between different community segments</p>
-        </div>
-        <div class="feature-simple">
-            <div class="feature-icon-simple">⚡</div>
-            <h3>Real-time Monitoring</h3>
-            <p>Track emergent events with live dashboards and instant alert notifications</p>
-        </div>
+        {% if features %}
+            {% for feature in features %}
+            <div class="feature-simple">
+                <div class="feature-icon-simple">{{ feature.icon or '✨' }}</div>
+                <h3>{{ feature.name or feature }}</h3>
+                <p>{{ feature.description or 'Advanced analytics for ' + (feature.name or feature)|lower }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="feature-simple">
+                <div class="feature-icon-simple">📊</div>
+                <h3>Sentiment Analysis</h3>
+                <p>Analyze opinions and track sentiment shifts over time to understand public perception</p>
+            </div>
+            <div class="feature-simple">
+                <div class="feature-icon-simple">👑</div>
+                <h3>Influencer Detection</h3>
+                <p>Identify key influencers and high-impact accounts driving conversations in your network</p>
+            </div>
+            <div class="feature-simple">
+                <div class="feature-icon-simple">🔄</div>
+                <h3>Community Clustering</h3>
+                <p>Detect subgroups and analyze information flows between different community segments</p>
+            </div>
+            <div class="feature-simple">
+                <div class="feature-icon-simple">⚡</div>
+                <h3>Real-time Monitoring</h3>
+                <p>Track emergent events with live dashboards and instant alert notifications</p>
+            </div>
+        {% endif %}
     </div>
 
     <!-- COMPACT PLAN SECTION -->
@@ -980,17 +987,27 @@
         <div class="compact-plan-content">
             <!-- Left Column: Price Options -->
             <div class="compact-price-options">
-                <div class="compact-price-option">
-                    <h3>Free Trial</h3>
-                    <div class="compact-price-amount">$0</div>
-                    <div class="compact-price-period">/member for first month</div>
-                </div>
-                
-                <div class="compact-price-option">
-                    <h3>Paid Subscription</h3>
-                    <div class="compact-price-amount">$49</div>
-                    <div class="compact-price-period">/member/month</div>
-                </div>
+                {% if pricing and pricing.plans %}
+                    {% for plan_key, plan_details in pricing.plans.items() %}
+                    <div class="compact-price-option">
+                        <h3>{{ plan_details.name or plan_key }}</h3>
+                        <div class="compact-price-amount">${{ plan_details.price or '0' }}</div>
+                        <div class="compact-price-period">{{ plan_details.period or '/month' }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="compact-price-option">
+                        <h3>Free Trial</h3>
+                        <div class="compact-price-amount">$0</div>
+                        <div class="compact-price-period">/member for first month</div>
+                    </div>
+                    
+                    <div class="compact-price-option">
+                        <h3>Paid Subscription</h3>
+                        <div class="compact-price-amount">$49</div>
+                        <div class="compact-price-period">/member/month</div>
+                    </div>
+                {% endif %}
             </div>
             
             <!-- Right Column: Features and Button -->
@@ -998,13 +1015,19 @@
                 <div class="compact-plan-included">
                     <h3>What's Included:</h3>
                     <ul class="compact-plan-features">
-                        <li>Full access to all features for 30 days</li>
-                        <li>Upload your own datasets</li>
-                        <li>Run sentiment analysis, influencer detection</li>
-                        <li>Create network visualizations</li>
-                        <li>Export results (CSV, PNG, PDF)</li>
-                        <li>Everything in Free Trial continues</li>
-                        <li>Data backup & enhanced security</li>
+                        {% if pricing and pricing.included %}
+                            {% for item in pricing.included %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Full access to all features for 30 days</li>
+                            <li>Upload your own datasets</li>
+                            <li>Run sentiment analysis, influencer detection</li>
+                            <li>Create network visualizations</li>
+                            <li>Export results (CSV, PNG, PDF)</li>
+                            <li>Everything in Free Trial continues</li>
+                            <li>Data backup & enhanced security</li>
+                        {% endif %}
                     </ul>
                 </div>
                 
@@ -1019,7 +1042,7 @@
         <!-- Centered Contact Intro -->
         <div class="contact-intro">
             <h2>CONTACT US</h2>
-            <p>Any Questions or remarks? Write us a message</p>
+            <p>{{ about_us or 'Any Questions or remarks? Write us a message' }}</p>
         </div>
         
         <!-- Contact Content -->
@@ -1059,8 +1082,8 @@
                         </div>
                         <div class="contact-details">
                             <h4>PHONE</h4>
-                            <p>+1 (555) 123-4567</p>
-                            <p>Mon-Fri from 12pm to 6pm</p>
+                            <p>{{ contact_phone or '+1 (555) 123-4567' }}</p>
+                            <p>{{ contact_hours or 'Mon-Fri from 12pm to 6pm' }}</p>
                         </div>
                     </div>
                     
@@ -1070,8 +1093,8 @@
                         </div>
                         <div class="contact-details">
                             <h4>EMAIL</h4>
-                            <p>support@orbitlink.com</p>
-                            <p>We reply within 24 hours</p>
+                            <p>{{ contact_email or 'support@orbitlink.com' }}</p>
+                            <p>{{ contact_response_time or 'We reply within 24 hours' }}</p>
                         </div>
                     </div>
                 </div>
