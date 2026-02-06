@@ -55,7 +55,7 @@ else no query
     Project --> ProjectRepository: return List[Project]
     deactivate Project
     
-    ProjectRepository --> ProjectRepository: return List[Project]
+    ProjectRepository --> ProjectsController: return List[Project]
     deactivate ProjectRepository
 end
 
