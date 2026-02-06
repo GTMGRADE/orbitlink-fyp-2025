@@ -1,0 +1,29 @@
+@startuml export_graph_pdf
+
+' Component definitions
+participant "Business User" as User
+participant "ExportUI\n(Templates with export\nfunctionality)" as ExportUI
+
+' Sequence flow
+User -> ExportUI: Click export button\n(on network graph page)
+activate ExportUI
+
+ExportUI -> ExportUI: Trigger export function\nin JavaScript
+activate ExportUI
+note right: Captures current graph state\nand visualization
+deactivate ExportUI
+
+ExportUI -> ExportUI: Generate export file\n(PDF or PNG)
+activate ExportUI
+note right: Uses canvas or SVG rendering\nto create static image\nof current graph
+deactivate ExportUI
+
+ExportUI -> ExportUI: Prepare download
+activate ExportUI
+note right: Creates blob/data URL\nfor file download
+deactivate ExportUI
+
+ExportUI --> User: Download file to device\n(graph_export.pdf or graph_export.png)
+deactivate ExportUI
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml detect_communities
+
+' Component definitions
+participant "Business User" as User
+participant "DetectCommunitiesUI\n(boundary/projects_ui.py\ndetect_communities())" as DetectCommunitiesUI
+
+' Sequence flow
+User -> DetectCommunitiesUI: Select detect communities\nfrom project SNA menu
+activate DetectCommunitiesUI
+
+DetectCommunitiesUI -> DetectCommunitiesUI: Render detect_communities.html
+activate DetectCommunitiesUI
+note right: Template includes:\n- Algorithm selection options\n- Network visualization placeholder\n- Modularity score display\n- Community count display
+deactivate DetectCommunitiesUI
+
+DetectCommunitiesUI --> User: Display detect communities page\nwith algorithm options
+deactivate DetectCommunitiesUI
+
+User -> DetectCommunitiesUI: View network visualization
+activate DetectCommunitiesUI
+
+DetectCommunitiesUI --> User: Display interactive network\nwith nodes and edges\n(community clusters if detection ran)
+deactivate DetectCommunitiesUI
+
+User -> DetectCommunitiesUI: View modularity score\nand community count
+activate DetectCommunitiesUI
+
+DetectCommunitiesUI --> User: Display metrics\n(modularity score, community count)
+deactivate DetectCommunitiesUI
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml view_personal_dashboard
+
+' Component definitions
+participant "Business User" as User
+participant "ProjectsDashboardUI\n(boundary/projects_ui.py\ndashboard())" as ProjectsDashboardUI
+participant "ProjectsController\n(Controller/projects_controller.py)" as ProjectsController
+participant "ProjectRepository\n(entity/project.py)" as ProjectRepository
+participant "Project\n(entity/project.py)" as Project
+
+' Sequence flow
+User -> ProjectsDashboardUI: Navigate to dashboard
+activate ProjectsDashboardUI
+
+ProjectsDashboardUI -> ProjectsController: dict[str, Any] view_recent()
+activate ProjectsController
+
+ProjectsController -> ProjectsController: Get user_id from session
+activate ProjectsController
+deactivate ProjectsController
+
+ProjectsController -> ProjectRepository: ProjectRepository(user_id)
+activate ProjectRepository
+ProjectRepository --> ProjectsController: return ProjectRepository
+deactivate ProjectRepository
+
+ProjectsController -> ProjectRepository: List[Project] list()
+activate ProjectRepository
+
+ProjectRepository -> ProjectRepository: Query MongoDB projects collection\nfilter by user_id, archived != True\nsort by last_opened desc
+activate ProjectRepository
+deactivate ProjectRepository
+
+ProjectRepository -> Project: Convert documents to Project objects
+activate Project
+Project --> ProjectRepository: return List[Project]
+deactivate Project
+
+ProjectRepository --> ProjectsController: return List[Project]
+deactivate ProjectRepository
+
+ProjectsController -> ProjectsController: Sort by last_opened (desc)\nand take top 3
+activate ProjectsController
+deactivate ProjectsController
+
+ProjectsController -> ProjectsController: Format dates (dd/mm/yy)\nfor each project
+activate ProjectsController
+deactivate ProjectsController
+
+ProjectsController --> ProjectsDashboardUI: return dict[str, Any]\n(page_title, projects, query)\nwith id, name, description, last_opened
+deactivate ProjectsController
+
+ProjectsDashboardUI -> ProjectsDashboardUI: Render projects_dashboard.html\nwith recent projects
+activate ProjectsDashboardUI
+deactivate ProjectsDashboardUI
+
+ProjectsDashboardUI --> User: Display dashboard\nwith 3 most recent projects
+deactivate ProjectsDashboardUI
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml delete_account
+
+' Component definitions
+participant "Business User" as User
+participant "ProfileUI\n(boundary/user_ui.py)" as ProfileUI
+participant "UserController\n(Controller/user_controller.py)" as UserController
+participant "RegisteredUser\n(entity)" as BusinessUser
+
+' Sequence flow
+User -> ProfileUI: Click delete account button
+activate ProfileUI
+
+ProfileUI --> User: Display confirmation dialog
+deactivate ProfileUI
+
+User -> ProfileUI: Confirm deletion
+activate ProfileUI
+
+ProfileUI -> UserController: delete_user(user_id, user_type)
+activate UserController
+
+UserController -> BusinessUser: Remove user from users dict
+activate BusinessUser
+BusinessUser --> UserController: User deleted
+deactivate BusinessUser
+
+UserController --> ProfileUI: return dict[str, Any]\n(status='success')
+deactivate UserController
+
+ProfileUI -> ProfileUI: session.clear()
+activate ProfileUI
+note right: Clear session data
+deactivate ProfileUI
+
+ProfileUI --> User: Redirect to landing page
+deactivate ProfileUI
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml view_network_graph
+
+' Component definitions
+participant "Business User" as User
+participant "NetworkGraphUI\n(detect_communities or\nproject_sna pages)" as NetworkGraphUI
+
+' Sequence flow
+User -> NetworkGraphUI: Navigate to network graph\n(from detect_communities or project_sna)
+activate NetworkGraphUI
+
+NetworkGraphUI -> NetworkGraphUI: Initialize network visualization\ncomponent
+activate NetworkGraphUI
+note right: Loads JavaScript libraries\nfor interactive graph rendering
+deactivate NetworkGraphUI
+
+NetworkGraphUI -> NetworkGraphUI: Render network data\n(nodes and edges)
+activate NetworkGraphUI
+note right: Displays nodes as circles\nEdges as connections\nCommunities with color coding
+deactivate NetworkGraphUI
+
+NetworkGraphUI --> User: Display interactive\nnetwork visualization
+deactivate NetworkGraphUI
+
+User -> NetworkGraphUI: Interact with graph\n(zoom, pan, select nodes)
+activate NetworkGraphUI
+
+NetworkGraphUI -> NetworkGraphUI: Update visualization\nbased on user interaction
+activate NetworkGraphUI
+deactivate NetworkGraphUI
+
+NetworkGraphUI --> User: Updated graph view
+deactivate NetworkGraphUI
+
+alt community detection was run
+    User -> NetworkGraphUI: View community clusters
+    activate NetworkGraphUI
+    
+    NetworkGraphUI --> User: Display nodes colored\nby community membership
+    deactivate NetworkGraphUI
+end
+
+@enduml

@@ -1,0 +1,76 @@
+@startuml view_projects
+
+' Component definitions
+participant "Business User" as User
+participant "ProjectsListUI\n(boundary/projects_ui.py\nprojects_list())" as ProjectsListUI
+participant "ProjectsController\n(Controller/projects_controller.py)" as ProjectsController
+participant "ProjectRepository\n(entity/project.py)" as ProjectRepository
+participant "Project\n(entity/project.py)" as Project
+
+' Sequence flow
+User -> ProjectsListUI: Navigate to projects\n(optional query parameter)
+activate ProjectsListUI
+
+ProjectsListUI -> ProjectsListUI: Extract query parameter\nfrom request.args
+activate ProjectsListUI
+deactivate ProjectsListUI
+
+ProjectsListUI -> ProjectsController: dict[str, Any] view_all(query)
+activate ProjectsController
+
+ProjectsController -> ProjectsController: Get user_id from session
+activate ProjectsController
+deactivate ProjectsController
+
+ProjectsController -> ProjectRepository: ProjectRepository(user_id)
+activate ProjectRepository
+ProjectRepository --> ProjectsController: return ProjectRepository
+deactivate ProjectRepository
+
+alt query is provided
+    ProjectsController -> ProjectRepository: List[Project] search(query)
+    activate ProjectRepository
+    
+    ProjectRepository -> ProjectRepository: Query MongoDB with regex\nfilter by user_id, archived != True,\nmatch name or description
+    activate ProjectRepository
+    deactivate ProjectRepository
+    
+    ProjectRepository -> Project: Convert documents to Project objects
+    activate Project
+    Project --> ProjectRepository: return List[Project]
+    deactivate Project
+    
+    ProjectRepository --> ProjectsController: return List[Project]
+    deactivate ProjectRepository
+else no query
+    ProjectsController -> ProjectRepository: List[Project] list()
+    activate ProjectRepository
+    
+    ProjectRepository -> ProjectRepository: Query MongoDB\nfilter by user_id, archived != True\nsort by last_opened desc
+    activate ProjectRepository
+    deactivate ProjectRepository
+    
+    ProjectRepository -> Project: Convert documents to Project objects
+    activate Project
+    Project --> ProjectRepository: return List[Project]
+    deactivate Project
+    
+    ProjectRepository --> ProjectRepository: return List[Project]
+    deactivate ProjectRepository
+end
+
+ProjectsController -> ProjectsController: Format dates (dd/mm/yy)\nfor each project
+activate ProjectsController
+deactivate ProjectsController
+
+ProjectsController --> ProjectsListUI: return dict[str, Any]\n(page_title='All Projects',\nprojects, query)
+deactivate ProjectsController
+
+ProjectsListUI -> ProjectsListUI: Render projects_dashboard.html\nwith projects table
+activate ProjectsListUI
+deactivate ProjectsListUI
+
+ProjectsListUI --> User: Display projects list
+deactivate ProjectsListUI
+
+@enduml

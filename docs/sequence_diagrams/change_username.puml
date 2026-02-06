@@ -1,0 +1,48 @@
+@startuml change_username
+
+' Component definitions
+participant "Business User" as User
+participant "ChangeUsernameUI\n(boundary/user_ui.py\nchange_username_get/post)" as ChangeUsernameUI
+participant "UserController\n(Controller/user_controller.py)" as UserController
+participant "RegisteredUser\n(entity)" as BusinessUser
+
+' GET request flow
+User -> ChangeUsernameUI: Navigate to change username
+activate ChangeUsernameUI
+
+ChangeUsernameUI -> UserController: get_user(user_type, user_id)
+activate UserController
+UserController --> ChangeUsernameUI: return RegisteredUser
+deactivate UserController
+
+ChangeUsernameUI --> User: Display change_username.html\nwith current username
+deactivate ChangeUsernameUI
+
+' POST request flow
+User -> ChangeUsernameUI: Submit new username
+activate ChangeUsernameUI
+
+ChangeUsernameUI -> ChangeUsernameUI: Validate new_username\n(not empty)
+activate ChangeUsernameUI
+deactivate ChangeUsernameUI
+
+alt username is valid
+    ChangeUsernameUI -> UserController: change_username(user, new_username)
+    activate UserController
+    
+    UserController -> BusinessUser: Update username attribute
+    activate BusinessUser
+    BusinessUser --> UserController: Username updated
+    deactivate BusinessUser
+    
+    UserController --> ChangeUsernameUI: return void
+    deactivate UserController
+    
+    ChangeUsernameUI --> User: Redirect to profile\nwith success message
+else username is empty
+    ChangeUsernameUI --> User: Display error:\n"Please enter a username."
+end
+
+deactivate ChangeUsernameUI
+
+@enduml

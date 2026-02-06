@@ -1,0 +1,39 @@
+@startuml view_personal_profile
+
+' Component definitions
+participant "Business User" as User
+participant "ProfileUI\n(boundary/user_ui.py\nprofile())" as ProfileUI
+participant "UserController\n(Controller/user_controller.py)" as UserController
+participant "RegisteredUser\n(entity)" as BusinessUser
+
+' Sequence flow
+User -> ProfileUI: Click profile link
+activate ProfileUI
+
+ProfileUI -> ProfileUI: Get user_id and user_type\nfrom session
+activate ProfileUI
+deactivate ProfileUI
+
+ProfileUI -> UserController: get_user(user_type, user_id)
+activate UserController
+
+UserController -> UserController: Lookup user\nfrom users dict
+activate UserController
+deactivate UserController
+
+UserController -> BusinessUser: Retrieve user object
+activate BusinessUser
+BusinessUser --> UserController: return RegisteredUser
+deactivate BusinessUser
+
+UserController --> ProfileUI: return RegisteredUser
+deactivate UserController
+
+ProfileUI -> ProfileUI: Render profile.html\nwith user data
+activate ProfileUI
+deactivate ProfileUI
+
+ProfileUI --> User: Display profile page\n(username, email, role)
+deactivate ProfileUI
+
+@enduml

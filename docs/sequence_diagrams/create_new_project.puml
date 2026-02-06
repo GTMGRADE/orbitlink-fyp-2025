@@ -1,0 +1,67 @@
+@startuml create_new_project
+
+' Component definitions
+participant "Business User" as User
+participant "ProjectsCreateUI\n(boundary/projects_ui.py\nprojects_create_get/post)" as ProjectsCreateUI
+participant "ProjectsController\n(Controller/projects_controller.py)" as ProjectsController
+participant "ProjectRepository\n(entity/project.py)" as ProjectRepository
+participant "Project\n(entity/project.py)" as Project
+
+' GET request flow
+User -> ProjectsCreateUI: Navigate to create project
+activate ProjectsCreateUI
+
+ProjectsCreateUI --> User: Display projects_create.html\nwith form (name, description)
+deactivate ProjectsCreateUI
+
+' POST request flow
+User -> ProjectsCreateUI: Submit project form\n(name, description)
+activate ProjectsCreateUI
+
+ProjectsCreateUI -> ProjectsCreateUI: Validate name\n(not empty)
+activate ProjectsCreateUI
+deactivate ProjectsCreateUI
+
+alt name is valid
+    ProjectsCreateUI -> ProjectsController: Project create(name, description)
+    activate ProjectsController
+    
+    ProjectsController -> ProjectsController: Get user_id from session
+    activate ProjectsController
+    deactivate ProjectsController
+    
+    ProjectsController -> ProjectRepository: ProjectRepository(user_id)
+    activate ProjectRepository
+    ProjectRepository --> ProjectsController: return ProjectRepository
+    deactivate ProjectRepository
+    
+    ProjectsController -> ProjectRepository: Optional[Project] create(name, description)
+    activate ProjectRepository
+    
+    ProjectRepository -> ProjectRepository: Generate project document\nwith ObjectId, user_id, name,\ndescription, timestamps
+    activate ProjectRepository
+    deactivate ProjectRepository
+    
+    ProjectRepository -> ProjectRepository: Insert into MongoDB\nprojects collection
+    activate ProjectRepository
+    deactivate ProjectRepository
+    
+    ProjectRepository -> Project: Create Project object\nwith generated ID
+    activate Project
+    Project --> ProjectRepository: return Project
+    deactivate Project
+    
+    ProjectRepository --> ProjectsController: return Optional[Project]
+    deactivate ProjectRepository
+    
+    ProjectsController --> ProjectsCreateUI: return Project
+    deactivate ProjectsController
+    
+    ProjectsCreateUI --> User: Redirect to projects list
+else name is empty
+    ProjectsCreateUI --> User: Display error:\n"Project name is required."
+end
+
+deactivate ProjectsCreateUI
+
+@enduml

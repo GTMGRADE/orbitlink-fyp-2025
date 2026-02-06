@@ -1,0 +1,19 @@
+@startuml log_out
+
+' Component definitions
+participant "Business User" as User
+participant "UserUI\n(boundary/user_ui.py\nlogout())" as UserUI
+
+' Sequence flow
+User -> UserUI: Click logout button
+activate UserUI
+
+UserUI -> UserUI: session.clear()
+activate UserUI
+note right: Clears all session data\nincluding user_id and user_type
+deactivate UserUI
+
+UserUI --> User: Redirect to landing page
+deactivate UserUI
+
+@enduml
