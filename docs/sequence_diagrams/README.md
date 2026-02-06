@@ -105,7 +105,7 @@ This directory contains comprehensive UML sequence diagrams for the OrbitLink FY
 GitHub automatically renders PlantUML diagrams in markdown files:
 
 ```markdown
-![Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/GTMGRADE/orbitlink-fyp-2025/main/docs/sequence_diagrams/view_personal_profile.puml)
+![Diagram](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/GTMGRADE/orbitlink-fyp-2025/main/docs/sequence_diagrams/view_personal_profile.puml)
 ```
 
 ## Diagram Structure
