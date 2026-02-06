@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background-color: #1E3167;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 3%;
+            background-color: #1E3167;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+        }        
+        .nav-links a {
+            text-decoration: none;
+            color: black;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+            background-color: #ff3333;
+        }
+        
+        .nav-links a:hover {
+            background-color: #cc0000;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto 2.5rem auto; /* keep same width and add bottom space from footer */
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1 0 auto; /* allow container to grow and push footer to bottom */
+            padding-bottom: 2.5rem; /* additional internal space so content doesn't sit flush */
+        }
+        
+        .page-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .stars-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 3rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .star {
+            color: #ccc;
+            transition: color 0.2s, transform 0.2s;
+        }
+        
+        .star:hover,
+        .star.selected {
+            color: #FFD700;
+        }
+        
+        .star:hover ~ .star {
+            color: #ccc;
+        }
+        
+        .star.selected ~ .star {
+            color: #ccc;
+        }
+        
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #ff3333;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .submit-btn {
+            padding: 1rem 2rem;
+            background: #ff3333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: center;
+        }
+        
+        .submit-btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success {
+            background: rgba(39, 202, 63, 0.2);
+            border: 1px solid #27ca3f;
+            color: #27ca3f;
+            display: block;
+        }
+        
+        .error {
+            background: rgba(255, 51, 51, 0.2);
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            display: block;
+        }
+        
+        .already-reviewed {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        
+        .already-reviewed h3 {
+            color: #FFD700;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            margin-top: auto; /* push footer to bottom when content is short */
+            padding: 2rem 3% 3rem 3%; /* more spacing above and below footer */
+            background-color: rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+        
+        footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .star-rating {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('projects.dashboard') }}" class="logo">OrbitLink</a>
+        <div class="nav-links">
+            <a href="{{ url_for('projects.dashboard') }}">Back to Dashboard</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">Rate Your Experience</h1>
+        
+        {% if has_existing_review %}
+        <div class="already-reviewed">
+            <h3>✓ Thank You!</h3>
+            <p>You have already submitted a review. We appreciate your feedback!</p>
+        </div>
+        {% else %}
+        <div class="message" id="message"></div>
+        
+        <form class="review-form" id="reviewForm">
+            <div class="stars-container">
+                <div class="star-rating" id="starRating">
+                    <span class="star" data-value="1">☆</span>
+                    <span class="star" data-value="2">☆</span>
+                    <span class="star" data-value="3">☆</span>
+                    <span class="star" data-value="4">☆</span>
+                    <span class="star" data-value="5">☆</span>
+                </div>
+                <div class="rating-labels">
+                    <span>Poor</span>
+                    <span>Fair</span>
+                    <span>Good</span>
+                    <span>Very Good</span>
+                    <span>Excellent</span>
+                </div>
+                <input type="hidden" id="rating" name="rating" value="">
+            </div>
+            
+            <div class="form-group">
+                <label for="comment">Your Feedback (Optional)</label>
+                <textarea 
+                    id="comment" 
+                    name="comment" 
+                    placeholder="Share your thoughts about OrbitLink... What did you like? What can we improve?"
+                    maxlength="500"></textarea>
+                <div style="text-align: right; color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; margin-top: 0.5rem;">
+                    <span id="charCount">0</span>/500 characters
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">Submit Review</button>
+        </form>
+        {% endif %}
+    </div>
+    
+    <footer>
+        <p>© 2025 OrbitLink Analytics Platform. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('rating');
+            const commentInput = document.getElementById('comment');
+            const charCount = document.getElementById('charCount');
+            const form = document.getElementById('reviewForm');
+            const message = document.getElementById('message');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            let selectedRating = 0;
+            
+            // Star rating functionality
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.value);
+                    ratingInput.value = selectedRating;
+                    
+                    // Update stars display
+                    stars.forEach((s, index) => {
+                        if (index < selectedRating) {
+                            s.textContent = '★';
+                            s.classList.add('selected');
+                        } else {
+                            s.textContent = '☆';
+                            s.classList.remove('selected');
+                        }
+                    });
+                    
+                    // Enable submit button
+                    submitBtn.disabled = false;
+                });
+                
+                // Hover effect
+                star.addEventListener('mouseover', function() {
+                    const hoverValue = parseInt(this.dataset.value);
+                    stars.forEach((s, index) => {
+                        if (index < hoverValue) {
+                            s.textContent = '★';
+                            s.classList.add('selected');
+                        } else {
+                            s.textContent = '☆';
+                            s.classList.remove('selected');
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    // Restore selected rating
+                    stars.forEach((s, index) => {
+                        if (index < selectedRating) {
+                            s.textContent = '★';
+                            s.classList.add('selected');
+                        } else {
+                            s.textContent = '☆';
+                            s.classList.remove('selected');
+                        }
+                    });
+                });
+            });
+            
+            // Character count for comment
+            commentInput.addEventListener('input', function() {
+                charCount.textContent = this.value.length;
+            });
+            
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!selectedRating) {
+                    showMessage('Please select a star rating', 'error');
+                    return;
+                }
+                
+                const formData = new FormData(form);
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+                
+                try {
+                    const response = await fetch('/review/submit', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        setTimeout(() => {
+                            window.location.href = data.redirect || '/review';
+                        }, 2000);
+                    } else {
+                        showMessage(data.message, 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Submit Review';
+                    }
+                } catch (error) {
+                    showMessage('Network error. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Review';
+                }
+            });
+            
+            function showMessage(text, type) {
+                message.textContent = text;
+                message.className = 'message ' + type;
+                message.style.display = 'block';
+                
+                // Scroll to message
+                message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    </script>
+</body>
+</html>

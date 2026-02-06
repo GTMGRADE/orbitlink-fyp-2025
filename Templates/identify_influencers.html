@@ -103,6 +103,35 @@
         max-width: 1000px;
         margin: 0 auto;
       }
+      
+      /* Analysis Results Header */
+      .results-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      }
+      .channel-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
+      .channel-stats {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .channel-stats span {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+      
       .page-title {
         font-size: 2rem;
         font-weight: 900;
@@ -117,22 +146,30 @@
       .influencer-card {
         background: #1e3a52;
         border-radius: 12px;
-        padding: 1.5rem;
+        padding: 1.8rem;
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: grid;
-        grid-template-columns: 120px 1fr;
+        grid-template-columns: 80px 1fr;
         gap: 1.5rem;
-        align-items: center;
+        align-items: start;
+        transition: all 0.3s ease;
       }
+      .influencer-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      
       .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #9966cc 0%, #ccccff 100%);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 3rem;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
       }
       .avatar.yellow {
         background: linear-gradient(135deg, #ffaa00 0%, #ffdd99 100%);
@@ -140,53 +177,159 @@
       .avatar.cyan {
         background: linear-gradient(135deg, #00ddff 0%, #99ffff 100%);
       }
+      .avatar.default {
+        background: linear-gradient(135deg, #9966cc 0%, #ccccff 100%);
+      }
+      
       .influencer-info {
         display: flex;
-        justify-content: space-between;
-        align-items: start;
+        flex-direction: column;
+        gap: 1rem;
       }
       .influencer-details {
         flex: 1;
       }
+      .influencer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.8rem;
+      }
       .influencer-name {
         font-size: 1.3rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
       }
       .influencer-score {
-        font-size: 1.4rem;
-        color: #ffa500;
-        font-weight: 700;
+        font-size: 1.6rem;
+        font-weight: 900;
       }
-      .influencer-stats {
-        list-style: none;
-        font-size: 0.9rem;
-        color: #b0c4de;
-        line-height: 1.6;
+      
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+      .stats-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+      }
+      .stat-item {
+        text-align: center;
+        padding: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+      }
+      .stat-label {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 0.2rem;
+      }
+      .stat-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+      }
+      
+      /* Score Tags */
+      .score-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
         margin-top: 0.5rem;
       }
-      .influencer-stats li:before {
-        content: "• ";
-        color: #ffa500;
-        font-weight: bold;
-        margin-right: 0.5rem;
+      .score-tag {
+        padding: 0.3rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
       }
+      
+      /* Loading State */
+      .loading-state {
+        text-align: center;
+        padding: 3rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #f24822;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* No Data State */
+      .no-data {
+        text-align: center;
+        padding: 3rem;
+        color: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
+      }
+      
+      /* Analysis Summary */
+      .analysis-summary {
+        text-align: center;
+        margin: 2rem 0;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+      }
+      .analysis-summary p {
+        color: rgba(255, 255, 255, 0.8);
+      }
+      
       @media (max-width: 768px) {
         .layout {
           grid-template-columns: 1fr;
         }
         .influencer-card {
-          grid-template-columns: 80px 1fr;
-          gap: 1rem;
-        }
-        .influencer-info {
-          flex-direction: column;
-          gap: 1rem;
+          grid-template-columns: 1fr;
+          text-align: center;
         }
         .avatar {
-          width: 80px;
-          height: 80px;
-          font-size: 2rem;
+          width: 60px;
+          height: 60px;
+          font-size: 1.8rem;
+          margin: 0 auto;
+        }
+        .influencer-header {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stats-grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .score-tags {
+          justify-content: center;
+        }
+        .channel-stats {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .avatar {
+          width: 50px;
+          height: 50px;
+          font-size: 1.5rem;
         }
       }
     </style>
@@ -195,13 +338,13 @@
     <div class="layout">
       <aside class="sidebar">
         <div class="brand">OrbitLink</div>
-        <div class="create-btn">
+        <!-- <div class="create-btn">
           <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
-        </div>
+        </div> -->
         <nav class="menu">
           <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
-          <a href="{{ url_for('projects.project_sna') }}">Analysis</a>
+          <!-- <a href="{{ url_for('projects.projects_list') }}">Projects</a> -->
+          <!-- <a href="{{ url_for('projects.project_sna') }}">Analysis</a> -->
           <a href="#">Support</a>
           <a href="#">Setting</a>
         </nav>
@@ -210,62 +353,408 @@
       <main class="content">
         <div class="header">
           <div class="title">Identify Key Influencers</div>
-          <div class="header-buttons">
+          <!-- <div class="header-buttons">
             <a href="{{ url_for('projects.project_sna') }}">Back</a>
+          </div> -->
+          <div class="header-buttons">
+              <!-- <a href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', 1) }}"  -->
+              <a href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', '') }}" 
+                class="back-button">Back</a>
           </div>
         </div>
 
         <div class="container">
+          <!-- Analysis Results Header (Hidden by default) -->
+          <div id="analysisResults" class="results-header" style="display: none;">
+            <h2 id="channelTitle" class="channel-title"></h2>
+            <div id="channelStats" class="channel-stats"></div>
+          </div>
+          
+          <!-- Loading indicator -->
+          <div id="loadingIndicator" class="loading-state" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading influencer data...</p>
+          </div>
+          
           <h1 class="page-title">Key Influencers</h1>
-
-          <div class="influencer-list">
+          
+          <div class="influencer-list" id="influencerList">
+            <!-- Default hardcoded influencers (fallback content) -->
             <div class="influencer-card">
-              <div class="avatar">👤</div>
+              <div class="avatar yellow">👤</div>
               <div class="influencer-info">
-                <div class="influencer-details">
+                <div class="influencer-header">
                   <div class="influencer-name">Tony Lee</div>
-                  <ul class="influencer-stats">
-                    <li>Youtube 300M subscriber</li>
-                    <li>Authentic</li>
-                    <li>Practical</li>
-                  </ul>
+                  <div class="influencer-score" style="color: #ffa500;">88 pts</div>
                 </div>
-                <div class="influencer-score">88 pts</div>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-label">Comments</div>
+                    <div class="stat-value">24</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Likes</div>
+                    <div class="stat-value">1.2K</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Replies Received</div>
+                    <div class="stat-value">15</div>
+                  </div>
+                </div>
+                <div class="stats-grid-2">
+                  <div class="stat-item">
+                    <div class="stat-label">Videos Participated</div>
+                    <div class="stat-value">8</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Threads Started</div>
+                    <div class="stat-value">3</div>
+                  </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
+                    Score Breakdown:
+                  </div>
+                  <div class="score-tags">
+                    <span class="score-tag" style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b;">
+                      Engagement: 8.5
+                    </span>
+                    <span class="score-tag" style="background: rgba(107, 203, 255, 0.2); color: #6bcbff;">
+                      Network: 7.8
+                    </span>
+                    <span class="score-tag" style="background: rgba(107, 255, 152, 0.2); color: #6bff98;">
+                      Quality: 9.2
+                    </span>
+                    <span class="score-tag" style="background: rgba(255, 203, 107, 0.2); color: #ffcb6b;">
+                      Consistency: 8.0
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="influencer-card">
-              <div class="avatar yellow">🟡</div>
+              <div class="avatar cyan">🟡</div>
               <div class="influencer-info">
-                <div class="influencer-details">
+                <div class="influencer-header">
                   <div class="influencer-name">AnnaEcoJourney</div>
-                  <ul class="influencer-stats">
-                    <li>Reddit got 8445 posts and 654K kudos</li>
-                    <li>Optimizing</li>
-                    <li>Innovative</li>
-                  </ul>
+                  <div class="influencer-score" style="color: #ffa500;">80 pts</div>
                 </div>
-                <div class="influencer-score">80 pts</div>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-label">Comments</div>
+                    <div class="stat-value">18</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Likes</div>
+                    <div class="stat-value">890</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Replies Received</div>
+                    <div class="stat-value">12</div>
+                  </div>
+                </div>
+                <div class="stats-grid-2">
+                  <div class="stat-item">
+                    <div class="stat-label">Videos Participated</div>
+                    <div class="stat-value">6</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Threads Started</div>
+                    <div class="stat-value">2</div>
+                  </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
+                    Score Breakdown:
+                  </div>
+                  <div class="score-tags">
+                    <span class="score-tag" style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b;">
+                      Engagement: 7.8
+                    </span>
+                    <span class="score-tag" style="background: rgba(107, 203, 255, 0.2); color: #6bcbff;">
+                      Network: 7.2
+                    </span>
+                    <span class="score-tag" style="background: rgba(107, 255, 152, 0.2); color: #6bff98;">
+                      Quality: 8.5
+                    </span>
+                    <span class="score-tag" style="background: rgba(255, 203, 107, 0.2); color: #ffcb6b;">
+                      Consistency: 7.5
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="influencer-card">
-              <div class="avatar cyan">🔷</div>
+              <div class="avatar default">🔷</div>
               <div class="influencer-info">
-                <div class="influencer-details">
+                <div class="influencer-header">
                   <div class="influencer-name">Dr. Fit Facts</div>
-                  <ul class="influencer-stats">
-                    <li>2 x Sea games medals</li>
-                    <li>Evidence-Based</li>
-                    <li>No.1 BodyBuilder from SG</li>
-                  </ul>
+                  <div class="influencer-score" style="color: #ffa500;">77 pts</div>
                 </div>
-                <div class="influencer-score">77 pts</div>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-label">Comments</div>
+                    <div class="stat-value">15</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Likes</div>
+                    <div class="stat-value">720</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Replies Received</div>
+                    <div class="stat-value">8</div>
+                  </div>
+                </div>
+                <div class="stats-grid-2">
+                  <div class="stat-item">
+                    <div class="stat-label">Videos Participated</div>
+                    <div class="stat-value">5</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">Threads Started</div>
+                    <div class="stat-value">1</div>
+                  </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                  <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
+                    Score Breakdown:
+                  </div>
+                  <div class="score-tags">
+                    <span class="score-tag" style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b;">
+                      Engagement: 7.2
+                    </span>
+                    <span class="score-tag" style="background: rgba(107, 203, 255, 0.2); color: #6bcbff;">
+                      Network: 6.8
+                    </span>
+                    <span class="score-tag" style="background: rgba(107, 255, 152, 0.2); color: #6bff98;">
+                      Quality: 8.0
+                    </span>
+                    <span class="score-tag" style="background: rgba(255, 203, 107, 0.2); color: #ffcb6b;">
+                      Consistency: 7.0
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </main>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const influencerList = document.getElementById('influencerList');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const analysisResults = document.getElementById('analysisResults');
+        const channelTitle = document.getElementById('channelTitle');
+        const channelStats = document.getElementById('channelStats');
+        
+        // Show loading indicator initially
+        loadingIndicator.style.display = 'block';
+        
+        // Get project ID from URL or localStorage
+        const projectId = new URLSearchParams(window.location.search).get('project_id') || localStorage.getItem('currentProjectId');
+        
+        // Try to load project-specific analysis data from sessionStorage
+        const projectAnalysis = sessionStorage.getItem(`youtubeAnalysis_${projectId}`);
+        
+        async function loadAnalysisData() {
+          if (projectAnalysis) {
+            try {
+              const data = JSON.parse(projectAnalysis);
+              displayAnalysis(data);
+              return true;
+            } catch (error) {
+              console.error('Error parsing project analysis data:', error);
+            }
+          }
+          
+          // If no project-specific data, try to load from server session
+          if (projectId) {
+            try {
+              const response = await fetch(`/projects/${projectId}/current-session`);
+              const session = await response.json();
+              
+              if (session && session.analysis_data) {
+                displayAnalysis(session.analysis_data);
+                
+                // Save to sessionStorage for future use
+                sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(session.analysis_data));
+                return true;
+              }
+            } catch (error) {
+              console.error('Error loading session from server:', error);
+            }
+          }
+          
+          return false;
+        }
+        
+        // Load analysis data
+        loadAnalysisData().then(success => {
+          if (!success) {
+            showDefaultContent();
+          }
+        });
+        
+        function displayAnalysis(data) {
+          loadingIndicator.style.display = 'none';
+          
+          if (data.success && data.channel_metadata) {
+            // Show analysis results
+            analysisResults.style.display = 'block';
+            
+            // Display channel info
+            channelTitle.textContent = data.channel_metadata.title;
+            channelStats.innerHTML = `
+              <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem;">
+                <span>📊 Subscribers: ${data.channel_metadata.subscriber_count ? data.channel_metadata.subscriber_count.toLocaleString() : 'N/A'}</span>
+                <span>🎬 Videos Analyzed: ${data.videos_analyzed || 'N/A'}</span>
+                <span>💬 Comments Analyzed: ${data.total_comments ? data.total_comments.toLocaleString() : 'N/A'}</span>
+              </div>
+            `;
+            
+            // Display influencers
+            displayInfluencers(data.influencers || [], data.total_comments || 0);
+            
+          } else {
+            showDefaultContent();
+          }
+        }
+        
+        function displayInfluencers(influencers, totalComments) {
+          if (!influencers || influencers.length === 0) {
+            influencerList.innerHTML = `
+              <div class="no-data">
+                <h3 style="margin-bottom: 1rem; color: #ffa500;">No influencers detected</h3>
+                <p>We couldn't identify any key influencers in the analyzed data.</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.5);">
+                  Try analyzing a channel with more comments and engagement.
+                </p>
+              </div>
+            `;
+            return;
+          }
+          
+          // Show only top 5
+          const topInfluencers = influencers.slice(0, 5);
+          
+          let html = '';
+          
+          topInfluencers.forEach((influencer, index) => {
+            const scoreColor = getScoreColor(influencer.total_score);
+            const rank = index + 1;
+            
+            html += `
+              <div class="influencer-card">
+                <div class="avatar" style="background: ${getAvatarColor(rank)};">
+                  ${rank}
+                </div>
+                <div class="influencer-info">
+                  <div class="influencer-details">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                      <div class="influencer-name">${influencer.author_name || 'Unknown User'}</div>
+                      <div class="influencer-score" style="color: ${scoreColor};">
+                        ${influencer.total_score ? influencer.total_score.toFixed(2) : '0.00'} pts
+                      </div>
+                    </div>
+                    <div style="margin-top: 0.8rem;">
+                      <div class="stats-grid">
+                        <div class="stat-item">
+                          <div class="stat-label">Comments</div>
+                          <div class="stat-value">${influencer.total_comments || 0}</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-label">Likes</div>
+                          <div class="stat-value">${influencer.total_likes ? influencer.total_likes.toLocaleString() : '0'}</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-label">Replies Received</div>
+                          <div class="stat-value">${influencer.total_replies_received || 0}</div>
+                        </div>
+                      </div>
+                      
+                      <div class="stats-grid-2">
+                        <div class="stat-item">
+                          <div class="stat-label">Videos Participated</div>
+                          <div class="stat-value">${influencer.unique_videos || 0}</div>
+                        </div>
+                        <div class="stat-item">
+                          <div class="stat-label">Threads Started</div>
+                          <div class="stat-value">${influencer.thread_starts || 0}</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Score Breakdown -->
+                    <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                      <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.5rem;">
+                        Score Breakdown:
+                      </div>
+                      <div class="score-tags">
+                        <span class="score-tag" style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b;">
+                          Engagement: ${influencer.engagement_score ? influencer.engagement_score.toFixed(1) : '0.0'}
+                        </span>
+                        <span class="score-tag" style="background: rgba(107, 203, 255, 0.2); color: #6bcbff;">
+                          Network: ${influencer.network_score ? influencer.network_score.toFixed(1) : '0.0'}
+                        </span>
+                        <span class="score-tag" style="background: rgba(107, 255, 152, 0.2); color: #6bff98;">
+                          Quality: ${influencer.quality_score ? influencer.quality_score.toFixed(1) : '0.0'}
+                        </span>
+                        <span class="score-tag" style="background: rgba(255, 203, 107, 0.2); color: #ffcb6b;">
+                          Consistency: ${influencer.consistency_score ? influencer.consistency_score.toFixed(1) : '0.0'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          
+          // Show summary
+          html += `
+            <div class="analysis-summary">
+              <p>
+                Analysis completed: ${topInfluencers.length} influencers identified from ${totalComments ? totalComments.toLocaleString() : '0'} comments
+              </p>
+              <p style="font-size: 0.9rem; margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6);">
+                Project ID: ${projectId || 'Not specified'}
+              </p>
+            </div>
+          `;
+          
+          influencerList.innerHTML = html;
+        }
+        
+        function showDefaultContent() {
+          // Show default hardcoded influencers if no analysis data
+          loadingIndicator.style.display = 'none';
+          // Keep the default content that's already in the HTML
+        }
+        
+        function getScoreColor(score) {
+          // Match Colab color scheme: 0-10 scale
+          if (score >= 8) return '#00ff00';  // Green for high scores
+          if (score >= 6) return '#ffa500';  // Orange for medium
+          if (score >= 4) return '#ffff00';  // Yellow
+          return '#ff3333';  // Red for low scores
+        }
+        
+        function getAvatarColor(rank) {
+          // Simple color scheme, no medals
+          const colors = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+          ];
+          return colors[rank - 1] || colors[0];
+        }
+      });
+    </script>
   </body>
 </html>

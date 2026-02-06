@@ -10,262 +10,866 @@
         padding: 0;
         box-sizing: border-box;
       }
+
       body {
         font-family: Arial, sans-serif;
-        background: #14294a;
-        color: #fff;
+        background-color: #1E3167; /* Same blue as landing/profile pages */
+        color: white;
         min-height: 100vh;
       }
 
+      /* Unified Layout */
       .layout {
         display: grid;
         grid-template-columns: 240px 1fr;
         min-height: 100vh;
       }
+
+      /* Sidebar - More Compact */
       .sidebar {
-        background: #f24822;
-        padding: 1rem 0.8rem;
+        background: #F24822; /* Same orange */
+        padding: 1.2rem 0.8rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-      }
-      .brand {
-        font-weight: 800;
-        font-size: 1.4rem;
-        margin: 0.5rem 0.4rem;
+        gap: 1.2rem;
+        position: relative;
       }
 
+      /* Brand - More Compact, Aligned with Dashboard */
+      .brand-section {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        margin-bottom: 0.2rem; /* Reduced space */
+      }
+
+      .brand {
+        font-size: 1.9rem; /* Slightly larger but compact */
+        font-weight: bold;
+        color: black;
+        line-height: 1;
+      }
+
+      /* Create Button - More Compact */
       .create-btn {
         background: #14294a;
-        color: #fff;
-        border-radius: 16px;
-        padding: 1rem;
+        color: white;
+        border-radius: 10px;
+        padding: 0.9rem 0.8rem;
         text-align: center;
-        font-weight: 800;
-      }
-      .create-btn a {
-        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
         text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
+      .create-btn:hover {
+        background: #0f1c3d;
+        transform: translateY(-1px);
+      }
+
+      /* Menu - Moved Higher */
       .menu {
         display: flex;
         flex-direction: column;
-        gap: 0.6rem;
-        margin-top: 0.5rem;
-      }
-      .menu a {
-        display: block;
-        padding: 0.7rem 0.8rem;
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-        text-decoration: none;
-        border-radius: 6px;
-      }
-      .menu a.active {
-        background: rgba(255, 255, 255, 0.25);
+        gap: 0.6rem; /* Tighter spacing */
+        margin-top: 0.3rem; /* Moved higher */
       }
 
-      .content {
-        background: #0f1c3d;
-        padding: 2rem;
+      .menu a {
+        display: block;
+        padding: 0.75rem 0.8rem; /* More compact */
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.9rem;
       }
+
+      .menu a.active {
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .menu a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(3px);
+      }
+
+      /* Main Content Area */
+      .content {
+        background: #1E3167; /* Same as body */
+        padding: 1.5rem 2rem; /* Reduced padding */
+      }
+
+      /* Header - More Compact, Better Alignment */
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 1.2rem; /* Reduced */
+        padding-bottom: 0.8rem; /* Reduced to move line up */
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
       }
+
       .title {
-        font-size: 1.6rem;
-        font-weight: 800;
-      }
-
-      .search {
-        margin: 1rem 0 1.5rem 0;
-        display: flex;
-        gap: 0.6rem;
-      }
-      .search input {
-        flex: 1;
-        padding: 0.7rem 0.9rem;
-        border-radius: 999px;
-        border: none;
-      }
-      .search button {
-        padding: 0.7rem 1.2rem;
-        background: #f24822;
-        color: #fff;
-        border: none;
-        border-radius: 999px;
+        font-size: 1.8rem; /* Slightly smaller */
         font-weight: 700;
+        color: white;
+        letter-spacing: 0.3px;
+        line-height: 1; /* Consistent with brand */
+        padding-top: 0.2rem; /* Small adjustment to align with OrbitLink */
       }
 
-      .card {
-        background: #14294a;
-        padding: 1rem;
-        border-radius: 12px;
+      .profile-btn {
+        text-decoration: none;
+        color: black;
+        font-weight: 700;
+        padding: 0.7rem 1.5rem; /* More compact */
+        background: #ff3333;
+        border-radius: 6px;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        line-height: 1; /* Consistent alignment */
+        height: fit-content; /* Allow natural height */
+        margin-top: 0.2rem; /* Small adjustment to align with OrbitLink */
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #fff;
-        color: #000;
+
+      .profile-btn:hover {
+        background: #cc0000;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .profile-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Search Bar - More Compact */
+      .search-container {
+        margin-bottom: 1.5rem; /* Reduced */
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 0.8rem; /* Reduced */
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .search-form {
+        display: flex;
+        gap: 0.8rem; /* Reduced */
+        align-items: center;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 0.8rem 1rem; /* Reduced */
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 8px;
+        color: white;
+        font-size: 0.95rem; /* Reduced */
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #ff3333;
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+      }
+
+      .search-btn {
+        padding: 0.8rem 1.5rem; /* Reduced */
+        background: #ff3333;
+        color: black;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem; /* Reduced */
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .search-btn:hover {
+        background: #cc0000;
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      /* Projects Grid Container - Glass Panel Design */
+      .projects-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Projects Grid - 3 columns */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 1200px) {
+        .projects-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Project Card - Glass Effect Design */
+      .project-card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0.02) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        min-height: 280px;
+        position: relative;
         overflow: hidden;
+        backdrop-filter: blur(10px);
       }
-      th,
-      td {
-        padding: 0.8rem;
-        border-bottom: 1px solid #eee;
+
+      .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12) 0%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
       }
-      th {
-        text-align: left;
-        font-weight: 800;
+
+      /* Project Header */
+      .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
       }
-      td.actions {
-        text-align: right;
+
+      .project-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        flex: 1;
       }
-      .inline-form {
-        display: inline;
-        margin-left: 0.3rem;
+
+      .project-open-btn {
+        color: #ff3333;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        background: rgba(255, 51, 51, 0.1);
+        border: 1px solid rgba(255, 51, 51, 0.2);
+        white-space: nowrap;
+        margin-left: 0.8rem;
       }
-      .small-btn {
-        padding: 0.4rem 0.7rem;
+
+      .project-open-btn:hover {
+        background: rgba(255, 51, 51, 0.2);
+        transform: translateY(-1px);
+      }
+
+      /* Project Description */
+      .project-description {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        line-clamp: 3;    
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
+      /* Project Metadata */
+      .project-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      /* Action Buttons - NEW LAYOUT */
+      .project-actions {
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Rename Section - Full width at top */
+      .rename-section {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+
+      .rename-input {
+        flex: 1;
+        padding: 0.5rem 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: white;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        min-width: 0; /* Allows flex item to shrink */
+      }
+
+      .rename-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+
+      .rename-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.8rem;
+      }
+
+      /* Bottom Action Buttons - Side by side */
+      .bottom-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      /* Action Buttons */
+      .action-btn {
+        padding: 0.5rem 0.8rem;
         border-radius: 6px;
         border: none;
         cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.15s;
+        white-space: nowrap;
+        min-width: 80px;
+        text-align: center;
       }
-      .small-btn.primary {
-        background: #14294a;
-        color: #fff;
+
+      .action-btn.rename-btn {
+        background: rgba(59, 130, 246, 0.9);
+        color: white;
+        border: 1px solid rgba(59, 130, 246, 0.5);
+        flex-shrink: 0;
       }
-      .small-btn.warn {
-        background: #f24822;
-        color: #fff;
+
+      .action-btn.archive-btn {
+        background: rgba(245, 158, 11, 0.9);
+        color: white;
+        border: 1px solid rgba(245, 158, 11, 0.5);
       }
-      .rename-input {
-        width: 180px;
-        padding: 0.3rem 0.5rem;
+
+      .action-btn.delete-btn {
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        border: 1px solid rgba(239, 68, 68, 0.5);
+      }
+
+      .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .action-btn:active {
+        transform: translateY(0);
+      }
+
+      .rename-btn:hover {
+        background: rgb(37, 99, 235);
+      }
+
+      .archive-btn:hover {
+        background: rgb(245, 158, 11);
+      }
+
+      .delete-btn:hover {
+        background: rgb(220, 38, 38);
+      }
+
+      /* Responsive adjustments for actions */
+      @media (max-width: 1200px) {
+        .project-actions {
+          gap: 0.6rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .project-actions {
+          gap: 0.5rem;
+        }
+        
+        .rename-section {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .bottom-actions {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .action-btn {
+          width: 100%;
+        }
+      }
+
+      /* Empty State - Updated Design */
+      .empty-state {
+        text-align: center;
+        padding: 4rem 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
+      }
+
+      .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+        color: white;
+      }
+
+      .empty-state p {
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .create-project-link {
+        display: inline-block;
+        padding: 0.9rem 2rem;
+        background: #ff3333;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .create-project-link:hover {
+        background: #cc0000;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .layout {
+          grid-template-columns: 220px 1fr;
+        }
+        
+        .content {
+          padding: 1.2rem 1.5rem;
+        }
+        
+        .title {
+          font-size: 1.6rem;
+        }
+        
+        .brand {
+          font-size: 1.7rem;
+        }
       }
 
       @media (max-width: 768px) {
         .layout {
           grid-template-columns: 1fr;
         }
+
         .sidebar {
           flex-direction: row;
           align-items: center;
+          padding: 0.8rem 1rem;
+          gap: 1rem;
         }
+
+        .brand-section {
+          margin-bottom: 0;
+          padding: 0.3rem 0.5rem;
+        }
+
+        .brand {
+          font-size: 1.7rem;
+        }
+
+        .create-btn {
+          padding: 0.7rem 0.8rem;
+          font-size: 0.9rem;
+        }
+
+        .menu {
+          display: none;
+        }
+
+        .content {
+          padding: 1rem 1.2rem;
+        }
+
+        .header {
+          flex-direction: column;
+          gap: 0.8rem;
+          align-items: flex-start;
+          margin-bottom: 1.2rem;
+          padding-bottom: 0.8rem;
+        }
+
+        .title {
+          font-size: 1.5rem;
+          padding-top: 0;
+        }
+
+        .profile-btn {
+          align-self: flex-start;
+          padding: 0.6rem 1.2rem;
+          font-size: 0.9rem;
+          margin-top: 0;
+        }
+
+        .search-form {
+          flex-direction: column;
+          gap: 0.6rem;
+        }
+
+        .search-input,
+        .search-btn {
+          width: 100%;
+        }
+
+        .projects-container {
+          padding: 1rem;
+        }
+
+        .empty-state {
+          padding: 3rem 1rem;
+        }
+
+        .empty-icon {
+          font-size: 3rem;
+        }
+
+        .empty-state h3 {
+          font-size: 1.3rem;
+        }
+
+        .empty-state p {
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .content {
+          padding: 0.8rem 1rem;
+        }
+
+        .title {
+          font-size: 1.4rem;
+        }
+
+        .profile-btn {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+
+        .project-card {
+          padding: 1.2rem;
+          min-height: 260px;
+        }
+
+        .project-header {
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+
+        .project-open-btn {
+          align-self: flex-start;
+          margin-left: 0;
+        }
+
+        .empty-state {
+          padding: 2rem 1rem;
+        }
+
+        .empty-icon {
+          font-size: 2.5rem;
+        }
+
+        .empty-state h3 {
+          font-size: 1.2rem;
+        }
+
+        .empty-state p {
+          font-size: 0.95rem;
+        }
+      }
+
+      /* Ensure OrbitLink and Personal Dashboard are aligned */
+      .brand-section, .header {
+        align-items: center; /* Center align vertically */
+      }
+
+      .brand {
+        line-height: 1; /* Remove extra line height */
+      }
+
+      .title {
+        line-height: 1; /* Match the brand line-height */
       }
     </style>
   </head>
   <body>
     <div class="layout">
+      <!-- Sidebar -->
       <aside class="sidebar">
-        <div class="brand">OrbitLink</div>
-        <div class="create-btn">
-          <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
+        <div class="brand-section">
+          <div class="brand">OrbitLink</div>
         </div>
-        <nav class="menu">
-          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('projects.projects_list') }}">Projects</a>
+        <a href="{{ url_for('projects.projects_create_get') }}" class="create-btn">Create +</a>
+        <!-- <nav class="menu">
+          <a href="{{ url_for('projects.dashboard') }}" class="active">Dashboard</a>
           <a href="#">Support</a>
           <a href="#">Setting</a>
+        </nav> -->
+        <nav class="menu">
+            <a href="{{ url_for('projects.dashboard') }}" class="active">Dashboard</a>
+            <!-- <a href="{{ url_for('projects.projects_list') }}">Projects</a> -->
+            <a href="{{ url_for('review.review_page') }}">Rate Us</a>
+            <a href="{{ url_for('contact_support.contact_support_page') }}">Contact Support</a>
         </nav>
       </aside>
 
+      <!-- Main Content -->
       <main class="content">
+        <!-- Header - Now properly aligned with OrbitLink logo -->
         <div class="header">
           <div class="title">Personal Dashboard</div>
-          <div style="display: flex; gap: 0.8rem">
-            <a
-              href="{{ url_for('user.profile') }}"
-              style="
-                background: #ff3333;
-                color: #000;
-                border-radius: 6px;
-                padding: 0.7rem 1.5rem;
-                text-decoration: none;
-                font-weight: 600;
-                transition: all 0.3s;
-                display: inline-block;
-              "
-              onmouseover="this.style.backgroundColor='#cc0000'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.3)'"
-              onmouseout="this.style.backgroundColor='#ff3333'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"
-            >
-              Profile
-            </a>
-          </div>
+          <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a>
         </div>
 
-        <form
-          class="search"
-          method="get"
-          action="{{ url_for('projects.projects_list') }}"
-        >
-          <input
-            type="text"
-            name="q"
-            placeholder="Search for existed project"
-            value="{{ query }}"
-          />
-          <button type="submit">Search</button>
-        </form>
+        <!-- Search -->
+        <div class="search-container">
+          <form class="search-form" method="get" action="{{ url_for('projects.projects_list') }}">
+            <input
+              type="text"
+              name="q"
+              class="search-input"
+              placeholder="Search for existing project..."
+              value="{{ query }}"
+              autocomplete="off"
+            />
+            <button type="submit" class="search-btn">Search</button>
+          </form>
+        </div>
 
-        <div class="card">
-          <table>
-            <thead>
-              <tr>
-                <th>Project Name</th>
-                <th>Last Opened</th>
-                <th style="text-align: right">Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for p in projects %}
-              <tr>
-                <td>
-                  <a href="{{ url_for('projects.projects_open', pid=p.id) }}"
-                    >{{ p.name }}</a
-                  >
-                </td>
-                <td>{{ p.last_opened }}</td>
-                <td class="actions">
-                  <form
-                    class="inline-form"
-                    method="post"
-                    action="{{ url_for('projects.projects_rename', pid=p.id) }}"
-                  >
-                    <input
-                      class="rename-input"
-                      name="new_name"
-                      placeholder="Rename a project"
-                    />
-                    <button class="small-btn primary" type="submit">
-                      Rename
-                    </button>
+        <!-- Projects Grid Container -->
+        <div class="projects-container">
+          {% if projects %}
+          <div class="projects-grid">
+            {% for p in projects %}
+            <div class="project-card">
+              <!-- Project Header -->
+              <div class="project-header">
+                <h3 class="project-name">{{ p.name }}</h3>
+                <a href="{{ url_for('projects.projects_open', pid=p.id) }}" class="project-open-btn">Open →</a>
+              </div>
+              
+              <!-- Project Description -->
+              {% if p.description %}
+              <p class="project-description">{{ p.description }}</p>
+              {% else %}
+              <p class="project-description" style="color: rgba(255, 255, 255, 0.5); font-style: italic;">
+                No description provided
+              </p>
+              {% endif %}
+              
+              <!-- Project Metadata -->
+              <div class="project-meta">
+                <div class="meta-item">
+                  <span>📅</span>
+                  <span>Last opened: {{ p.last_opened }}</span>
+                </div>
+              </div>
+              
+              <!-- Action Buttons - NEW LAYOUT -->
+              <div class="project-actions">
+                <!-- Rename Section - Full width at top -->
+                <form class="action-form rename-section" method="post" action="{{ url_for('projects.projects_rename', pid=p.id) }}">
+                  <input
+                    class="rename-input"
+                    name="new_name"
+                    placeholder="New name..."
+                    autocomplete="off"
+                  />
+                  <button class="action-btn rename-btn" type="submit">Rename</button>
+                </form>
+                
+                <!-- Bottom Action Buttons - Side by side -->
+                <div class="bottom-actions">
+                  <!-- Archive Button - Bottom Left -->
+                  <form class="action-form" method="post" action="{{ url_for('projects.projects_archive', pid=p.id) }}">
+                    <button class="action-btn archive-btn" type="submit">Archive</button>
                   </form>
-                  <form
-                    class="inline-form"
-                    method="post"
-                    action="{{ url_for('projects.projects_archive', pid=p.id) }}"
-                  >
-                    <button class="small-btn" type="submit">Archive</button>
+                  
+                  <!-- Delete Button - Bottom Right -->
+                  <form class="action-form" method="post" action="{{ url_for('projects.projects_delete', pid=p.id) }}">
+                    <button class="action-btn delete-btn" type="submit">Delete</button>
                   </form>
-                  <form
-                    class="inline-form"
-                    method="post"
-                    action="{{ url_for('projects.projects_delete', pid=p.id) }}"
-                  >
-                    <button class="small-btn warn" type="submit">Delete</button>
-                  </form>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">📁</div>
+            <h3>No Projects Yet</h3>
+            <p>You haven't created any projects yet. Start by creating your first project to analyze social networks and gain insights.</p>
+            <a href="{{ url_for('projects.projects_create_get') }}" class="create-project-link">Create First Project</a>
+          </div>
+          {% endif %}
         </div>
       </main>
     </div>
+
+    <script>
+      // Add form validation and user feedback
+      document.addEventListener('DOMContentLoaded', function() {
+        // Add confirmation for delete actions
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+          button.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Add confirmation for archive actions
+        const archiveButtons = document.querySelectorAll('.archive-btn');
+        archiveButtons.forEach(button => {
+          button.addEventListener('click', function(e) {
+            if (!confirm('Archive this project? It will be moved to your archived projects.')) {
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Set initial focus to search input
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput && !searchInput.value) {
+          searchInput.focus();
+        }
+
+        // Add hover effects to project cards
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+          card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+          });
+          
+          card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+
+        // Add animation for empty state
+        const emptyState = document.querySelector('.empty-state');
+        if (emptyState) {
+          emptyState.style.opacity = '0';
+          emptyState.style.transform = 'translateY(20px)';
+          emptyState.style.transition = 'all 0.5s ease';
+          
+          setTimeout(() => {
+            emptyState.style.opacity = '1';
+            emptyState.style.transform = 'translateY(0)';
+          }, 300);
+        }
+
+        // Add focus effect to rename inputs
+        const renameInputs = document.querySelectorAll('.rename-input');
+        renameInputs.forEach(input => {
+          input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+            this.parentElement.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.2)';
+          });
+          
+          input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+            this.parentElement.style.boxShadow = 'none';
+          });
+        });
+        
+        // Add visual feedback for bottom buttons
+        const actionButtons = document.querySelectorAll('.archive-btn, .delete-btn');
+        actionButtons.forEach(button => {
+          button.addEventListener('mouseenter', function() {
+            if (this.classList.contains('archive-btn')) {
+              this.parentElement.style.transform = 'translateX(-2px)';
+            } else if (this.classList.contains('delete-btn')) {
+              this.parentElement.style.transform = 'translateX(2px)';
+            }
+          });
+          
+          button.addEventListener('mouseleave', function() {
+            this.parentElement.style.transform = 'translateX(0)';
+          });
+        });
+      });
+    </script>
   </body>
 </html>

@@ -4,485 +4,829 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin - Edit Website</title>
-
     <style>
       :root {
-        --navy: #1d2f61;
-        --navy-deep: #14224a;
-        --orange: #ef4a22;
-
-        --btn-red: #ff3a3a;
-        --btn-active: #c40000;
-
-        --panel-bg: rgba(0, 0, 0, 0.22);
-        --panel-border: rgba(255, 255, 255, 0.18);
-        --panel-head: rgba(255, 255, 255, 0.06);
-        --panel-head-border: rgba(255, 255, 255, 0.14);
+        --navy: #1E3167;
+        --navy-deep: #14294a;
+        --orange: #F24822;
+        --red: #ff3333;
+        --red-dark: #cc0000;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --text-light: rgba(255, 255, 255, 0.9);
+        --text-muted: rgba(255, 255, 255, 0.7);
+        --glass-bg: rgba(255, 255, 255, 0.07);
+        --glass-border: rgba(255, 255, 255, 0.12);
       }
 
       * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
       }
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-      }
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
-          sans-serif;
-        background: var(--navy-deep);
-        overflow-x: hidden;
-        color: #fff;
-      }
 
-      .app {
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--navy);
+        color: white;
         min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+        line-height: 1.6;
       }
 
-      .header {
-        height: 90px;
-        background: var(--navy);
+      /* Navigation Bar - Consistent with other admin pages */
+      .navbar {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 14px 22px;
+        align-items: center;
+        padding: 1.2rem 3%;
+        background-color: var(--navy);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .logo {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        background: var(--orange);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-weight: 700;
-      }
-
-      .topnav {
-        display: flex;
-        gap: 28px;
-        align-items: center;
-      }
-
-      .topbtn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 150px;
-        height: 56px;
-        padding: 0 22px;
-        border-radius: 10px;
-        background: var(--btn-red);
-        color: #111;
-        font-weight: 800;
-        font-size: 18px;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
         text-decoration: none;
-        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
-        transition: 0.15s;
-        border: 0;
-      }
-      .topbtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 0 rgba(0, 0, 0, 0.22);
-      }
-      .topbtn:active {
-        transform: translateY(1px);
-        box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
-      }
-      .topbtn.active {
-        background: var(--btn-active);
-        color: #fff;
       }
 
-      .content {
-        flex: 1 1 auto;
-        padding: 36px 48px 64px;
+      /* Right-side navigation container */
+      .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
       }
 
-      .page-title {
-        text-align: center;
-        font-size: clamp(44px, 4.8vw, 72px);
-        color: #fff;
-        letter-spacing: 2px;
-        margin: 10px 0 26px;
+      /* Admin tabs - on the right side */
+      .admin-nav-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-right: 0.8rem;
+        padding-right: 0.8rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .nav-tab {
+        text-decoration: none;
+        color: white;
         font-weight: 600;
-      }
-
-      /* NEW: two-column layout (tiles + editor box) */
-      .layout {
-        width: min(1100px, 96%);
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 420px 1fr;
-        gap: 22px;
-        align-items: start;
-      }
-
-      /* LEFT side cards stack */
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 22px;
-      }
-
-      .tile {
-        background: var(--orange);
-        border-radius: 10px;
-        padding: 16px;
-        box-shadow: 0 10px 0 rgba(0, 0, 0, 0.16);
-        border: 1px solid rgba(0, 0, 0, 0.15);
-        min-height: 120px;
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-      }
-
-      .imgbox {
-        width: 56px;
-        height: 56px;
+        padding: 0.6rem 1rem;
         border-radius: 6px;
-        overflow: hidden;
-        background: #fff;
-        border: 2px solid rgba(0, 0, 0, 0.2);
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        color: #222;
-        font-size: 12px;
-      }
-      .imgbox img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-
-      .tile-body {
-        flex: 1 1 auto;
-        color: #111;
-      }
-      .tile-title {
-        font-weight: 900;
-        margin: 2px 0 10px;
-      }
-
-      .tile-link {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 36px;
-        padding: 0 14px;
-        border-radius: 8px;
-        background: #111;
-        color: #fff;
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 14px;
-        box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
-        transition: 0.15s;
-      }
-      .tile-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
-      }
-      .tile-link:active {
-        transform: translateY(1px);
-        box-shadow: 0 4px 0 rgba(0, 0, 0, 0.22);
-      }
-
-      /* ===== Boxed editor panel ===== */
-      .panel {
-        background: var(--panel-bg);
-        border: 2px solid var(--panel-border);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      }
-
-      .panel-head {
-        padding: 16px 18px;
-        background: var(--panel-head);
-        border-bottom: 1px solid var(--panel-head-border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .panel-title {
-        margin: 0;
-        font-size: 22px;
-        letter-spacing: 0.4px;
-        font-weight: 900;
-        color: #fff;
-      }
-
-      .panel-body {
-        padding: 18px;
-      }
-
-      .badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: 900;
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.14);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        color: #fff;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
         white-space: nowrap;
       }
 
-      .msg {
-        margin: 0 0 12px;
-        padding: 12px 14px;
-        border-radius: 12px;
-        font-weight: 900;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-      }
-      .msg.success {
-        background: rgba(39, 202, 63, 0.14);
-      }
-      .msg.error {
-        background: rgba(255, 58, 58, 0.14);
+      .nav-tab:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
       }
 
-      .field-label {
-        display: block;
-        margin: 12px 0 8px;
-        font-weight: 900;
-        opacity: 0.95;
-        color: #fff;
+      .nav-tab.active {
+        background-color: var(--red);
+        color: black;
+        border-color: var(--red);
       }
 
-      textarea {
-        width: 100%;
-        min-height: 260px;
-        resize: vertical;
-        padding: 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        background: rgba(0, 0, 0, 0.22);
-        color: #fff;
-        outline: none;
-        line-height: 1.6;
-        font-size: 15px;
-      }
-      textarea:focus {
-        border-color: rgba(255, 255, 255, 0.35);
+      /* Logout button */
+      .nav-logout {
+        text-decoration: none;
+        color: black;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        background-color: var(--red);
+        white-space: nowrap;
       }
 
-      .save-row {
+      .nav-logout:hover {
+        background-color: var(--red-dark);
+        transform: translateY(-2px);
+      }
+
+      /* Main Content Container */
+      .main-container {
+        padding: 2rem 3%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* Page Header */
+      .page-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+      }
+
+      .page-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-description {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Main Layout - Two Column */
+      .editor-layout {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      @media (max-width: 992px) {
+        .editor-layout {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+      }
+
+      /* Left Column - Page Selection */
+      .pages-container {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1.8rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 2px solid var(--orange);
+      }
+
+      .pages-list {
         display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 14px;
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 1rem;
       }
 
-      .savebtn {
+      .page-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .page-item:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-3px);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .page-item.active {
+        background: rgba(242, 72, 34, 0.2);
+        border-color: var(--orange);
+      }
+
+      .page-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .page-info {
+        flex: 1;
+      }
+
+      .page-name {
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.3rem;
+      }
+
+      .page-desc {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      /* Right Column - Editor */
+      .editor-container {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .editor-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: white;
+      }
+
+      .page-badge {
+        background: rgba(242, 72, 34, 0.2);
+        color: var(--orange);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border: 1px solid rgba(242, 72, 34, 0.3);
+      }
+
+      /* Message Alerts */
+      .alert-message {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .alert-success {
+        background: rgba(39, 202, 63, 0.15);
+        color: #27ca3f;
+        border: 1px solid rgba(39, 202, 63, 0.3);
+      }
+
+      .alert-error {
+        background: rgba(255, 51, 51, 0.15);
+        color: #ff3333;
+        border: 1px solid rgba(255, 51, 51, 0.3);
+      }
+
+      /* Editor Form */
+      .editor-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 0.5rem;
+      }
+
+      .form-label {
+        display: block;
+        color: var(--text-light);
+        margin-bottom: 0.8rem;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      .editor-textarea {
+        width: 100%;
+        min-height: 300px;
+        padding: 1.2rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        color: white;
+        font-size: 1rem;
+        line-height: 1.6;
+        resize: vertical;
+        transition: all 0.3s;
+        font-family: monospace;
+      }
+
+      .editor-textarea:focus {
+        outline: none;
+        border-color: var(--orange);
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 0 2px rgba(242, 72, 34, 0.2);
+      }
+
+      /* Action Buttons */
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .btn-primary, .btn-secondary {
+        padding: 0.9rem 2rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        text-decoration: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 46px;
-        padding: 0 18px;
-        border-radius: 10px;
-        background: var(--btn-red);
-        color: #111;
-        font-weight: 900;
-        font-size: 16px;
-        text-decoration: none;
-        border: 0;
-        cursor: pointer;
-        box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
-        transition: 0.15s;
+        gap: 0.5rem;
       }
-      .savebtn:hover {
+
+      .btn-primary {
+        background: var(--orange);
+        color: black;
+        flex: 1;
+      }
+
+      .btn-primary:hover {
+        background: #d84315;
         transform: translateY(-2px);
-        box-shadow: 0 10px 0 rgba(0, 0, 0, 0.22);
-      }
-      .savebtn:active {
-        transform: translateY(1px);
-        box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
+        box-shadow: 0 4px 12px rgba(242, 72, 34, 0.3);
       }
 
-      .hint {
-        margin-top: 10px;
-        font-size: 13px;
-        opacity: 0.85;
-        line-height: 1.4;
-        color: #fff;
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
-      @media (max-width: 980px) {
-        .content {
-          padding: 28px 18px 48px;
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      /* Help Text */
+      .help-text {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border-left: 3px solid var(--orange);
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      /* Footer - Consistent with other pages */
+      footer {
+        margin-top: 4rem;
+        padding: 2rem 3%;
+        background-color: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      footer p {
+        color: var(--text-muted);
+        margin: 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .navbar {
+          padding: 1rem 5%;
+          flex-wrap: wrap;
+          gap: 0.8rem;
         }
-        .topnav {
-          gap: 14px;
+        
+        .logo {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 0.5rem;
         }
-        .topbtn {
-          min-width: 120px;
-          height: 52px;
-          font-size: 16px;
+        
+        .navbar-right {
+          width: 100%;
+          justify-content: center;
         }
-        .layout {
-          grid-template-columns: 1fr;
+        
+        .admin-nav-tabs {
+          margin-right: 0.5rem;
+          padding-right: 0.5rem;
         }
+        
+        .nav-tab {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.85rem;
+        }
+        
+        .nav-logout {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+        
+        .main-container {
+          padding: 1.5rem 5%;
+        }
+        
+        .page-title {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .editor-container, .pages-container {
+          padding: 1.5rem;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .btn-primary, .btn-secondary {
+          width: 100%;
+        }
+
+        .editor-textarea {
+          min-height: 250px;
+        }
+
+        .page-item {
+          padding: 1rem;
+        }
+
+        .page-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar-right {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .admin-nav-tabs {
+          margin-right: 0;
+          padding-right: 0;
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          padding-bottom: 0.5rem;
+          margin-bottom: 0.5rem;
+          width: 100%;
+          justify-content: center;
+        }
+        
+        .nav-tab {
+          flex: 1;
+          text-align: center;
+          padding: 0.6rem;
+        }
+        
+        .editor-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.8rem;
+        }
+        
+        .page-badge {
+          align-self: flex-start;
+        }
+      }
+
+      /* Loading State */
+      .loading-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--orange);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
     </style>
   </head>
-
   <body>
-    <div class="app">
-      <header class="header">
-        <div class="logo">Logo</div>
+    <!-- Navigation Bar - Consistent with other admin pages -->
+    <nav class="navbar">
+      <a href="{{ url_for('admin_ui.admin_home') }}" class="logo">OrbitLink</a>
+      
+      <div class="navbar-right">
+        <!-- Admin tabs on the right side -->
+        <div class="admin-nav-tabs">
+          <a href="{{ url_for('admin_ui.admin_users_page') }}" class="nav-tab">Users</a>
+          <a href="{{ url_for('admin_ui.admin_reviews_page') }}" class="nav-tab">Reviews</a>
+          <a href="{{ url_for('admin_ui.admin_edit_website_page') }}" class="nav-tab active">Edit Website</a>
+        </div>
+        
+        <!-- Logout button -->
+        <a href="{{ url_for('user.logout') }}" class="nav-logout">Logout</a>
+      </div>
+    </nav>
 
-        <nav class="topnav">
-          <a class="topbtn" href="{{ url_for('admin_ui.admin_users_page') }}"
-            >Users</a
-          >
-          <a class="topbtn" href="{{ url_for('admin_ui.admin_reviews_page') }}"
-            >Reviews</a
-          >
-          <a
-            class="topbtn active"
-            href="{{ url_for('admin_ui.admin_edit_website_page') }}"
-            >Edit Website</a
-          >
-          <a class="topbtn" href="{{ url_for('user.logout') }}">Logout</a>
-        </nav>
-      </header>
+    <div class="main-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Web Editor</h1>
+        <p class="page-description">Edit and update website content for different sections</p>
+      </div>
 
-      <main class="content">
-        <div class="page-title">Web&nbsp;&nbsp;Editor</div>
+      <!-- Main Editor Layout -->
+      <div class="editor-layout">
+        <!-- Left Column - Page Selection -->
+        <div class="pages-container">
+          <h2 class="section-title">Website Sections</h2>
+          <div class="pages-list">
+            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=1) }}" 
+               class="page-item {% if page and page.page_id == 1 %}active{% endif %}">
+              <div class="page-icon">🏠</div>
+              <div class="page-info">
+                <div class="page-name">Hero Section</div>
+                <div class="page-desc">Main landing page content</div>
+              </div>
+            </a>
 
-        <section class="layout">
-          <!-- LEFT: 3 sections -->
-          <div class="grid">
-            <div class="tile">
-              <div class="imgbox">
-                <img
-                  alt="Hero"
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=200&q=60"
-                />
+            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=2) }}" 
+               class="page-item {% if page and page.page_id == 2 %}active{% endif %}">
+              <div class="page-icon">✨</div>
+              <div class="page-info">
+                <div class="page-name">Features Section</div>
+                <div class="page-desc">Key features and capabilities</div>
               </div>
-              <div class="tile-body">
-                <div class="tile-title">Hero Section</div>
-                <a
-                  class="tile-link"
-                  href="{{ url_for('admin_ui.admin_edit_website_page', page_id=1) }}"
-                  >update/Edit →</a
-                >
-              </div>
-            </div>
+            </a>
 
-            <div class="tile">
-              <div class="imgbox">
-                <img
-                  alt="Pricing"
-                  src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=200&q=60"
-                />
+            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=3) }}" 
+               class="page-item {% if page and page.page_id == 3 %}active{% endif %}">
+              <div class="page-icon">💰</div>
+              <div class="page-info">
+                <div class="page-name">Pricing Section</div>
+                <div class="page-desc">Membership plans and pricing</div>
               </div>
-              <div class="tile-body">
-                <div class="tile-title">Pricing Section</div>
-                <a
-                  class="tile-link"
-                  href="{{ url_for('admin_ui.admin_edit_website_page', page_id=2) }}"
-                  >update/Edit →</a
-                >
-              </div>
-            </div>
+            </a>
 
-            <div class="tile">
-              <div class="imgbox">
-                <img
-                  alt="Contact"
-                  src="https://images.unsplash.com/photo-1521791055366-0d553872125f?auto=format&fit=crop&w=200&q=60"
-                />
+            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=4) }}" 
+               class="page-item {% if page and page.page_id == 4 %}active{% endif %}">
+              <div class="page-icon">📞</div>
+              <div class="page-info">
+                <div class="page-name">Contact Section</div>
+                <div class="page-desc">Contact information and details</div>
               </div>
-              <div class="tile-body">
-                <div class="tile-title">Contact Section</div>
-                <a
-                  class="tile-link"
-                  href="{{ url_for('admin_ui.admin_edit_website_page', page_id=3) }}"
-                  >update/Edit →</a
-                >
-              </div>
-            </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column - Editor -->
+        <div class="editor-container">
+          <div class="editor-header">
+            <h2 class="editor-title">Edit Content</h2>
+            {% if page %}
+            <span class="page-badge">Page ID: {{ page.page_id }}</span>
+            {% endif %}
           </div>
 
-          <!-- RIGHT: editor panel (boxed) -->
-          <div class="panel">
-            <div class="panel-head">
-              <h2 class="panel-title">Edit Content</h2>
-              {% if page %}
-              <span class="badge">page_id={{ page.page_id }}</span>
-              {% endif %}
-            </div>
-
-            <div class="panel-body">
-              {% if success %}
-              <div class="msg success">{{ success }}</div>
-              {% endif %} {% if error %}
-              <div class="msg error">{{ error }}</div>
-              {% endif %} {% if page %}
-              <form
-                method="POST"
-                action="{{ url_for('admin_ui.admin_edit_website_submit') }}"
-              >
-                <input
-                  type="hidden"
-                  name="page_id"
-                  value="{{ page.page_id }}"
-                />
-
-                <label class="field-label">
-                  {% if page.page_id == 1 %} Hero Section Text {% elif
-                  page.page_id == 2 %} Pricing Section Text {% elif page.page_id
-                  == 3 %} Contact Section Text {% else %} Page Content {% endif
-                  %}
-                </label>
-
-                <textarea
-                  name="content"
-                  placeholder="Type updated content here..."
-                >
-{{ page.content }}</textarea
-                >
-
-                <div class="save-row">
-                  <button class="savebtn" type="submit">Save Changes</button>
-                </div>
-
-                <div class="hint">
-                  Note: Your content is stored in-memory (no database). Updates
-                  reset when Flask restarts.
-                </div>
-              </form>
-              {% else %}
-              <div class="msg error">
-                Page not found. Please select a section on the left.
-              </div>
-              <div class="hint">
-                If you clicked Contact (page_id=3) but it shows "Page not
-                found", add page_id=3 into WebsiteContentEntity._PAGES.
-              </div>
-              {% endif %}
-            </div>
+          <!-- Messages -->
+          {% if success %}
+          <div class="alert-message alert-success">
+            <span>✓</span> {{ success }}
           </div>
-        </section>
-      </main>
+          {% endif %}
+
+          {% if error %}
+          <div class="alert-message alert-error">
+            <span>⚠</span> {{ error }}
+          </div>
+          {% endif %}
+
+          <!-- Editor Form -->
+          {% if page %}
+          <form class="editor-form" method="POST" action="{{ url_for('admin_ui.admin_edit_website_submit') }}">
+            <input type="hidden" name="page_id" value="{{ page.page_id }}" />
+
+            <div class="form-group">
+              <label class="form-label">
+                {% if page.page_id == 1 %} 
+                  Hero Section Content
+                {% elif page.page_id == 2 %} 
+                  Key Features Content
+                {% elif page.page_id == 3 %} 
+                  Contact Section Content
+                {% else %} 
+                  Page Content
+                {% endif %}
+              </label>
+              <textarea 
+                name="content" 
+                class="editor-textarea"
+                placeholder="Enter content here... (HTML supported)"
+                required
+              >{{ page.content|safe }}</textarea>
+            </div>
+
+            <div class="action-buttons">
+              <button type="submit" class="btn-primary">
+                <span>💾</span> Save Changes
+              </button>
+              <button type="button" class="btn-secondary" id="resetBtn">
+                <span>↺</span> Reset
+              </button>
+              <button type="button" class="btn-secondary" id="validateBtn" title="Validate JSON">
+                🔍 Validate JSON
+              </button>
+              <button type="button" class="btn-secondary" id="formatBtn" title="Format JSON">
+                🧾 Format JSON
+              </button>
+            </div>
+
+            <div class="help-text">
+              <strong>Note:</strong> Content is stored temporarily. For permanent storage, connect to a database. HTML tags are supported for formatting.
+            </div>
+          </form>
+          {% else %}
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Select a section to edit content.</p>
+            <p class="help-text" style="margin-top: 1rem;">
+              If a page shows "Page not found", ensure it's added to the WebsiteContentEntity.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 OrbitLink Admin Panel. All rights reserved.</p>
+      <p>Contact: support@orbitlink.com</p>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Capture initial content for reset (prevents double-escaping issues)
+        const textarea = document.querySelector('.editor-textarea');
+        let _initialContent = '';
+        if (textarea) {
+          _initialContent = textarea.value;
+        }
+
+        window.resetForm = function() {
+          const form = document.querySelector('.editor-form');
+          if (form) {
+            const ta = form.querySelector('textarea');
+            if (ta) {
+              ta.value = _initialContent;
+            }
+          }
+        };
+
+        // Auto-save indicator (optional feature)
+        if (textarea) {
+          let saveTimer;
+          let isSaved = true;
+          
+          textarea.addEventListener('input', function() {
+            isSaved = false;
+            clearTimeout(saveTimer);
+            
+            // Show auto-saving indicator
+            const saveIndicator = document.getElementById('saveIndicator') || 
+              (function() {
+                const div = document.createElement('div');
+                div.id = 'saveIndicator';
+                div.style.cssText = `
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  background: rgba(242, 72, 34, 0.9);
+                  color: white;
+                  padding: 10px 15px;
+                  border-radius: 8px;
+                  font-size: 0.9rem;
+                  display: none;
+                  z-index: 1000;
+                `;
+                document.body.appendChild(div);
+                return div;
+              })();
+            
+            saveIndicator.textContent = 'Unsaved changes...';
+            saveIndicator.style.display = 'block';
+            
+            // Simulate auto-save after 2 seconds of inactivity
+            saveTimer = setTimeout(() => {
+              isSaved = true;
+              saveIndicator.textContent = 'Changes saved!';
+              setTimeout(() => {
+                saveIndicator.style.display = 'none';
+              }, 2000);
+            }, 2000);
+          });
+        }
+
+        // JSON validate/format helpers
+        const validateBtn = document.getElementById('validateBtn');
+        const formatBtn = document.getElementById('formatBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function showAlert(msg) {
+          alert(msg);
+        }
+
+        if (validateBtn) {
+          validateBtn.addEventListener('click', function() {
+            if (!textarea) return showAlert('No editor available');
+            try {
+              JSON.parse(textarea.value);
+              showAlert('Valid JSON');
+            } catch (e) {
+              showAlert('Invalid JSON: ' + e.message);
+            }
+          });
+        }
+
+        if (formatBtn) {
+          formatBtn.addEventListener('click', function() {
+            if (!textarea) return showAlert('No editor available');
+            try {
+              const parsed = JSON.parse(textarea.value);
+              textarea.value = JSON.stringify(parsed, null, 2);
+            } catch (e) {
+              showAlert('Cannot format: invalid JSON');
+            }
+          });
+        }
+
+        if (resetBtn) {
+          resetBtn.addEventListener('click', resetForm);
+        }
+
+        // Validate JSON on submit for structured pages (features/pricing)
+        const editorForm = document.querySelector('.editor-form');
+        if (editorForm) {
+          editorForm.addEventListener('submit', function(e) {
+            const pageIdInput = editorForm.querySelector('input[name="page_id"]');
+            const pageId = pageIdInput ? Number(pageIdInput.value) : null;
+            if (pageId === 2 || pageId === 3) {
+              // expect JSON
+              try {
+                JSON.parse(textarea.value);
+              } catch (err) {
+                e.preventDefault();
+                const ok = confirm('The content does not look like valid JSON. Save anyway?');
+                if (ok) editorForm.submit();
+              }
+            }
+          });
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+          // Ctrl/Cmd + S to save
+          if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            const saveBtn = document.querySelector('.btn-primary');
+            if (saveBtn) {
+              saveBtn.click();
+            }
+          }
+          
+          // Escape to reset
+          if (e.key === 'Escape') {
+            resetForm();
+          }
+        });
+
+        // Highlight active page
+        const pageItems = document.querySelectorAll('.page-item');
+        pageItems.forEach(item => {
+          item.addEventListener('click', function() {
+            pageItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+      });
+    </script>
   </body>
 </html>

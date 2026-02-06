@@ -3,14 +3,14 @@
     "id": 1,
     "name": "Project Name 1",
     "description": "Demo project",
-    "last_opened": "2025-12-21",
+    "last_opened": "2025-12-19",
     "archived": false
   },
   {
     "id": 2,
     "name": "Project Name 2",
     "description": "Another project",
-    "last_opened": "2025-12-20",
+    "last_opened": "2025-12-19",
     "archived": false
   },
   {
@@ -29,9 +29,16 @@
   },
   {
     "id": 5,
-    "name": "New Proj",
+    "name": "Old Project 2",
     "description": "Another old project",
     "last_opened": "2025-10-20",
+    "archived": false
+  },
+  {
+    "id": 6,
+    "name": "Old Project 3",
+    "description": "October archive",
+    "last_opened": "2025-10-05",
     "archived": false
   }
 ]

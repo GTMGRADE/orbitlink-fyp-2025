@@ -13,6 +13,7 @@ class AdminEditWebsiteContentController:
 
         if updated_page is None:
             # could be page not found OR empty content
+            # keep it simple: decide based on page existence
             if WebsiteContentEntity.get_content(page_id) is None:
                 return {"ok": False, "error": "Page not found", "code": 404}
             return {"ok": False, "error": "Content cannot be empty", "code": 400}

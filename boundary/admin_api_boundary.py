@@ -1,11 +1,12 @@
 from flask import Blueprint, jsonify, session, request
-from controller.admin_view_user_accounts_controller import AdminViewUserAccountsController
-from controller.admin_search_user_accounts_controller import AdminSearchUserAccountsController
-from controller.admin_suspend_user_account_controller import AdminSuspendUserAccountController
-from controller.admin_view_feedback_controller import AdminViewFeedbackController
+from Controller.admin_view_user_accounts_controller import AdminViewUserAccountsController
+from Controller.admin_search_user_accounts_controller import AdminSearchUserAccountsController
+from Controller.admin_suspend_user_account_controller import AdminSuspendUserAccountController
+from Controller.admin_view_feedback_controller import AdminViewFeedbackController
 
 admin_api_bp = Blueprint("admin_api", __name__)
 
+#admin is determined by shared login session user_type
 def require_admin():
     return session.get("user_type") == "admin"
 

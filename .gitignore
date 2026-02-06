@@ -124,3 +124,15 @@ tmp/
 *.swp   
 # Coverage reports
 .coverage
+<<<<<<< HEAD
+
+# Firebase credentials (sensitive)
+**/firebase-key.json
+**/firebase-keynotadmin.json
+DatabaseExtract/firebase-key.json
+DatabaseExtract/firebase-keynotadmin.json
+
+# Hugging Face / model cache
+models/sentiment_bert/
+=======
+>>>>>>> origin/feature/gautam
