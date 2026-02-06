@@ -347,4 +347,44 @@ def projects_open(pid: str):
     # Pass project_id when redirecting to project_sna
     return redirect(url_for("projects.project_sna", project_id=pid))
     
+# Add this function at the top of the file, after imports
+def check_subscription_required():
+    """Check if user needs to complete subscription before accessing dashboard"""
+    user_id = get_user_id()
     
+    if not user_id:
+        return True, redirect(url_for("user.login_get"))
+    
+    # Check if user has subscription
+    try:
+        from db_config import get_connection
+        from bson import ObjectId
+        
+        db = get_connection()
+        if db is None:
+            return False, None
+        
+        try:
+            query_id = ObjectId(user_id)
+        except:
+            query_id = user_id
+        
+        user_doc = db.users.find_one(
+            {"_id": query_id},
+            {"subscription_active": 1, "role": 1}
+        )
+        
+        # Admin users don't need subscription
+        if user_doc and user_doc.get('role') == 'admin':
+            return False, None
+        
+        # Regular users need subscription
+        if user_doc and user_doc.get('subscription_active'):
+            return False, None
+        
+        # User doesn't have subscription, redirect to payment
+        return True, redirect(url_for("payment.payment_page"))
+        
+    except Exception as e:
+        logger.error(f"Error checking subscription: {str(e)}")
+        return False, None

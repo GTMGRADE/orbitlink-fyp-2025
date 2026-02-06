@@ -316,6 +316,37 @@ class UserController:
             "message": "Password reset link sent.",
         }
 
+    def delete_account(self, user: RegisteredUser) -> dict:
+        """Delete a user account from the database"""
+        # Can't delete hardcoded admin account
+        if user.id == "0" or user.id == 0:
+            return {"status": "failure", "message": "Cannot delete admin account."}
+        
+        db = get_connection()
+        if db is None:
+            return {"status": "failure", "message": "Database connection error."}
+        
+        try:
+            from bson import ObjectId
+            try:
+                query_id = ObjectId(user.id)
+            except:
+                query_id = user.id
+            
+            # Delete the user document from the database
+            result = db.users.delete_one({"_id": query_id})
+            
+            if result.deleted_count > 0:
+                logger.info("Account deleted for user: %s (id=%s)", user.username, user.id)
+                return {"status": "success", "message": "Account deleted successfully."}
+            else:
+                logger.warning("Account deletion failed for user: %s (id=%s) - user not found", user.username, user.id)
+                return {"status": "failure", "message": "Account not found."}
+                
+        except Exception as e:
+            logger.error(f"Error deleting account for user {user.username}: {str(e)}")
+            return {"status": "failure", "message": f"Error deleting account: {str(e)}"}
+
 
 def _build_controller() -> UserController:
     return UserController()

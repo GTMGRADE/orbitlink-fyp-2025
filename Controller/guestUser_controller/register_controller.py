@@ -33,7 +33,9 @@ class RegisterController:
                 "username": user.username,
                 "password": user.password,
                 "created_at": datetime.utcnow(),
-                "status": "active"
+                "status": "active",
+                "subscription_active": False,  # Start with no subscription
+                "role": "user"  # Default role
             }
             
             result = self.conn.users.insert_one(user_doc)
@@ -47,7 +49,8 @@ class RegisterController:
                 "email": user_data["email"],
                 "username": user_data["username"],
                 "created_at": user_data.get("created_at"),
-                "status": user_data.get("status", "active")
+                "status": user_data.get("status", "active"),
+                "subscription_active": user_data.get("subscription_active", False)
             }
             
             logger.info(f"User registered successfully: {username} ({email})")

@@ -90,6 +90,36 @@
             padding: 0.6rem 1.2rem;
         }
 
+        /* Flash messages */
+        .flash-alert {
+            margin: 0;
+            padding: 1rem 3%;
+            color: white;
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flash-alert.success {
+            background-color: #28a745;
+        }
+
+        .flash-alert.error {
+            background-color: #dc3545;
+        }
+
+        .flash-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
         /* Hamburger + side menu styles */
         .menu-btn {
             display: inline-flex;
@@ -920,6 +950,18 @@
         </nav>
     </aside>
 
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-alert {{ category }}" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close-alert flash-close" aria-label="Close">✕</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <!-- Hero Section -->
     <div id="about" class="hero-container">
         <section class="hero-section">
@@ -1243,6 +1285,18 @@
         });
       }
     })();
+    </script>
+
+    <!-- Flash Message Close Handler -->
+    <script>
+      document.querySelectorAll('.close-alert').forEach(btn => {
+        btn.addEventListener('click', function() {
+                    const alert = this.closest('.flash-alert');
+                    if (alert) {
+                        alert.style.display = 'none';
+                    }
+        });
+      });
     </script>
 </body>
 </html>
