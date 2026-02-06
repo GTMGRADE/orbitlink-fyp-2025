@@ -55,7 +55,7 @@ def init_db():
             sys.exit(1)
         
         # Create collections (MongoDB equivalent of tables)
-        collections = ['users', 'projects', 'youtube_analysis']
+        collections = ['users', 'projects', 'youtube_analysis', 'website_content']
         
         for collection_name in collections:
             if collection_name not in db.list_collection_names():
@@ -79,6 +79,10 @@ def init_db():
         db.youtube_analysis.create_index([("created_at", -1)], name="idx_youtube_created_at")
         print("✓ Indexes created for youtube_analysis collection")
         
+        # Create indexes for website_content collection
+        db.website_content.create_index("page_id", unique=True, name="idx_website_content_page_id")
+        print("✓ Indexes created for website_content collection")
+        
         print("\n✅ Database initialization completed successfully!")
         return True
         
@@ -97,7 +101,7 @@ def check_database_status():
     
     try:
         # Check all required collections exist
-        collections = ['users', 'projects', 'youtube_analysis']
+        collections = ['users', 'projects', 'youtube_analysis', 'website_content']
         existing_collections = db.list_collection_names()
         
         for collection in collections:

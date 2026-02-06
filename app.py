@@ -3,6 +3,11 @@ from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+
+# Set matplotlib backend BEFORE any other imports that might use it
+os.environ['MPLBACKEND'] = 'Agg'
+
 from db_config import init_db, check_database_status
 # Preload sentiment resources at startup
 try:
@@ -21,6 +26,8 @@ from boundary.guestUser_boundary.register_ui import register_bp
 # registered user boundaries
 from boundary.registeredUser_boundary.user_ui import user_bp
 from boundary.registeredUser_boundary.projects_ui import projects_bp
+from boundary.registeredUser_boundary.review_ui import review_bp
+from boundary.registeredUser_boundary.contact_support_ui import contact_support_bp
 
 
 # admin user boundaries
@@ -30,10 +37,12 @@ from boundary.admin_boundary.admin_ui_boundary import admin_ui_bp
 import logging
 import sys 
 
-load_dotenv()  # Load environment variables
-
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
+
+# Disable Jinja template caching for dynamic content
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.jinja_env.cache = None
 
 # Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -52,6 +61,8 @@ app.register_blueprint(user_bp)
 app.register_blueprint(projects_bp)
 app.register_blueprint(admin_api_bp)
 app.register_blueprint(admin_ui_bp)
+app.register_blueprint(review_bp)
+app.register_blueprint(contact_support_bp)
 
 # YouTube API configuration
 app.config['YOUTUBE_API_KEY'] = os.getenv('YOUTUBE_API_KEY')
