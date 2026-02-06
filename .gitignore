@@ -133,3 +133,7 @@ DatabaseExtract/firebase-keynotadmin.json
 
 # Hugging Face / model cache
 models/sentiment_bert/
+
+# PlantUML generated images
+docs/sequence_diagrams/*.png
+docs/sequence_diagrams/*.svg
