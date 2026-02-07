@@ -1,8 +1,9 @@
 # boundary/admin_ui_boundary.py
-from flask import Blueprint, render_template, redirect, url_for, request, session, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, session, jsonify, flash
 from Controller.admin_controller.admin_edit_website_content_controller import AdminEditWebsiteContentController
 from entity.website_content_entity import WebsiteContentEntity
 import json
+
 
 admin_ui_bp = Blueprint("admin_ui", __name__)
 
@@ -25,6 +26,7 @@ def admin_home():
 @admin_ui_bp.get("/admin/logout")
 def admin_logout():
     session.clear()
+    flash("You have been successfully logged out.", "success")
     return redirect(url_for("landing.landing_page"))
 
 

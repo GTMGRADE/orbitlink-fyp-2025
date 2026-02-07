@@ -169,6 +169,7 @@ def change_password_post():
 def logout():
     logger.info("User logged out")
     session.clear()
+    flash("You have been successfully logged out.", "success")
     return redirect(url_for("landing.landing_page"))
 
 
