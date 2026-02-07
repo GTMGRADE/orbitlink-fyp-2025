@@ -326,6 +326,89 @@
         color: #4299e1;
       }
       
+      /* Loading Progress Bar */
+      .loading-container {
+        display: none;
+        margin-top: 1.5rem;
+        padding: 1rem 1.5rem;
+        background: rgba(66, 153, 225, 0.1);
+        border: 1px solid rgba(66, 153, 225, 0.3);
+        border-radius: 12px;
+        animation: fadeIn 0.3s ease;
+      }
+      
+      .loading-header {
+        margin-bottom: 0.8rem;
+      }
+      
+      .loading-text {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.8rem;
+      }
+      
+      .progress-bar-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .progress-bar-container {
+        flex: 1;
+        height: 18px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 9px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(66, 153, 225, 0.3);
+      }
+      
+      .loading-percentage {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #4299e1;
+        min-width: 50px;
+        text-align: right;
+      }
+      
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4299e1 0%, #9f7aea 50%, #f687b3 100%);
+        border-radius: 9px;
+        transition: width 0.5s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .progress-bar-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+      
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+      
+      .loading-steps {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        display: none;
+      }
+      
       /* Data Source Tabs */
       .data-source-tabs {
         display: flex;
@@ -377,7 +460,7 @@
       
       .analysis-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
       }
       
@@ -668,6 +751,20 @@
             </div>
             
             <div id="statusMessage" class="status-message"></div>
+            
+            <!-- Loading Progress Bar -->
+            <div id="loadingContainer" class="loading-container">
+              <div class="loading-header">
+                <div class="loading-text" id="loadingText">Getting data...</div>
+              </div>
+              <div class="progress-bar-wrapper">
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                </div>
+                <div class="loading-percentage" id="loadingPercentage">0%</div>
+              </div>
+              <div class="loading-steps" id="loadingSteps">Preparing...</div>
+            </div>
           </div>
 
           <!-- Analysis Options Section -->
@@ -681,26 +778,6 @@
                 <a href="{{ url_for('projects.sentiment_analysis') }}" 
                    class="analysis-link disabled" 
                    id="sentimentLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
-              </div>
-
-              <!-- Data Monitoring Card -->
-              <div class="analysis-card disabled" id="monitoringCard">
-                <h3 class="analysis-name">Data Monitoring</h3>
-                <p class="analysis-desc">Track follower dynamics, post performance, and engagement metrics in real-time</p>
-                <a href="{{ url_for('projects.data_monitoring') }}" 
-                   class="analysis-link disabled" 
-                   id="monitoringLink"
-                   onclick="return addProjectIdToLink(this)">Open Analysis</a>
-              </div>
-
-              <!-- Historical Analysis Card -->
-              <div class="analysis-card disabled" id="historicalCard">
-                <h3 class="analysis-name">Historical Analysis</h3>
-                <p class="analysis-desc">Analyze long-term trends, follower growth, and historical campaign performance</p>
-                <a href="{{ url_for('projects.historical_analysis') }}" 
-                   class="analysis-link disabled" 
-                   id="historicalLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
               </div>
 
@@ -722,6 +799,16 @@
                    class="analysis-link disabled" 
                    id="communitiesLink"
                    onclick="return addProjectIdToLink(this)">Open Analysis</a>
+              </div>
+
+              <!-- Predictive Analysis Card -->
+              <div class="analysis-card disabled" id="predictiveCard">
+                <h3 class="analysis-name">Predictive Analysis</h3>
+                <p class="analysis-desc">Forecast trends and predict future engagement patterns using machine learning models</p>
+                <a href="#" 
+                   class="analysis-link disabled" 
+                   id="predictiveLink"
+                   onclick="showComingSoon(); return false;">Open Analysis</a>
               </div>
             </div>
           </div>
@@ -749,12 +836,11 @@
               return;
           }
           
-          // Show detailed loading state
+          // Show loading bar instead of status message
           confirmBtn.textContent = 'Analyzing...';
           confirmBtn.disabled = true;
-          statusMessage.textContent = 'Starting analysis... This may take 2-3 minutes.';
-          statusMessage.className = 'status-message status-info';
-          statusMessage.style.display = 'block';
+          statusMessage.style.display = 'none';
+          showLoadingProgress();
           
           try {
               const response = await fetch('/projects/analyze-youtube', {
@@ -776,7 +862,13 @@
                       ? result.data.video_metadata.title 
                       : result.data.channel_metadata.title;
                   
-                  showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments.`, 'success');
+                  // Complete the progress bar
+                  completeLoadingProgress();
+                  
+                  setTimeout(() => {
+                      hideLoadingProgress();
+                      showStatus(`✓ Analysis completed! Analyzed ${result.data.total_comments.toLocaleString()} comments.`, 'success');
+                  }, 800);
                   
                   // Store analysis results WITH PROJECT ID
                   sessionStorage.setItem(`youtubeAnalysis_${projectId}`, JSON.stringify(result.data));
@@ -798,10 +890,83 @@
               
           } catch (error) {
               console.error('Analysis error:', error);
+              hideLoadingProgress();
               showStatus('❌ Connection error. Please check your internet and try again.', 'error');
               confirmBtn.textContent = 'Try Again';
               confirmBtn.disabled = false;
           }
+      }
+      
+      // Loading progress animation
+      let progressInterval = null;
+      let currentProgress = 0;
+      
+      function showLoadingProgress() {
+          const loadingContainer = document.getElementById('loadingContainer');
+          const progressBarFill = document.getElementById('progressBarFill');
+          const loadingPercentage = document.getElementById('loadingPercentage');
+          const loadingText = document.getElementById('loadingText');
+          const loadingSteps = document.getElementById('loadingSteps');
+          
+          loadingContainer.style.display = 'block';
+          currentProgress = 0;
+          
+          const steps = [
+              { percent: 10, text: 'Getting info...' },
+              { percent: 20, text: 'Validating input...' },
+              { percent: 30, text: 'Loading resources...' },
+              { percent: 40, text: 'Building structure...' },
+              { percent: 50, text: 'Analyzing content...' },
+              { percent: 60, text: 'Generating insights...' },
+              { percent: 70, text: 'Organizing data...' },
+              { percent: 80, text: 'Optimizing results...' },
+              { percent: 90, text: 'Preparing output...' },
+              { percent: 95, text: 'Almost done...' }
+          ];
+          
+          let stepIndex = 0;
+          
+          progressInterval = setInterval(() => {
+              if (currentProgress < 92) {
+                  if (stepIndex < steps.length && currentProgress >= steps[stepIndex].percent) {
+                      loadingText.textContent = steps[stepIndex].text;
+                      stepIndex++;
+                  }
+                  
+                  currentProgress += Math.random() * 3;
+                  if (currentProgress > 92) currentProgress = 92;
+                  
+                  progressBarFill.style.width = currentProgress + '%';
+                  loadingPercentage.textContent = Math.floor(currentProgress) + '%';
+              }
+          }, 400);
+      }
+      
+      function completeLoadingProgress() {
+          if (progressInterval) {
+              clearInterval(progressInterval);
+          }
+          
+          const progressBarFill = document.getElementById('progressBarFill');
+          const loadingPercentage = document.getElementById('loadingPercentage');
+          const loadingText = document.getElementById('loadingText');
+          const loadingSteps = document.getElementById('loadingSteps');
+          
+          currentProgress = 100;
+          progressBarFill.style.width = '100%';
+          loadingPercentage.textContent = '100%';
+          loadingText.textContent = '✓ Complete!';
+      }
+      
+      function hideLoadingProgress() {
+          if (progressInterval) {
+              clearInterval(progressInterval);
+              progressInterval = null;
+          }
+          
+          const loadingContainer = document.getElementById('loadingContainer');
+          loadingContainer.style.display = 'none';
+          currentProgress = 0;
       }
       
       // Load current session from server - PROJECT-SPECIFIC
@@ -895,43 +1060,46 @@
               return;
           }
           
-          try {
-              const projectId = getCurrentProjectId();
-              const response = await fetch(`/projects/${projectId}/clear-session`, {
-                  method: 'POST'
-              });
+          const projectId = getCurrentProjectId();
           
-              if (response.ok) {
-                  const sessionDisplay = document.getElementById('currentSession');
-                  const urlInputSection = document.getElementById('urlInputSection');
-                  const title = document.getElementById('currentAnalysisTitle');
-                  const desc = document.getElementById('currentAnalysisDesc');
-                  
-                  sessionDisplay.style.display = 'none';
-                  urlInputSection.style.display = 'block';
-                  
-                  title.textContent = 'Enter Data Source';
-                  desc.textContent = 'Paste the URL of a YouTube channel or video you want to analyze';
-                  
-                  // Disable analysis cards
-                  document.querySelectorAll('.analysis-card').forEach(card => {
-                      card.classList.add('disabled');
-                  });
-                  
-                  document.querySelectorAll('.analysis-link').forEach(link => {
-                      link.classList.add('disabled');
-                  });
-                  
-                  // Clear stored project ID and analysis data for THIS PROJECT
-                  sessionStorage.removeItem(`youtubeAnalysis_${projectId}`);
-                  localStorage.removeItem('currentProjectId');
-                  
-                  showStatus('Session cleared. Enter a new channel or video URL to analyze.', 'info');
-              }
-          } catch (error) {
-              console.error('Error clearing session:', error);
-              showStatus('Error clearing session', 'error');
+          // Clear frontend storage
+          sessionStorage.removeItem(`youtubeAnalysis_${projectId}`);
+          sessionStorage.removeItem('youtubeAnalysis');
+          
+          // Reset UI
+          const sessionDisplay = document.getElementById('currentSession');
+          const urlInputSection = document.getElementById('urlInputSection');
+          const title = document.getElementById('currentAnalysisTitle');
+          const desc = document.getElementById('currentAnalysisDesc');
+          const confirmBtn = document.getElementById('confirmBtn');
+          const urlInput = document.getElementById('youtubeUrl');
+          
+          sessionDisplay.style.display = 'none';
+          urlInputSection.style.display = 'block';
+          
+          title.textContent = 'Enter Data Source';
+          desc.textContent = 'Paste the URL of a YouTube channel or video you want to analyze';
+          
+          if (confirmBtn) {
+              confirmBtn.textContent = 'Analyze';
+              confirmBtn.classList.remove('confirmed');
+              confirmBtn.disabled = false;
           }
+          
+          if (urlInput) {
+              urlInput.value = '';
+          }
+          
+          // Disable all analysis cards
+          document.querySelectorAll('.analysis-card').forEach(card => {
+              card.classList.add('disabled');
+          });
+          
+          document.querySelectorAll('.analysis-link').forEach(link => {
+              link.classList.add('disabled');
+          });
+          
+          showStatus('✓ Session cleared. Enter a new channel or video URL to analyze.', 'success');
       }
       
       // Helper function to append project ID to links - PROJECT-SPECIFIC
@@ -1030,6 +1198,10 @@
                   statusMessage.style.display = 'none';
               }, 8000);
           }
+      }
+
+      function showComingSoon() {
+          showStatus('🚧 Predictive Analysis is coming soon! This feature is currently under development.', 'info');
       }
       
       document.addEventListener('DOMContentLoaded', function() {

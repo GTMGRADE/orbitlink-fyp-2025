@@ -305,15 +305,20 @@ def get_current_session(project_id):
 @projects_bp.post("/projects/<int:project_id>/clear-session")
 def clear_current_session(project_id):
     """Clear current analysis session for a project"""
+    logger.info(f"[CLEAR SESSION] Endpoint called for project_id={project_id}")
     user_id = get_user_id()
     if not user_id:
+        logger.warning(f"[CLEAR SESSION] No user_id in session")
         return jsonify({"success": False, "error": "Not logged in"}), 401
     
     try:
+        logger.info(f"[CLEAR SESSION] Clearing session for user={user_id}, project={project_id}")
         controller = AnalysisSessionController(user_id, project_id)
         success = controller.clear_session()
-        return jsonify({"success": success}), 200
+        logger.info(f"[CLEAR SESSION] Clear result: {success}")
+        return jsonify({"success": success, "message": "Session cleared"}), 200
     except Exception as e:
+        logger.error(f"[CLEAR SESSION] Error: {str(e)}", exc_info=True)
         return jsonify({"success": False, "error": str(e)}), 500
 
 @projects_bp.get("/projects/<int:project_id>/community-data")
