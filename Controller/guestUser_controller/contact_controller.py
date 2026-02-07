@@ -41,5 +41,7 @@ Message:
     
     def get_contact_data(self):
         """Get data for contact form"""
-        # Return empty dict - LandingPageController provides all contact data
-        return {}
+        return {
+            'contact_phone': '+1 (555) 123-4567',
+            'contact_email': 'support@orbitlink.com'
+        }
