@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from controller.registeredUser_controller.user_controller import user_controller
 
 logger = logging.getLogger(__name__)
@@ -169,4 +169,35 @@ def change_password_post():
 def logout():
     logger.info("User logged out")
     session.clear()
+    flash("You have been successfully logged out.", "success")
     return redirect(url_for("landing.landing_page"))
+
+
+@user_bp.post("/delete-account")
+def delete_account():
+    """Delete the current user's account"""
+    user = _get_current_user()
+    if not user:
+        return redirect(url_for("user.login_get"))
+    
+    try:
+        result = user_controller.delete_account(user)
+        
+        if result["status"] == "success":
+            # Clear session after successful deletion
+            session.clear()
+            logger.info("Account deleted for user: %s", user.username)
+            # Flash success message
+            flash('Your account has been successfully deleted. We hope to see you again!', 'success')
+            # Redirect to landing page
+            return redirect(url_for("landing.landing_page"))
+        else:
+            # If deletion failed, redirect back to profile with error message
+            logger.warning("Failed to delete account for user: %s - %s", user.username, result.get("message"))
+            flash(f"Error: {result.get('message')}", 'error')
+            return redirect(url_for("user.profile"))
+    
+    except Exception as e:
+        logger.error(f"Error in delete account route: {str(e)}")
+        flash(f"Error deleting account: {str(e)}", 'error')
+        return redirect(url_for("user.profile"))

@@ -172,18 +172,25 @@
         border-radius: 12px;
         padding: 1.8rem;
         color: white;
-        transition: all 0.3s ease;
+        transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease, background 0.35s ease;
         display: flex;
         flex-direction: column;
         min-height: 220px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        will-change: transform, box-shadow;
       }
 
       .review-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        border-color: rgba(255, 255, 255, 0.25);
-        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .review-card:focus {
+        outline: none;
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
       }
 
       /* Stars Rating */
@@ -458,58 +465,24 @@
         <!-- Statistics Section -->
         <div class="stats-container">
           <div class="stat-card">
-            <div class="stat-value">4.8</div>
+            <div class="stat-value" id="avgRating">0</div>
             <div class="stat-label">Average Rating</div>
           </div>
           
           <div class="stat-card">
-            <div class="stat-value">3</div>
+            <div class="stat-value" id="totalReviews">0</div>
             <div class="stat-label">Total Reviews</div>
           </div>
           
           <div class="stat-card">
-            <div class="stat-value">100%</div>
+            <div class="stat-value" id="positivePercentage">0%</div>
             <div class="stat-label">Positive Feedback</div>
           </div>
         </div>
 
         <!-- Reviews Grid - 3 columns like admin_users -->
-        <div class="reviews-grid">
-          <!-- Review 1 -->
-          <div class="review-card">
-            <div class="stars">★★★★★</div>
-            <p class="review-message">
-              This app makes social network analysis much easier to understand. The visualisations are clean and very helpful.
-            </p>
-            <div class="review-footer">
-              <span class="review-author">~ Grace Fu</span>
-              <span class="review-date">2025/Dec/11</span>
-            </div>
-          </div>
-
-          <!-- Review 2 -->
-          <div class="review-card">
-            <div class="stars">★★★★★</div>
-            <p class="review-message">
-              I like how the app shows trends and communities clearly. It helped me gain insights faster than manual analysis.
-            </p>
-            <div class="review-footer">
-              <span class="review-author">~ Denise Phua</span>
-              <span class="review-date">2025/Dec/14</span>
-            </div>
-          </div>
-
-          <!-- Review 3 -->
-          <div class="review-card">
-            <div class="stars">★★★★★</div>
-            <p class="review-message">
-              The features are well-organised and practical for real projects. Progress indicators also make long analyses less confusing.
-            </p>
-            <div class="review-footer">
-              <span class="review-author">~ Rachel Ong</span>
-              <span class="review-date">2025/Dec/15</span>
-            </div>
-          </div>
+        <div class="reviews-grid" id="reviewsGrid">
+          <!-- Dynamic reviews will be loaded here -->
         </div>
       </div>
     </div>
@@ -569,6 +542,78 @@
         // Simple filter functionality for potential future use
         console.log('Admin Reviews page loaded successfully.');
       });
+      
+      // Load reviews dynamically
+      async function loadReviews() {
+        try {
+          const response = await fetch('/api/admin/feedback');
+          if (!response.ok) throw new Error('Failed to load reviews');
+          
+          const data = await response.json();
+          
+          console.log('Reviews data:', data); // Debug log
+          
+          if (data.reviews && data.reviews.length > 0) {
+            const reviewsGrid = document.getElementById('reviewsGrid');
+            reviewsGrid.innerHTML = '';
+            
+            data.reviews.forEach(review => {
+              const reviewCard = document.createElement('div');
+              reviewCard.className = 'review-card';
+              reviewCard.innerHTML = `
+                <div class="stars">${review.stars || '★★★★★'}</div>
+                <p class="review-message">${review.comment || 'No comment provided'}</p>
+                <div class="review-footer">
+                  <span class="review-author">~ ${review.username}</span>
+                  <span class="review-date">${review.date}</span>
+                </div>
+              `;
+
+              // Add keyboard + click interaction (same as landing)
+              reviewCard.setAttribute('tabindex', '0');
+              reviewCard.addEventListener('click', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+                setTimeout(() => {
+                  this.style.transform = 'translateY(-5px)';
+                }, 150);
+              });
+              reviewCard.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  this.click();
+                }
+              });
+
+              reviewsGrid.appendChild(reviewCard);
+            });
+            
+            // Update statistics with correct selectors
+            if (data.stats) {
+              document.getElementById('avgRating').textContent = data.stats.average_rating;
+              document.getElementById('totalReviews').textContent = data.stats.total_reviews;
+              document.getElementById('positivePercentage').textContent = data.stats.positive_percentage + '%';
+            }
+          } else {
+            document.getElementById('reviewsGrid').innerHTML = `
+              <div class="empty-state">
+                <p>No reviews yet. Encourage users to submit reviews!</p>
+              </div>
+            `;
+            // Set stats to 0
+            document.getElementById('avgRating').textContent = '0';
+            document.getElementById('totalReviews').textContent = '0';
+            document.getElementById('positivePercentage').textContent = '0%';
+          }
+        } catch (error) {
+          console.error('Error loading reviews:', error);
+          document.getElementById('reviewsGrid').innerHTML = `
+            <div class="empty-state">
+              <p>Error loading reviews. Please try again later.</p>
+            </div>
+          `;
+        }
+      }
+      
+      document.addEventListener('DOMContentLoaded', loadReviews);
     </script>
   </body>
 </html>

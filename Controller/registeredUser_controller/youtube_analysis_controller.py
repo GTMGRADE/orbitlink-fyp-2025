@@ -91,14 +91,30 @@ class YouTubeAnalysisController:
             else:
                 title = result_data.get('channel_metadata', {}).get('title', 'Channel Analysis')
             
+            # 檢查 sentiment_analysis 是否存在
+            if 'sentiment_analysis' in result_data:
+                print(f"[CONTROLLER] Sentiment data found in result_data")
+                sentiment = result_data['sentiment_analysis']
+                if sentiment:
+                    print(f"[CONTROLLER] Sentiment keys: {list(sentiment.keys())}")
+                    print(f"[CONTROLLER] Overall score: {sentiment.get('overall_score')}")
+                    print(f"[CONTROLLER] Top comments: {len(sentiment.get('top_like_comments', []))}")
+                else:
+                    print(f"[CONTROLLER] WARNING: sentiment_analysis is None")
+            else:
+                print(f"[CONTROLLER] WARNING: No sentiment_analysis in result_data")
+                print(f"[CONTROLLER] Available keys: {list(result_data.keys())}")
+            
             session_controller.save_analysis_session(
                 input_url,
                 title,
                 result_data
             )
-            print(f"Analysis saved to session storage for project_id: {self.project_id}")
+            print(f"[CONTROLLER] Analysis saved to session storage for project_id: {self.project_id}")
         except Exception as e:
-            print(f"Error saving to session storage: {e}")
+            print(f"[CONTROLLER] Error saving to session storage: {e}")
+            import traceback
+            traceback.print_exc()
     
     # ... rest of your existing methods remain the same ...
     def get_recent_analyses(self, limit=5):

@@ -570,6 +570,15 @@
 
             <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=2) }}" 
                class="page-item {% if page and page.page_id == 2 %}active{% endif %}">
+              <div class="page-icon">✨</div>
+              <div class="page-info">
+                <div class="page-name">Features Section</div>
+                <div class="page-desc">Key features and capabilities</div>
+              </div>
+            </a>
+
+            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=3) }}" 
+               class="page-item {% if page and page.page_id == 3 %}active{% endif %}">
               <div class="page-icon">💰</div>
               <div class="page-info">
                 <div class="page-name">Pricing Section</div>
@@ -577,12 +586,12 @@
               </div>
             </a>
 
-            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=3) }}" 
-               class="page-item {% if page and page.page_id == 3 %}active{% endif %}">
+            <a href="{{ url_for('admin_ui.admin_edit_website_page', page_id=4) }}" 
+               class="page-item {% if page and page.page_id == 4 %}active{% endif %}">
               <div class="page-icon">📞</div>
               <div class="page-info">
                 <div class="page-name">Contact Section</div>
-                <div class="page-desc">Contact information and form</div>
+                <div class="page-desc">Contact information and details</div>
               </div>
             </a>
           </div>
@@ -620,7 +629,7 @@
                 {% if page.page_id == 1 %} 
                   Hero Section Content
                 {% elif page.page_id == 2 %} 
-                  Pricing Section Content
+                  Key Features Content
                 {% elif page.page_id == 3 %} 
                   Contact Section Content
                 {% else %} 
@@ -632,15 +641,21 @@
                 class="editor-textarea"
                 placeholder="Enter content here... (HTML supported)"
                 required
-              >{{ page.content }}</textarea>
+              >{{ page.content|safe }}</textarea>
             </div>
 
             <div class="action-buttons">
               <button type="submit" class="btn-primary">
                 <span>💾</span> Save Changes
               </button>
-              <button type="button" class="btn-secondary" onclick="resetForm()">
+              <button type="button" class="btn-secondary" id="resetBtn">
                 <span>↺</span> Reset
+              </button>
+              <button type="button" class="btn-secondary" id="validateBtn" title="Validate JSON">
+                🔍 Validate JSON
+              </button>
+              <button type="button" class="btn-secondary" id="formatBtn" title="Format JSON">
+                🧾 Format JSON
               </button>
             </div>
 
@@ -669,19 +684,24 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Form reset functionality
+        // Capture initial content for reset (prevents double-escaping issues)
+        const textarea = document.querySelector('.editor-textarea');
+        let _initialContent = '';
+        if (textarea) {
+          _initialContent = textarea.value;
+        }
+
         window.resetForm = function() {
           const form = document.querySelector('.editor-form');
           if (form) {
-            const textarea = form.querySelector('textarea');
-            if (textarea) {
-              textarea.value = '{{ page.content if page else "" }}';
+            const ta = form.querySelector('textarea');
+            if (ta) {
+              ta.value = _initialContent;
             }
           }
         };
 
         // Auto-save indicator (optional feature)
-        const textarea = document.querySelector('.editor-textarea');
         if (textarea) {
           let saveTimer;
           let isSaved = true;
@@ -722,6 +742,62 @@
                 saveIndicator.style.display = 'none';
               }, 2000);
             }, 2000);
+          });
+        }
+
+        // JSON validate/format helpers
+        const validateBtn = document.getElementById('validateBtn');
+        const formatBtn = document.getElementById('formatBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function showAlert(msg) {
+          alert(msg);
+        }
+
+        if (validateBtn) {
+          validateBtn.addEventListener('click', function() {
+            if (!textarea) return showAlert('No editor available');
+            try {
+              JSON.parse(textarea.value);
+              showAlert('Valid JSON');
+            } catch (e) {
+              showAlert('Invalid JSON: ' + e.message);
+            }
+          });
+        }
+
+        if (formatBtn) {
+          formatBtn.addEventListener('click', function() {
+            if (!textarea) return showAlert('No editor available');
+            try {
+              const parsed = JSON.parse(textarea.value);
+              textarea.value = JSON.stringify(parsed, null, 2);
+            } catch (e) {
+              showAlert('Cannot format: invalid JSON');
+            }
+          });
+        }
+
+        if (resetBtn) {
+          resetBtn.addEventListener('click', resetForm);
+        }
+
+        // Validate JSON on submit for structured pages (features/pricing)
+        const editorForm = document.querySelector('.editor-form');
+        if (editorForm) {
+          editorForm.addEventListener('submit', function(e) {
+            const pageIdInput = editorForm.querySelector('input[name="page_id"]');
+            const pageId = pageIdInput ? Number(pageIdInput.value) : null;
+            if (pageId === 2 || pageId === 3) {
+              // expect JSON
+              try {
+                JSON.parse(textarea.value);
+              } catch (err) {
+                e.preventDefault();
+                const ok = confirm('The content does not look like valid JSON. Save anyway?');
+                if (ok) editorForm.submit();
+              }
+            }
           });
         }
 

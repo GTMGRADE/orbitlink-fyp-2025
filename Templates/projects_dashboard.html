@@ -430,6 +430,18 @@
         background: rgb(220, 38, 38);
       }
 
+      /* Welcome Message Animation */
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       /* Responsive adjustments for actions */
       @media (max-width: 1200px) {
         .project-actions {
@@ -680,10 +692,16 @@
           <div class="brand">OrbitLink</div>
         </div>
         <a href="{{ url_for('projects.projects_create_get') }}" class="create-btn">Create +</a>
-        <nav class="menu">
+        <!-- <nav class="menu">
           <a href="{{ url_for('projects.dashboard') }}" class="active">Dashboard</a>
           <a href="#">Support</a>
           <a href="#">Setting</a>
+        </nav> -->
+        <nav class="menu">
+            <a href="{{ url_for('projects.dashboard') }}" class="active">Dashboard</a>
+            <!-- <a href="{{ url_for('projects.projects_list') }}">Projects</a> -->
+            <a href="{{ url_for('review.review_page') }}">Rate Us</a>
+            <a href="{{ url_for('contact_support.contact_support_page') }}">Contact Support</a>
         </nav>
       </aside>
 
@@ -694,6 +712,28 @@
           <div class="title">Personal Dashboard</div>
           <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a>
         </div>
+
+        <!-- Welcome Message (only shown after registration + payment) -->
+        {% if welcome_message %}
+        <div class="welcome-message" style="
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          color: white;
+          padding: 1.2rem 1.5rem;
+          border-radius: 10px;
+          margin-bottom: 1.5rem;
+          border-left: 5px solid #047857;
+          box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+          animation: slideDown 0.5s ease;
+        ">
+          <div style="display: flex; align-items: flex-start; gap: 1rem;">
+            <div style="font-size: 1.5rem; flex-shrink: 0;">🎉</div>
+            <div>
+              <h3 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">{{ welcome_message.title }}</h3>
+              <p style="margin: 0; opacity: 0.9; font-size: 1rem;">{{ welcome_message.message }}</p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
         <!-- Search -->
         <div class="search-container">
@@ -864,6 +904,6 @@
           });
         });
       });
-    </script>
+    </script
   </body>
 </html>

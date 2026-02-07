@@ -130,3 +130,9 @@ tmp/
 **/firebase-keynotadmin.json
 DatabaseExtract/firebase-key.json
 DatabaseExtract/firebase-keynotadmin.json
+
+# ML Models (downloaded at runtime via Hugging Face)
+models/
+*.msgpack
+*.safetensors
+*.h5

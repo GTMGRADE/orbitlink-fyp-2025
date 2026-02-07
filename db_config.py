@@ -87,7 +87,6 @@ def init_db():
         return False
 
 
-
 def check_database_status():
     """Check database connection and collection status"""
     db = get_connection()
