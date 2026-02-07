@@ -153,12 +153,15 @@
       }
       .score-section {
         text-align: center;
-        padding: 2rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
       .score-value {
-        font-size: 3.5rem;
+        font-size: 2.5rem;
         font-weight: 900;
-        margin: 1rem 0;
+        margin: 0.5rem 0;
         color: #00ff00;
         text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
       }
@@ -171,25 +174,58 @@
         color: #b0c4de;
         margin-bottom: 1rem;
       }
+      .chart-description {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.4;
+        margin-top: 1rem;
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 3px solid rgba(168, 85, 247, 0.5);
+        border-radius: 4px;
+      }
       .pie-chart {
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 300px;
+        min-height: 240px;
         background: rgba(255, 255, 255, 0.05);
         border-radius: 8px;
         font-size: 0.9rem;
         color: #b0c4de;
       }
+      .pie-wrap {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+      .pie-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+      }
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
       .word-cloud {
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 250px;
+        min-height: 180px;
         background: rgba(255, 255, 255, 0.05);
         border-radius: 8px;
         font-size: 0.9rem;
         color: #b0c4de;
+        padding: 1rem;
       }
       .comments-section {
         background: #1e3a52;
@@ -277,28 +313,31 @@
               {% else %}
               <div class="score-value">N/A</div>
               {% endif %}
+              <div class="chart-description">
+                Net sentiment score calculated from comment analysis. Positive scores (0-10) indicate favorable sentiment, while negative scores show critical feedback. This metric aggregates positive, neutral, and negative comments to gauge overall community perception.
+              </div>
             </div>
 
             <div class="card">
-              <div class="pie-chart">
-                {% if sentiment and sentiment.pie_chart %}
-                  <img alt="Sentiment Pie Chart" style="max-width:100%" src="data:image/png;base64, {{ sentiment.pie_chart }}" />
-                {% else %}
-                  <div>Pie Chart<br />(Sentiment Distribution)</div>
-                {% endif %}
+              <div id="sentimentPieChart" class="pie-chart">
+                <div>Loading sentiment distribution...</div>
+              </div>
+              <div class="chart-description">
+                Distribution of sentiment labels across all analyzed comments. Shows the percentage breakdown of positive, neutral, and negative feedback, helping identify the overall tone of community discussions.
               </div>
             </div>
           </div>
 
-          <div class="content-grid">
-            <div class="card">
-              <div class="word-cloud">
-                {% if sentiment and sentiment.word_cloud %}
-                  <img alt="Word Cloud" style="max-width:100%" src="data:image/png;base64, {{ sentiment.word_cloud }}" />
-                {% else %}
-                  Word Cloud<br />(Topic Analysis)
-                {% endif %}
-              </div>
+          <div class="card">
+            <div class="word-cloud">
+              {% if sentiment and sentiment.word_cloud %}
+                <img alt="Word Cloud" style="max-width:100%" src="data:image/png;base64, {{ sentiment.word_cloud }}" />
+              {% else %}
+                Word Cloud<br />(Topic Analysis)
+              {% endif %}
+            </div>
+            <div class="chart-description">
+              Visual representation of the most frequently mentioned words in comments. Larger words appear more often in discussions. This reveals key topics, themes, and concerns that dominate the conversation, providing insight into what the community is talking about.
             </div>
           </div>
 
@@ -327,5 +366,73 @@
         </div>
       </main>
     </div>
+    
+    <script>
+      // Build SVG pie chart from sentiment data
+      function buildSentimentPie() {
+        const labelCounts = {{ sentiment.label_counts | tojson if sentiment and sentiment.label_counts else '{}' }};
+        
+        if (!labelCounts || Object.keys(labelCounts).length === 0) {
+          document.getElementById('sentimentPieChart').innerHTML = '<div>No sentiment data available</div>';
+          return;
+        }
+        
+        const segments = [
+          { label: 'Positive', value: labelCounts.positive || 0 },
+          { label: 'Neutral', value: labelCounts.neutral || 0 },
+          { label: 'Negative', value: labelCounts.negative || 0 }
+        ];
+        
+        const total = segments.reduce((s, d) => s + d.value, 0) || 1;
+        const colors = ['#6bff98', '#ffa500', '#ff3333'];
+        let current = 0;
+
+        const arcs = segments.map((d, i) => {
+          const fraction = d.value / total;
+          const start = current * 2 * Math.PI;
+          const end = (current + fraction) * 2 * Math.PI;
+          current += fraction;
+
+          const x1 = Math.cos(start);
+          const y1 = Math.sin(start);
+          const x2 = Math.cos(end);
+          const y2 = Math.sin(end);
+          const largeArc = fraction > 0.5 ? 1 : 0;
+          const path = `M 0 0 L ${x1} ${y1} A 1 1 0 ${largeArc} 1 ${x2} ${y2} Z`;
+          return `<path d="${path}" fill="${colors[i]}" />`;
+        }).join('');
+
+        const legend = segments.map((d, i) => {
+          const percent = (d.value / total) * 100;
+          return `
+            <div class="legend-item">
+              <span class="legend-dot" style="background: ${colors[i]};"></span>
+              <span>${d.label} (${percent.toFixed(1)}%)</span>
+            </div>
+          `;
+        }).join('');
+
+        const pieHtml = `
+          <div class="pie-wrap">
+            <svg viewBox="-1.1 -1.1 2.2 2.2" width="160" height="160" aria-label="Sentiment distribution">
+              ${arcs}
+              <circle cx="0" cy="0" r="0.45" fill="#1e3a52"></circle>
+            </svg>
+            <div class="pie-legend">
+              ${legend}
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('sentimentPieChart').innerHTML = pieHtml;
+      }
+      
+      // Build pie chart when page loads
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildSentimentPie);
+      } else {
+        buildSentimentPie();
+      }
+    </script>
   </body>
 </html>
