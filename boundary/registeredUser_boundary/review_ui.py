@@ -34,6 +34,10 @@ def review_page():
     controller = ReviewController(user_id, current_user.username)
     data = controller.get_review_page_data()
     
+    # Get referrer information
+    referrer = request.args.get('from', 'dashboard')
+    data['referrer'] = referrer
+    
     return render_template("review_submit.html", **data)
 
 @review_bp.route("/review/submit", methods=["POST"])
