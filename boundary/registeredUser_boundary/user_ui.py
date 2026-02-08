@@ -40,7 +40,7 @@ def login_post():
         )
         if session.get("user_type") == "admin":
             return redirect(url_for("admin_ui.admin_users_page"))
-        return redirect(url_for("projects.dashboard"))
+        return redirect(url_for("projects.projects_list"))
 
     logger.warning("Failed login attempt with username: %s", username)
     return render_template("login.html", error=login_result.get("message"))

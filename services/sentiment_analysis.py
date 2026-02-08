@@ -5,6 +5,10 @@ from pathlib import Path
 from io import BytesIO
 from typing import Optional, Dict, List
 
+# Suppress tokenizer regex warnings
+warnings.filterwarnings("ignore", message=".*incorrect regex pattern.*")
+warnings.filterwarnings("ignore", message=".*fix_mistral_regex.*")
+
 # Set matplotlib backend BEFORE any matplotlib imports
 os.environ['MPLBACKEND'] = 'Agg'
 
@@ -59,16 +63,24 @@ def _get_pipeline():
         return _MODEL_CACHE["pipeline"]
 
     import torch
-    from transformers import pipeline
+    from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 
     device = 0 if torch.cuda.is_available() else -1
     # Try explicit download first to avoid lazy fetch at first inference
     local_dir = ensure_model_download()
     model_id_or_path = local_dir or "nlptown/bert-base-multilingual-uncased-sentiment"
     try:
+        # Load tokenizer explicitly with fix_mistral_regex flag to suppress warning
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_id_or_path,
+            use_fast=True
+        )
+        model = AutoModelForSequenceClassification.from_pretrained(model_id_or_path)
+        
         pipe = pipeline(
             "sentiment-analysis",
-            model=model_id_or_path,
+            model=model,
+            tokenizer=tokenizer,
             device=device,
         )
     except Exception as e:

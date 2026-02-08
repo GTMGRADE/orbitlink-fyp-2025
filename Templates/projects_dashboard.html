@@ -698,8 +698,9 @@
           <a href="#">Setting</a>
         </nav> -->
         <nav class="menu">
-            <a href="{{ url_for('projects.dashboard') }}" class="active">Dashboard</a>
+            <a href="{{ url_for('projects.projects_list') }}" class="active">Dashboard</a>
             <!-- <a href="{{ url_for('projects.projects_list') }}">Projects</a> -->
+            <a href="{{ url_for('projects.projects_archived') }}">Archived</a>
             <a href="{{ url_for('review.review_page') }}">Rate Us</a>
             <a href="{{ url_for('contact_support.contact_support_page') }}">Contact Support</a>
         </nav>
@@ -709,7 +710,7 @@
       <main class="content">
         <!-- Header - Now properly aligned with OrbitLink logo -->
         <div class="header">
-          <div class="title">Personal Dashboard</div>
+          <div class="title">{{ page_title }}</div>
           <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a>
         </div>
 

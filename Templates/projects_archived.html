@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Archived Projects - OrbitLink</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1e3167;
+        color: white;
+        min-height: 100vh;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background: #f24822;
+        padding: 1.2rem 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+
+      .brand-section {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .brand {
+        font-size: 1.9rem;
+        font-weight: bold;
+        color: black;
+        line-height: 1;
+      }
+
+      .back-btn {
+        background: #14294a;
+        color: white;
+        border-radius: 10px;
+        padding: 0.9rem 0.8rem;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .back-btn:hover {
+        background: #0f1c3d;
+        transform: translateY(-1px);
+      }
+
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-top: 0.3rem;
+      }
+
+      .menu a {
+        display: block;
+        padding: 0.75rem 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.9rem;
+      }
+
+      .menu a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(3px);
+      }
+
+      .content {
+        padding: 2.5rem;
+        overflow-y: auto;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid rgba(242, 72, 34, 0.3);
+      }
+
+      .title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #f24822;
+      }
+
+      .profile-btn {
+        background: rgba(242, 72, 34, 0.1);
+        color: #f24822;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1px solid rgba(242, 72, 34, 0.2);
+      }
+
+      .profile-btn:hover {
+        background: rgba(242, 72, 34, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .info-banner {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border-left: 5px solid #1d4ed8;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .info-banner p {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .projects-container {
+        margin-top: 1.5rem;
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .project-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(242, 72, 34, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .project-card::before {
+        content: "📦";
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        opacity: 0.3;
+      }
+
+      .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(242, 72, 34, 0.3);
+        border-color: rgba(242, 72, 34, 0.4);
+      }
+
+      .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.8rem;
+        gap: 1rem;
+      }
+
+      .project-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #f24822;
+        margin: 0;
+        flex: 1;
+        word-break: break-word;
+      }
+
+      .project-description {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .project-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.8rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .meta-item span:first-child {
+        font-size: 1.1rem;
+      }
+
+      .project-actions {
+        display: flex;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      .action-form {
+        flex: 1;
+      }
+
+      .action-btn {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .restore-btn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+      }
+
+      .restore-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      }
+
+      .delete-btn {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+      }
+
+      .delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 2px dashed rgba(242, 72, 34, 0.3);
+      }
+
+      .empty-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.5;
+      }
+
+      .empty-state h3 {
+        font-size: 1.8rem;
+        color: #f24822;
+        margin-bottom: 1rem;
+      }
+
+      .empty-state p {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="brand-section">
+          <div class="brand">OrbitLink</div>
+        </div>
+
+        <nav class="menu">
+          <a href="{{ url_for('projects.projects_list') }}">Dashboard</a>
+          <a href="{{ url_for('review.review_page') }}">Rate Us</a>
+          <a href="{{ url_for('contact_support.contact_support_page') }}"
+            >Contact Support</a
+          >
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <div class="header">
+          <div class="title">📦 Archived Projects</div>
+          <a href="{{ url_for('user.profile') }}" class="profile-btn"
+            >Profile</a
+          >
+        </div>
+
+        <div class="info-banner">
+          <p>
+            ℹ️ These projects have been archived. You can restore them to your
+            active projects or permanently delete them.
+          </p>
+        </div>
+
+        <div class="projects-container">
+          {% if projects %}
+          <div class="projects-grid">
+            {% for p in projects %}
+            <div class="project-card">
+              <div class="project-header">
+                <h3 class="project-name">{{ p.name }}</h3>
+              </div>
+
+              {% if p.description %}
+              <p class="project-description">{{ p.description }}</p>
+              {% else %}
+              <p class="project-description" style="font-style: italic">
+                No description provided
+              </p>
+              {% endif %}
+
+              <div class="project-meta">
+                <div class="meta-item">
+                  <span>📅</span>
+                  <span>Last opened: {{ p.last_opened }}</span>
+                </div>
+                <div class="meta-item">
+                  <span>📦</span>
+                  <span>Archived project</span>
+                </div>
+              </div>
+
+              <div class="project-actions">
+                <form
+                  class="action-form"
+                  method="post"
+                  action="{{ url_for('projects.projects_unarchive', pid=p.id) }}"
+                >
+                  <button class="action-btn restore-btn" type="submit">
+                    ✓ Restore
+                  </button>
+                </form>
+
+                <form
+                  class="action-form"
+                  method="post"
+                  action="{{ url_for('projects.projects_delete', pid=p.id) }}"
+                >
+                  <button class="action-btn delete-btn" type="submit">
+                    🗑️ Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h3>No Archived Projects</h3>
+            <p>
+              You don't have any archived projects. Projects you archive will
+              appear here.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Confirmation for restore
+        const restoreButtons = document.querySelectorAll(".restore-btn");
+        restoreButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            if (!confirm("Restore this project to your active projects?")) {
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Confirmation for delete
+        const deleteButtons = document.querySelectorAll(".delete-btn");
+        deleteButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            if (
+              !confirm(
+                "Permanently delete this project? This action cannot be undone.",
+              )
+            ) {
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Card hover animation
+        const projectCards = document.querySelectorAll(".project-card");
+        projectCards.forEach((card) => {
+          card.addEventListener("mouseenter", function () {
+            this.style.transform = "translateY(-5px)";
+          });
+
+          card.addEventListener("mouseleave", function () {
+            this.style.transform = "translateY(0)";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

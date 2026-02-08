@@ -8,6 +8,8 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from io import BytesIO
 import base64
 from datetime import datetime
+import html
+import re
 
 class AnalysisPDFExporter:
     """Generate PDF reports for YouTube analysis data"""
@@ -15,6 +17,22 @@ class AnalysisPDFExporter:
     def __init__(self):
         self.styles = getSampleStyleSheet()
         self._setup_custom_styles()
+    
+    def _sanitize_text(self, text):
+        """Sanitize text for use in PDF Paragraphs by removing HTML tags and escaping special characters"""
+        if not text:
+            return ''
+        # Remove HTML tags
+        text = re.sub(r'<[^>]+>', ' ', text)
+        # Unescape HTML entities first (like &#39; -> ')
+        text = html.unescape(text)
+        # Escape XML special characters for ReportLab
+        text = text.replace('&', '&amp;')
+        text = text.replace('<', '&lt;')
+        text = text.replace('>', '&gt;')
+        # Clean up multiple spaces
+        text = re.sub(r'\s+', ' ', text)
+        return text.strip()
     
     def _setup_custom_styles(self):
         """Setup custom paragraph styles for the PDF"""
@@ -156,11 +174,15 @@ class AnalysisPDFExporter:
         if top_comments:
             elements.append(Paragraph("Top 5 Most Liked Comments:", self.styles['SubHeader']))
             for i, comment in enumerate(top_comments, 1):
-                text = comment.get('text', '')[:200] + ('...' if len(comment.get('text', '')) > 200 else '')
+                raw_text = comment.get('text', '')
+                # Sanitize and truncate text
+                clean_text = self._sanitize_text(raw_text)
+                if len(clean_text) > 200:
+                    clean_text = clean_text[:200] + '...'
                 likes = comment.get('like_count', 0)
                 sentiment = comment.get('label', 'neutral')
                 elements.append(Paragraph(
-                    f"<b>{i}.</b> {text}<br/><i>Likes: {likes} | Sentiment: {sentiment}</i>",
+                    f"<b>{i}.</b> {clean_text}<br/><i>Likes: {likes} | Sentiment: {sentiment}</i>",
                     self.styles['Normal']
                 ))
                 elements.append(Spacer(1, 0.08*inch))
@@ -173,35 +195,118 @@ class AnalysisPDFExporter:
         elements.append(Paragraph("2. Identify Influencers", self.styles['SectionHeader']))
         elements.append(Spacer(1, 0.1*inch))
         
-        influencers = influencers_data[:15]  # Top 15 influencers
+        influencers = influencers_data[:10]  # Top 10 influencers for detailed view
         
         if influencers:
             elements.append(Paragraph(f"Top {len(influencers)} Influencers:", self.styles['SubHeader']))
+            elements.append(Spacer(1, 0.05*inch))
             
-            # Create table
-            data = [['Rank', 'Name', 'Score', 'Comments', 'Influence']]
+            # Main metrics table
+            data = [['Rank', 'Name', 'Total\nScore', 'Comments', 'Likes', 'Replies\nReceived', 'Videos']]
             for i, influencer in enumerate(influencers, 1):
                 data.append([
                     str(i),
-                    influencer.get('author_name', 'Unknown')[:30],
-                    f"{influencer.get('influencer_score', 0):.2f}",
-                    str(influencer.get('comment_count', 0)),
-                    influencer.get('influence_type', 'N/A')
+                    influencer.get('author_name', 'Unknown')[:25],
+                    f"{influencer.get('total_score', 0):.2f}",
+                    str(influencer.get('total_comments', 0)),
+                    str(influencer.get('total_likes', 0)),
+                    str(influencer.get('total_replies_received', 0)),
+                    str(influencer.get('unique_videos', 0))
                 ])
             
-            table = Table(data, colWidths=[0.5*inch, 2*inch, 0.8*inch, 0.8*inch, 1.2*inch])
+            table = Table(data, colWidths=[0.4*inch, 1.8*inch, 0.6*inch, 0.7*inch, 0.6*inch, 0.7*inch, 0.6*inch])
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f24822')),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 10),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
                 ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                ('FONTSIZE', (0, 1), (-1, -1), 9)
+                ('FONTSIZE', (0, 1), (-1, -1), 8)
             ]))
             elements.append(table)
+            elements.append(Spacer(1, 0.15*inch))
+            
+            # Score breakdown table
+            elements.append(Paragraph("Score Breakdown (0-10 scale):", self.styles['SubHeader']))
+            elements.append(Spacer(1, 0.05*inch))
+            
+            score_data = [['Rank', 'Name', 'Engagement', 'Network', 'Consistency', 'Quality', 'Activity', 'Response']]
+            for i, influencer in enumerate(influencers, 1):
+                score_data.append([
+                    str(i),
+                    influencer.get('author_name', 'Unknown')[:25],
+                    f"{influencer.get('engagement_score', 0):.1f}",
+                    f"{influencer.get('network_score', 0):.1f}",
+                    f"{influencer.get('consistency_score', 0):.1f}",
+                    f"{influencer.get('quality_score', 0):.1f}",
+                    f"{influencer.get('activity_score', 0):.1f}",
+                    f"{influencer.get('responsiveness_score', 0):.1f}"
+                ])
+            
+            score_table = Table(score_data, colWidths=[0.4*inch, 1.8*inch, 0.75*inch, 0.7*inch, 0.8*inch, 0.65*inch, 0.65*inch, 0.7*inch])
+            score_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0f1c3d')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.lightblue),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTSIZE', (0, 1), (-1, -1), 8)
+            ]))
+            elements.append(score_table)
+            elements.append(Spacer(1, 0.15*inch))
+            
+            # Additional metrics table
+            elements.append(Paragraph("Network & Engagement Metrics:", self.styles['SubHeader']))
+            elements.append(Spacer(1, 0.05*inch))
+            
+            network_data = [['Rank', 'Name', 'Threads\nStarted', 'InDegree', 'OutDegree', 'Avg\nSentiment', 'Channel\nReplies']]
+            for i, influencer in enumerate(influencers, 1):
+                network_data.append([
+                    str(i),
+                    influencer.get('author_name', 'Unknown')[:25],
+                    str(influencer.get('thread_starts', 0)),
+                    str(influencer.get('indegree', 0)),
+                    str(influencer.get('outdegree', 0)),
+                    f"{influencer.get('avg_sentiment', 0):.2f}",
+                    str(influencer.get('channel_owner_replies', 0))
+                ])
+            
+            network_table = Table(network_data, colWidths=[0.4*inch, 1.8*inch, 0.7*inch, 0.7*inch, 0.7*inch, 0.7*inch, 0.7*inch])
+            network_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#14294a')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTSIZE', (0, 1), (-1, -1), 8)
+            ]))
+            elements.append(network_table)
+            
+            # Add legend for metrics
+            elements.append(Spacer(1, 0.1*inch))
+            elements.append(Paragraph("<b>Metrics Explained:</b>", self.styles['Normal']))
+            elements.append(Paragraph(
+                "<i>• Engagement: Based on likes and replies received (25% weight)</i><br/>"
+                "<i>• Network: Connections and channel owner interactions (20% weight)</i><br/>"
+                "<i>• Consistency: Participation across multiple videos (20% weight)</i><br/>"
+                "<i>• Quality: Comment length and sentiment strength (15% weight)</i><br/>"
+                "<i>• Activity: Total comments and thread initiations (10% weight)</i><br/>"
+                "<i>• Response: How actively they reply to others (10% weight)</i><br/>"
+                "<i>• InDegree: How many people reply to them | OutDegree: How many they reply to</i>",
+                self.styles['Normal']
+            ))
         else:
             elements.append(Paragraph("<i>No influencer data available</i>", self.styles['Normal']))
         

@@ -20,7 +20,7 @@ def payment_page():
     if controller.get_user_subscription_status():
         # Already subscribed, redirect to dashboard
         session['show_welcome_message'] = True
-        return redirect(url_for("projects.dashboard"))
+        return redirect(url_for("projects.projects_list"))
     
     # Get payment page data
     payment_data = controller.get_payment_page_data()
@@ -76,7 +76,7 @@ def activate_subscription():
         return jsonify({
             "success": True,
             "message": "Subscription activated successfully!",
-            "redirect": url_for("projects.dashboard")
+            "redirect": url_for("projects.projects_list")
         })
     else:
         return jsonify({

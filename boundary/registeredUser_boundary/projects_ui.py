@@ -27,18 +27,9 @@ def create_projects_controller():
 
 @projects_bp.get("/dashboard")
 def dashboard():
-    logger.info("Dashboard accessed (recent projects)")
-    
-    # Check if user is logged in
-    if not get_user_id():
-        return redirect(url_for("user.login_get"))
-    
-    controller = create_projects_controller()
-    if not controller:
-        return redirect(url_for("user.login_get"))
-    
-    data = controller.view_recent()
-    return render_template("projects_dashboard.html", **data)
+    logger.info("Dashboard accessed - redirecting to projects list")
+    # Redirect to projects list to show all projects instead of just 3 recent
+    return redirect(url_for("projects.projects_list"))
 
 
 @projects_bp.get("/projects")
@@ -111,6 +102,32 @@ def projects_archive(pid: str):
     if controller:
         controller.archive(pid)
     return redirect(url_for("projects.projects_list"))
+
+
+@projects_bp.post("/projects/unarchive/<pid>")
+def projects_unarchive(pid: str):
+    # Check if user is logged in
+    if not get_user_id():
+        return redirect(url_for("user.login_get"))
+    
+    controller = create_projects_controller()
+    if controller:
+        controller.unarchive(pid)
+    return redirect(url_for("projects.projects_archived"))
+
+
+@projects_bp.get("/projects/archived")
+def projects_archived():
+    # Check if user is logged in
+    if not get_user_id():
+        return redirect(url_for("user.login_get"))
+    
+    controller = create_projects_controller()
+    if not controller:
+        return redirect(url_for("user.login_get"))
+    
+    data = controller.view_archived()
+    return render_template("projects_archived.html", **data)
 
 
 @projects_bp.post("/projects/delete/<pid>")
