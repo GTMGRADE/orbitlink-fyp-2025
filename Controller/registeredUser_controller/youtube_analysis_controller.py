@@ -3,7 +3,7 @@ import os
 import json
 from datetime import datetime
 from services.youtube_analyzer import YouTubeAnalyzer
-from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 from db_config import get_connection
 
 class YouTubeAnalysisController:

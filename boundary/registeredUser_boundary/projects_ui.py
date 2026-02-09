@@ -3,8 +3,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import json
 from flask import jsonify
 from datetime import datetime
-from controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
-from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+from Controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
+from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def get_user_id():
 
 def create_projects_controller():
     """Create a projects controller for the current user"""
-    from controller.registeredUser_controller.projects_controller import ProjectsController
+    from Controller.registeredUser_controller.projects_controller import ProjectsController
     user_id = get_user_id()
     if not user_id:
         return None
