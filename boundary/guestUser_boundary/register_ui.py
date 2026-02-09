@@ -80,7 +80,7 @@ from Controller.guestUser_controller.contact_controller import ContactController
 
 logger = logging.getLogger(__name__)
 
-register_bp = Blueprint('register', __name__, template_folder='templates')
+register_bp = Blueprint('register', __name__, template_folder='../../Templates')
 
 @register_bp.route('/register', methods=['GET', 'POST'])
 def register_page():

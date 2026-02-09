@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-landing_bp = Blueprint('landing', __name__, template_folder='templates')
+landing_bp = Blueprint('landing', __name__, template_folder='../../Templates')
 
 @landing_bp.route('/')
 def landing_page():

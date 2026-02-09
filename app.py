@@ -42,7 +42,7 @@ from boundary.admin_boundary.admin_ui_boundary import admin_ui_bp
 import logging
 import sys 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 app.secret_key = 'your-secret-key-here'
 
 # Disable Jinja template caching for dynamic content
@@ -80,6 +80,15 @@ logging.basicConfig(
 )
 
 if __name__ == '__main__':
-    print(" * Running on http://127.0.0.1:5000")
-    app.run(debug=True)
+    # Get port from environment variable (Render sets this) or default to 5000 for local dev
+    port = int(os.environ.get('PORT', 5000))
+    # Use 0.0.0.0 on Render (allows external connections), localhost for local dev
+    host = '0.0.0.0' if os.environ.get('RENDER') else 'localhost'
+    
+    if host == 'localhost':
+        print(f" * Running on http://localhost:{port}")
+    else:
+        print(f" * Running on port {port} (accessible via Render URL)")
+    
+    app.run(debug=True, host=host, port=port)
     logging.info("Application started")

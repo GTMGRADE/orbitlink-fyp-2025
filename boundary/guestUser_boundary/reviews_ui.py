@@ -9,7 +9,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-reviews_bp = Blueprint('reviews', __name__, template_folder='templates')
+reviews_bp = Blueprint('reviews', __name__, template_folder='../../Templates')
 
 @reviews_bp.route('/reviews')
 def show_reviews():
