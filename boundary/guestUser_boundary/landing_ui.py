@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
-from controller.guestUser_controller.landing_controller import LandingPageController
-from controller.guestUser_controller.contact_controller import ContactController
+from Controller.guestUser_controller.landing_controller import LandingPageController
+from Controller.guestUser_controller.contact_controller import ContactController
 import logging
 
 logger = logging.getLogger(__name__)
