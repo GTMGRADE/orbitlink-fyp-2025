@@ -1,7 +1,7 @@
 # boundary/registeredUser_boundary/contact_support_ui.py
 import logging
 from flask import Blueprint, render_template, request, jsonify
-from Controller.guestUser_controller.contact_controller import ContactController
+from controller.guestUser_controller.contact_controller import ContactController
 
 logger = logging.getLogger(__name__)
 

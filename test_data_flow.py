@@ -15,7 +15,7 @@ print("=" * 60)
 # Test 1: Check session controller
 print("\n[1] 測試會話控制器...")
 try:
-    from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+    from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
     from datetime import datetime
     
     # Mock data matching real structure

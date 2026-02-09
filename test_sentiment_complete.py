@@ -177,7 +177,7 @@ try:
     print("-" * 80)
     
     # 模擬路由檢索邏輯
-    from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+    from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
     
     session_controller = AnalysisSessionController(test_user_id, test_project_id)
     session_data = session_controller.get_current_session()

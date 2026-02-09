@@ -19,7 +19,7 @@ def test_data_flow():
     # 1. 測試 Session Controller
     print("\n[1] 測試 Session Controller...")
     try:
-        from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+        from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
         print("✓ AnalysisSessionController 導入成功")
         
         # 模擬保存數據

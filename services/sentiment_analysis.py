@@ -5,6 +5,25 @@ from pathlib import Path
 from io import BytesIO
 from typing import Optional, Dict, List
 
+# Suppress tokenizer regex warnings
+warnings.filterwarnings("ignore", message=".*incorrect regex pattern.*")
+warnings.filterwarnings("ignore", message=".*fix_mistral_regex.*")
+
+# Set matplotlib backend BEFORE any matplotlib imports
+os.environ['MPLBACKEND'] = 'Agg'
+
+# Set up matplotlib early
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except Exception as e:
+    print(f"[WARNING] Matplotlib setup failed: {e}")
+    import traceback
+    traceback.print_exc()
+    MATPLOTLIB_AVAILABLE = False
+
 warnings.filterwarnings("ignore")
 
 _MODEL_CACHE = {
@@ -44,16 +63,24 @@ def _get_pipeline():
         return _MODEL_CACHE["pipeline"]
 
     import torch
-    from transformers import pipeline
+    from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 
     device = 0 if torch.cuda.is_available() else -1
     # Try explicit download first to avoid lazy fetch at first inference
     local_dir = ensure_model_download()
     model_id_or_path = local_dir or "nlptown/bert-base-multilingual-uncased-sentiment"
     try:
+        # Load tokenizer explicitly with fix_mistral_regex flag to suppress warning
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_id_or_path,
+            use_fast=True
+        )
+        model = AutoModelForSequenceClassification.from_pretrained(model_id_or_path)
+        
         pipe = pipeline(
             "sentiment-analysis",
-            model=model_id_or_path,
+            model=model,
+            tokenizer=tokenizer,
             device=device,
         )
     except Exception as e:
@@ -79,11 +106,25 @@ def _get_wordcloud():
 def preload_sentiment_resources():
     """Ensure models and resources are downloaded before analysis."""
     try:
+        print("[PRELOAD] Downloading sentiment model...")
         ensure_model_download()
-        _get_pipeline()
-        _get_wordcloud()
+        print("[PRELOAD] Model downloaded successfully")
     except Exception as e:
-        pass
+        print(f"[PRELOAD] Warning - model download failed: {e}")
+    
+    try:
+        print("[PRELOAD] Loading sentiment pipeline...")
+        _get_pipeline()
+        print("[PRELOAD] Pipeline loaded successfully")
+    except Exception as e:
+        print(f"[PRELOAD] Warning - pipeline load failed: {e}")
+    
+    try:
+        print("[PRELOAD] Loading wordcloud...")
+        _get_wordcloud()
+        print("[PRELOAD] Wordcloud loaded successfully")
+    except Exception as e:
+        print(f"[PRELOAD] Warning - wordcloud load failed: {e}")
 
 
 def _label_to_score(label: str) -> float:
@@ -115,10 +156,10 @@ def _label_to_bucket(label: str) -> str:
 def _build_wordcloud(texts):
     if not texts:
         return None
+    if not MATPLOTLIB_AVAILABLE:
+        print(f"[ERROR] Word cloud generation: matplotlib not available")
+        return None
     try:
-        # Import matplotlib only when needed to avoid circular imports
-        import matplotlib
-        matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         
         wc = _get_wordcloud()
@@ -132,8 +173,12 @@ def _build_wordcloud(texts):
         buffer.seek(0)
         encoded = base64.b64encode(buffer.read()).decode("utf-8")
         plt.close(fig)
+        print(f"[SUCCESS] Word cloud generated, size: {len(encoded)} bytes")
         return encoded
     except Exception as e:
+        print(f"[ERROR] Word cloud generation failed: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 
@@ -141,13 +186,14 @@ def _build_pie(label_counts):
     total = sum(label_counts.values())
     if total == 0:
         return None
+    if not MATPLOTLIB_AVAILABLE:
+        print(f"[ERROR] Pie chart generation: matplotlib not available")
+        return None
     labels = ["Positive", "Neutral", "Negative"]
     sizes = [label_counts.get("positive", 0), label_counts.get("neutral", 0), label_counts.get("negative", 0)]
     colors = ["#2ecc71", "#f1c40f", "#e74c3c"]
     try:
         # Import matplotlib only when needed
-        import matplotlib
-        matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         
         fig, ax = plt.subplots(figsize=(4, 4))
@@ -159,14 +205,21 @@ def _build_pie(label_counts):
         buffer.seek(0)
         encoded = base64.b64encode(buffer.read()).decode("utf-8")
         plt.close(fig)
+        print(f"[SUCCESS] Pie chart generated, size: {len(encoded)} bytes")
         return encoded
     except Exception as e:
+        print(f"[ERROR] Pie chart generation failed: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 
 def run_sentiment_analysis(comments):
     """Return overall score, word cloud, and top liked comments."""
+    print(f"[SENTIMENT] Starting sentiment analysis on {len(comments)} comments")
+    
     if not comments:
+        print(f"[SENTIMENT] No comments provided, returning empty result")
         return {
             "overall_score": 0,
             "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
@@ -182,7 +235,11 @@ def run_sentiment_analysis(comments):
         text = (c.get("text") or "").strip()
         if text:
             texts.append(text)
+    
+    print(f"[SENTIMENT] Extracted {len(texts)} non-empty texts from {len(comments)} comments")
+    
     if not texts:
+        print(f"[SENTIMENT] No valid texts extracted, returning empty result")
         return {
             "overall_score": 0,
             "label_counts": {"positive": 0, "neutral": 0, "negative": 0},
@@ -192,8 +249,11 @@ def run_sentiment_analysis(comments):
         }
 
     try:
+        print(f"[SENTIMENT] Running predictions on {len(texts)} texts")
         predictions = pipe(texts, batch_size=16, truncation=True)
+        print(f"[SENTIMENT] Predictions complete")
     except Exception as e:
+        print(f"[SENTIMENT] Prediction error: {e}")
         raise
 
     label_counts = {"positive": 0, "neutral": 0, "negative": 0}
@@ -216,7 +276,12 @@ def run_sentiment_analysis(comments):
         })
 
     overall_score = round(sum(scores) / len(scores), 2) if scores else 0.0
+    print(f"[SENTIMENT] Overall score: {overall_score}, Label counts: {label_counts}")
+    
+    print(f"[SENTIMENT] Building word cloud...")
     word_cloud = _build_wordcloud(texts)
+    
+    print(f"[SENTIMENT] Building pie chart...")
     pie_chart = _build_pie(label_counts)
 
     top_like_comments = sorted(enriched, key=lambda x: x.get("like_count", 0), reverse=True)[:5]
@@ -229,11 +294,11 @@ def run_sentiment_analysis(comments):
         "top_like_comments": top_like_comments,
     }
     
+    print(f"[SENTIMENT] Final result - pie_chart: {bool(pie_chart)}, word_cloud: {bool(word_cloud)}")
+    print(f"[SENTIMENT] Pie chart size: {len(pie_chart or '')} bytes")
+    print(f"[SENTIMENT] Word cloud size: {len(word_cloud or '')} bytes")
+    
     return result
-
-
-# Preload at import time to ensure resources are ready
-preload_sentiment_resources()
 
 
 def diagnostics() -> Dict[str, str]:

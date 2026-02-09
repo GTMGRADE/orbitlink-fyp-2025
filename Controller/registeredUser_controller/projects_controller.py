@@ -90,5 +90,29 @@ class ProjectsController:
     def archive(self, pid: str) -> Project | None:
         return self.repo.archive(pid)
 
+    def unarchive(self, pid: str) -> Project | None:
+        return self.repo.unarchive(pid)
+
+    def view_archived(self) -> Dict:
+        """View archived projects"""
+        projects: List[Project] = self.repo.list(include_archived=True)
+        archived_projects = [p for p in projects if p.archived]
+        
+        vm = [
+            {
+                "id": p.id,
+                "name": p.name,
+                "description": p.description,
+                "last_opened": self._format_date(p.last_opened),
+            }
+            for p in archived_projects
+        ]
+        
+        return {
+            "page_title": "Archived Projects",
+            "projects": vm,
+            "query": "",
+        }
+
     def delete(self, pid: str) -> bool:
         return self.repo.delete(pid)

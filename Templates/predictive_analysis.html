@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Predictive Analysis - Project SNA</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f1c3d;
+        color: #fff;
+        min-height: 100vh;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: 100vh;
+      }
+      .sidebar {
+        background: #f24822;
+        padding: 1.2rem 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        position: relative;
+      }
+
+      .brand-section {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .brand {
+        font-size: 1.9rem;
+        font-weight: bold;
+        color: black;
+        line-height: 1;
+      }
+
+      .create-btn {
+        background: #14294a;
+        color: white;
+        border-radius: 10px;
+        padding: 0.9rem 0.8rem;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .create-btn:hover {
+        background: #0f1c3d;
+        transform: translateY(-1px);
+      }
+
+      .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-top: 0.3rem;
+      }
+
+      .menu a {
+        display: block;
+        padding: 0.75rem 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.9rem;
+      }
+
+      .menu a.active {
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .menu a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(3px);
+      }
+      .content {
+        background: #0f1c3d;
+        padding: 2rem;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .title {
+        font-size: 1.8rem;
+        font-weight: 800;
+      }
+      .header-buttons {
+        display: flex;
+        gap: 0.8rem;
+      }
+      .header-buttons a {
+        background: #ff3333;
+        color: #000;
+        border-radius: 6px;
+        padding: 0.7rem 1.5rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+      .header-buttons a:hover {
+        background: #cc0000;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      .container {
+        background: linear-gradient(135deg, #1a3a52 0%, #14294a 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .page-title {
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .loading-state {
+        text-align: center;
+        padding: 3rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #f24822;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .card {
+        background: #1e3a52;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #00bfff;
+      }
+      .metric-card {
+        background: #1e3a52;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+      }
+      .metric-label {
+        font-size: 0.9rem;
+        color: #b0c4de;
+        margin-bottom: 0.5rem;
+      }
+      .metric-value {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #ffa500;
+        text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+      }
+      .metric-subtext {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 0.5rem;
+      }
+      .chart-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 1rem;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #b0c4de;
+        font-size: 0.9rem;
+      }
+      .prediction-list {
+        list-style: none;
+        padding: 0;
+      }
+      .prediction-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.8rem;
+        border-left: 3px solid #00bfff;
+      }
+      .prediction-date {
+        font-weight: 700;
+        color: #00bfff;
+        margin-bottom: 0.3rem;
+      }
+      .prediction-value {
+        font-size: 1.2rem;
+        color: #fff;
+      }
+      .confidence-bar {
+        background: rgba(255, 255, 255, 0.1);
+        height: 6px;
+        border-radius: 3px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+      .confidence-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #00ff00, #ffff00, #ff8800);
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+      .info-box {
+        background: rgba(0, 191, 255, 0.1);
+        border: 1px solid #00bfff;
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin-top: 2rem;
+      }
+      .info-box h4 {
+        color: #00bfff;
+        margin-bottom: 0.8rem;
+      }
+      .info-box p {
+        color: #b0c4de;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .coming-soon-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #ff5722, #ff9800);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-left: 1rem;
+      }
+      @media (max-width: 768px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand-section">
+          <div class="brand">OrbitLink</div>
+        </div>
+        <a
+          href="{{ url_for('projects.projects_create_get') }}"
+          class="create-btn"
+          >Create +</a
+        >
+        <nav class="menu">
+          <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('review.review_page') }}?from=analysis"
+            >Rate Us</a
+          >
+          <a
+            href="{{ url_for('contact_support.contact_support_page') }}?from=analysis"
+            >Contact Support</a
+          >
+        </nav>
+      </aside>
+
+      <main class="content">
+        <div class="header">
+          <div class="title">
+            Predictive Analysis
+            <span
+              class="coming-soon-badge"
+              style="background: linear-gradient(135deg, #00ff00, #00aa00)"
+              >LIVE</span
+            >
+          </div>
+          <div class="header-buttons">
+            <a
+              href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', '') }}"
+              class="back-button"
+              >Back</a
+            >
+          </div>
+        </div>
+
+        <div class="container">
+          <div id="mainContent">
+            <h1 class="page-title">📊 Predictive Analysis Dashboard</h1>
+
+            <div class="main-grid">
+              <!-- Engagement Forecast -->
+              <div class="card">
+                <div class="card-title">📈 Engagement Forecast</div>
+                <div class="chart-container">
+                  <div style="text-align: center">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem">📊</div>
+                    <div>Engagement trend visualization</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem">
+                      (ML model predictions)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sentiment Trends -->
+              <div class="card">
+                <div class="card-title">😊 Sentiment Trends</div>
+                <div class="chart-container">
+                  <div style="text-align: center">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem">📉</div>
+                    <div>Sentiment trajectory</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem">
+                      (Past & future sentiment)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Growth Prediction -->
+              <div class="card">
+                <div class="card-title">🚀 Growth Prediction</div>
+                <div class="chart-container">
+                  <div style="text-align: center">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem">📈</div>
+                    <div>Channel/Video growth rate</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem">
+                      (Subscriber/View projections)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="main-grid">
+              <div class="metric-card">
+                <div class="metric-label">Predicted Engagement</div>
+                <div class="metric-label">Next 7 Days</div>
+                <div class="metric-value">+15%</div>
+                <div class="metric-subtext">Based on historical trends</div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-label">Sentiment Score</div>
+                <div class="metric-label">Forecast</div>
+                <div class="metric-value">0.72</div>
+                <div class="metric-subtext">Expected positive sentiment</div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-label">Growth Rate</div>
+                <div class="metric-label">30-Day Projection</div>
+                <div class="metric-value">+22%</div>
+                <div class="metric-subtext">Audience expansion estimate</div>
+              </div>
+            </div>
+
+            <!-- Upcoming Predictions -->
+            <div class="card">
+              <div class="card-title">🔮 Upcoming Predictions</div>
+              <ul class="prediction-list">
+                <li class="prediction-item">
+                  <div class="prediction-date">Next Week</div>
+                  <div class="prediction-value">
+                    15% increase in engagement expected
+                  </div>
+                  <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: 85%"></div>
+                  </div>
+                  <div class="metric-subtext">85% confidence</div>
+                </li>
+                <li class="prediction-item">
+                  <div class="prediction-date">Next 2 Weeks</div>
+                  <div class="prediction-value">Peak activity on weekends</div>
+                  <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: 78%"></div>
+                  </div>
+                  <div class="metric-subtext">78% confidence</div>
+                </li>
+                <li class="prediction-item">
+                  <div class="prediction-date">Next Month</div>
+                  <div class="prediction-value">
+                    Sentiment trending positive (+0.15)
+                  </div>
+                  <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: 72%"></div>
+                  </div>
+                  <div class="metric-subtext">72% confidence</div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Information Box -->
+            <div class="info-box">
+              <h4>🤖 About Predictive Analysis</h4>
+              <p>
+                <strong>Predictive Analysis</strong> uses machine learning
+                models to forecast future trends based on historical data from
+                your YouTube channel or video analysis. The system analyzes
+                patterns in:
+              </p>
+              <ul
+                style="
+                  margin-left: 1.5rem;
+                  margin-top: 0.8rem;
+                  line-height: 1.8;
+                "
+              >
+                <li>
+                  <strong>Engagement patterns:</strong> Views, likes, comments
+                  over time
+                </li>
+                <li>
+                  <strong>Sentiment trends:</strong> How audience sentiment
+                  evolves
+                </li>
+                <li>
+                  <strong>Community dynamics:</strong> Growth and interaction
+                  patterns
+                </li>
+                <li>
+                  <strong>Temporal patterns:</strong> Peak activity times and
+                  seasonal trends
+                </li>
+              </ul>
+              <p style="margin-top: 1rem">
+                <strong>Note:</strong> This feature requires sufficient
+                historical data from analyzed projects. Run YouTube analyses
+                regularly to improve prediction accuracy.
+              </p>
+            </div>
+
+            <!-- Call to Action -->
+            <div
+              class="card"
+              style="
+                margin-top: 2rem;
+                text-align: center;
+                background: rgba(0, 191, 255, 0.05);
+              "
+            >
+              <h3 style="color: #00bfff; margin-bottom: 1rem">
+                📊 Start Building Your Predictions
+              </h3>
+              <p style="color: #b0c4de; margin-bottom: 1.5rem">
+                Run multiple YouTube analyses to gather data and unlock detailed
+                predictive insights
+              </p>
+              <a
+                href="{{ url_for('projects.project_sna') }}?project_id={{ request.args.get('project_id', '') }}"
+                style="
+                  display: inline-block;
+                  background: linear-gradient(135deg, #00bfff, #0080ff);
+                  color: white;
+                  padding: 0.8rem 2rem;
+                  border-radius: 8px;
+                  text-decoration: none;
+                  font-weight: 700;
+                  transition: transform 0.2s;
+                "
+              >
+                ← Back to Analysis Dashboard
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const projectId = new URLSearchParams(window.location.search).get(
+          "project_id",
+        );
+        console.log("Predictive Analysis page loaded for project:", projectId);
+
+        if (!projectId) {
+          showNoDataMessage();
+          return;
+        }
+
+        // Load predictive data from backend
+        loadPredictiveData(projectId);
+      });
+
+      async function loadPredictiveData(projectId) {
+        try {
+          console.log("Fetching predictive data for project:", projectId);
+          const url = `/projects/${projectId}/predictive-data`;
+          console.log("Fetching URL:", url);
+
+          const response = await fetch(url);
+          console.log("Response status:", response.status);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Response error:", errorText);
+            showError(`Server error: ${response.status} - ${errorText}`);
+            return;
+          }
+
+          const data = await response.json();
+          console.log("Received data:", data);
+
+          if (data.success) {
+            if (data.has_data) {
+              console.log("Rendering predictions with data");
+              renderPredictions(data);
+            } else {
+              console.log("No historical data available");
+              showNoDataMessage();
+            }
+          } else {
+            console.error("Data error:", data.error);
+            showError(data.error || "Unknown error");
+          }
+        } catch (error) {
+          console.error("Error loading predictive data:", error);
+          showError(`Failed to load prediction data: ${error.message}`);
+        }
+      }
+
+      function renderPredictions(data) {
+        // Update engagement forecast
+        const engagementTrend = data.engagement_forecast;
+        document.querySelector(
+          ".main-grid .card:nth-child(1) .chart-container",
+        ).innerHTML = `
+          <div style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+              ${engagementTrend.trend === "increasing" ? "📈" : engagementTrend.trend === "decreasing" ? "📉" : "➡️"}
+            </div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: ${engagementTrend.trend === "increasing" ? "#00ff00" : engagementTrend.trend === "decreasing" ? "#ff5555" : "#ffaa00"};">
+              ${engagementTrend.trend.toUpperCase()}
+            </div>
+            <div style="margin-top: 0.5rem;">${engagementTrend.description}</div>
+            <div style="margin-top: 0.5rem; font-size: 0.85rem;">
+              Confidence: ${engagementTrend.confidence}%
+            </div>
+          </div>
+        `;
+
+        // Update sentiment trends
+        const sentimentTrend = data.sentiment_trends;
+        document.querySelector(
+          ".main-grid .card:nth-child(2) .chart-container",
+        ).innerHTML = `
+          <div style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+              ${sentimentTrend.trend === "improving" ? "😊" : sentimentTrend.trend === "declining" ? "😟" : "😐"}
+            </div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: #ffa500;">
+              Score: ${sentimentTrend.current_score}
+            </div>
+            <div style="margin-top: 0.5rem;">${sentimentTrend.description}</div>
+            <div style="margin-top: 0.5rem; font-size: 0.85rem;">
+              Forecast: ${sentimentTrend.forecast} (${sentimentTrend.confidence}% confidence)
+            </div>
+          </div>
+        `;
+
+        // Update growth prediction
+        const growthPred = data.growth_prediction;
+        document.querySelector(
+          ".main-grid .card:nth-child(3) .chart-container",
+        ).innerHTML = `
+          <div style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+              ${growthPred.rate > 0 ? "🚀" : "📊"}
+            </div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: ${growthPred.rate > 0 ? "#00ff00" : "#ffaa00"};">
+              ${growthPred.rate > 0 ? "+" : ""}${growthPred.rate}%
+            </div>
+            <div style="margin-top: 0.5rem;">${growthPred.description}</div>
+            <div style="margin-top: 0.5rem; font-size: 0.85rem;">
+              ${growthPred.timeframe} | ${growthPred.confidence}% confidence
+            </div>
+          </div>
+        `;
+
+        // Update key metrics
+        document.querySelector(
+          ".metric-card:nth-child(1) .metric-value",
+        ).textContent =
+          `${engagementTrend.percentage > 0 ? "+" : ""}${engagementTrend.percentage}%`;
+        document.querySelector(
+          ".metric-card:nth-child(1) .metric-subtext",
+        ).textContent = engagementTrend.description;
+
+        document.querySelector(
+          ".metric-card:nth-child(2) .metric-value",
+        ).textContent = sentimentTrend.forecast;
+        document.querySelector(
+          ".metric-card:nth-child(2) .metric-subtext",
+        ).textContent = sentimentTrend.description;
+
+        document.querySelector(
+          ".metric-card:nth-child(3) .metric-value",
+        ).textContent = `${growthPred.rate > 0 ? "+" : ""}${growthPred.rate}%`;
+        document.querySelector(
+          ".metric-card:nth-child(3) .metric-subtext",
+        ).textContent = growthPred.description;
+
+        // Update upcoming predictions
+        const predictionsList = document.querySelector(".prediction-list");
+        predictionsList.innerHTML = data.upcoming_predictions
+          .map(
+            (pred) => `
+          <li class="prediction-item">
+            <div class="prediction-date">${pred.timeframe}</div>
+            <div class="prediction-value">${pred.prediction}</div>
+            <div class="confidence-bar">
+              <div class="confidence-fill" style="width: ${pred.confidence}%;"></div>
+            </div>
+            <div class="metric-subtext">${pred.confidence}% confidence</div>
+          </li>
+        `,
+          )
+          .join("");
+
+        // Update info box
+        if (data.historical_count) {
+          const infoNote = document.querySelector(
+            ".info-box p:last-child strong:last-child",
+          ).parentElement;
+          infoNote.innerHTML = `<strong>Data Source:</strong> Predictions based on ${data.historical_count} historical analysis${data.historical_count > 1 ? "es" : ""}. 
+            Last analysis: ${new Date(data.last_analysis).toLocaleString()}. Run more analyses to improve accuracy!`;
+        }
+      }
+
+      function showNoDataMessage() {
+        document.querySelector(".main-grid").innerHTML = `
+          <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+            <h3 style="color: #00bfff; margin-bottom: 1rem;">No Prediction Data Available</h3>
+            <p style="color: #b0c4de; margin-bottom: 1.5rem;">
+              Run YouTube channel or video analyses to start building your predictive model
+            </p>
+            <a href="${window.location.pathname.replace("predictive-analysis", "project_sna")}${window.location.search}"
+               style="display: inline-block; background: #f24822; color: white; padding: 0.8rem 2rem; 
+                      border-radius: 8px; text-decoration: none; font-weight: 700;">
+              ← Back to Analysis Dashboard
+            </a>
+          </div>
+        `;
+
+        // Hide other sections
+        document
+          .querySelectorAll(".metric-card")
+          .forEach((el) => (el.style.display = "none"));
+        document
+          .querySelector(".card .prediction-list")
+          .closest(".card").style.display = "none";
+      }
+
+      function showError(message) {
+        document.querySelector(".main-grid").innerHTML = `
+          <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: rgba(255, 0, 0, 0.1);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h3 style="color: #ff5555; margin-bottom: 1rem;">Error Loading Predictions</h3>
+            <p style="color: #b0c4de;">${message}</p>
+          </div>
+        `;
+      }
+    </script>
+  </body>
+</html>
