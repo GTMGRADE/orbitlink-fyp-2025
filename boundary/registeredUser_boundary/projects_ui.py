@@ -18,7 +18,7 @@ def get_user_id():
 
 def get_current_user():
     """Get current user object from session"""
-    from controller.registeredUser_controller.user_controller import user_controller
+    from Controller.registeredUser_controller.user_controller import user_controller
     return user_controller.get_user(session.get("user_type"), session.get("user_id"))
 
 
