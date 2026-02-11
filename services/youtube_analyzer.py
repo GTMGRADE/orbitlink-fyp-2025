@@ -509,7 +509,7 @@ class YouTubeAnalyzer:
         return sorted(influencers, key=lambda x: x['total_score'], reverse=True)
     
     def detect_communities(self, all_comments, reply_edges):
-        """Detect communities using Louvain method"""
+        """Detect communities using enhanced Louvain method with multi-resolution optimization"""
         try:
             # Build interaction graph
             G = nx.Graph()
@@ -534,21 +534,60 @@ class YouTubeAnalyzer:
                     'communities': [],
                     'modularity': 0,
                     'num_communities': 0,
-                    'user_to_community': {}
+                    'user_to_community': {},
+                    'resolution_used': 1.0
                 }
             
-            # Detect communities using Louvain method
-            user_to_community = community_louvain.best_partition(G)
-            modularity = community_louvain.modularity(user_to_community, G)
+            # Multi-resolution community detection - find optimal resolution
+            print("[COMMUNITIES] Testing multiple resolutions for optimal community structure...")
+            best_partition = None
+            best_modularity = -1
+            best_resolution = 1.0
             
-            # Calculate community statistics
+            for resolution in [0.5, 1.0, 1.5, 2.0]:
+                try:
+                    partition = community_louvain.best_partition(G, resolution=resolution)
+                    modularity = community_louvain.modularity(partition, G)
+                    
+                    print(f"[COMMUNITIES] Resolution {resolution}: Modularity={modularity:.4f}, Communities={len(set(partition.values()))}")
+                    
+                    if modularity > best_modularity:
+                        best_modularity = modularity
+                        best_partition = partition
+                        best_resolution = resolution
+                except Exception as e:
+                    print(f"[COMMUNITIES] Warning: Resolution {resolution} failed: {e}")
+                    continue
+            
+            # Use best partition found, or fallback to default
+            if best_partition is None:
+                print("[COMMUNITIES] Using default resolution")
+                best_partition = community_louvain.best_partition(G)
+                best_modularity = community_louvain.modularity(best_partition, G)
+                best_resolution = 1.0
+            
+            user_to_community = best_partition
+            modularity = best_modularity
+            
+            print(f"[COMMUNITIES] Optimal resolution: {best_resolution}, Modularity: {modularity:.4f}")
+            
+            # Calculate advanced network metrics
+            print("[COMMUNITIES] Calculating network metrics...")
+            pagerank_scores = nx.pagerank(G, weight='weight')
+            betweenness_scores = nx.betweenness_centrality(G, weight='weight')
+            clustering_coeffs = nx.clustering(G, weight='weight')
+            
+            # Calculate community statistics with enhanced metrics
             community_stats = defaultdict(lambda: {
                 'members': [],
                 'member_names': [],
                 'total_comments': 0,
                 'total_likes': 0,
                 'avg_sentiment': 0,
-                'sentiment_count': 0
+                'sentiment_count': 0,
+                'pagerank_scores': {},
+                'betweenness_scores': {},
+                'clustering_scores': {}
             })
             
             for comment in all_comments:
@@ -560,6 +599,9 @@ class YouTubeAnalyzer:
                     if author_id not in stats['members']:
                         stats['members'].append(author_id)
                         stats['member_names'].append(comment['author_name'])
+                        stats['pagerank_scores'][author_id] = pagerank_scores.get(author_id, 0)
+                        stats['betweenness_scores'][author_id] = betweenness_scores.get(author_id, 0)
+                        stats['clustering_scores'][author_id] = clustering_coeffs.get(author_id, 0)
                     
                     stats['total_comments'] += 1
                     stats['total_likes'] += comment['like_count']
@@ -567,32 +609,62 @@ class YouTubeAnalyzer:
                                              comment['sentiment_polarity']) / (stats['sentiment_count'] + 1)
                     stats['sentiment_count'] += 1
             
-            # Format communities list
+            # Format communities list with enhanced metrics
             communities = []
             for comm_id, stats in sorted(community_stats.items(), key=lambda x: len(x[1]['members']), reverse=True):
+                # Find top influencer by PageRank
+                top_influencer_id = max(stats['pagerank_scores'], key=stats['pagerank_scores'].get) if stats['pagerank_scores'] else None
+                top_influencer_name = next((name for uid, name in zip(stats['members'], stats['member_names']) if uid == top_influencer_id), 'Unknown')
+                
+                # Find bridge users (high betweenness centrality)
+                if stats['betweenness_scores']:
+                    sorted_betweenness = sorted(stats['betweenness_scores'].items(), key=lambda x: x[1], reverse=True)
+                    bridge_users = [uid for uid, score in sorted_betweenness[:3] if score > 0]
+                else:
+                    bridge_users = []
+                
+                # Calculate average clustering coefficient
+                avg_clustering = np.mean(list(stats['clustering_scores'].values())) if stats['clustering_scores'] else 0
+                
+                # Build community subgraph for density
+                subgraph = G.subgraph(stats['members'])
+                density = nx.density(subgraph) if len(stats['members']) > 1 else 0
+                
                 communities.append({
                     'community_id': comm_id,
                     'size': len(stats['members']),
                     'total_comments': stats['total_comments'],
                     'total_likes': stats['total_likes'],
                     'avg_sentiment': round(stats['avg_sentiment'], 3),
-                    'top_members': stats['member_names'][:5]
+                    'top_members': stats['member_names'][:5],
+                    'top_influencer': top_influencer_name,
+                    'top_influencer_id': top_influencer_id,
+                    'top_influencer_score': round(stats['pagerank_scores'].get(top_influencer_id, 0), 4) if top_influencer_id else 0,
+                    'bridge_users': [next((name for uid, name in zip(stats['members'], stats['member_names']) if uid == b_uid), 'Unknown') for b_uid in bridge_users[:2]],
+                    'clustering_coefficient': round(avg_clustering, 3),
+                    'density': round(density, 3)
                 })
+            
+            print(f"[COMMUNITIES] Detected {len(communities)} communities with enhanced metrics")
             
             return {
                 'communities': communities,
                 'modularity': round(modularity, 3),
                 'num_communities': len(communities),
-                'user_to_community': user_to_community
+                'user_to_community': user_to_community,
+                'resolution_used': best_resolution
             }
             
         except Exception as e:
             print(f"Error detecting communities: {e}")
+            import traceback
+            traceback.print_exc()
             return {
                 'communities': [],
                 'modularity': 0,
                 'num_communities': 0,
-                'user_to_community': {}
+                'user_to_community': {},
+                'resolution_used': 1.0
             }
     
     def generate_community_network_visualization(self, all_comments, reply_edges, user_to_community):

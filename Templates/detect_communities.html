@@ -458,71 +458,121 @@
         }
 
         function displayCommunityData(communityData) {
-          // Create a summary display
+          // Create a summary display with enhanced metrics
           const summaryHtml = `
             <div class="card" style="margin-bottom: 2rem;">
               <h2 style="margin-bottom: 1rem; font-size: 1.5rem;">Community Detection Results</h2>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                 <div class="metric-card">
                   <div class="metric-label">Total Communities</div>
-                  <div class="metric-value">${
-                    communityData.num_communities
-                  }</div>
+                  <div class="metric-value">${communityData.num_communities || 0}</div>
                 </div>
                 <div class="metric-card">
                   <div class="metric-label">Modularity Score</div>
-                  <div class="metric-value">${communityData.modularity}</div>
+                  <div class="metric-value">${communityData.modularity || 0}</div>
+                  <div class="metric-change" style="color: ${(communityData.modularity || 0) > 0.7 ? '#4ade80' : (communityData.modularity || 0) > 0.5 ? '#fbbf24' : '#f87171'}">
+                    ${(communityData.modularity || 0) > 0.7 ? 'Excellent' : (communityData.modularity || 0) > 0.5 ? 'Good' : 'Fair'}
+                  </div>
                 </div>
                 <div class="metric-card">
                   <div class="metric-label">Largest Community</div>
-                  <div class="metric-value">${
-                    communityData.communities[0]?.size || 0
-                  }</div>
+                  <div class="metric-value">${communityData.communities?.[0]?.size || 0}</div>
                   <div class="metric-change">members</div>
                 </div>
+                ${communityData.resolution_used ? `
+                <div class="metric-card">
+                  <div class="metric-label">Resolution Used</div>
+                  <div class="metric-value" style="font-size: 2rem;">${communityData.resolution_used}</div>
+                  <div class="metric-change">optimized</div>
+                </div>
+                ` : ''}
               </div>
             </div>
             
-            ${
-              communityData.network_visualization
-                ? `
+            ${communityData.network_visualization ? `
               <div class="card" style="margin-bottom: 2rem;">
                 <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Community Network Visualization</h3>
                 <img src="data:image/png;base64,${communityData.network_visualization}" 
                      style="width: 100%; border-radius: 8px; background: white;" 
                      alt="Community Network Graph" />
               </div>
-            `
-                : ""
-            }
+            ` : ''}
             
-            <div class="card">
+            <div class="card" style="margin-bottom: 2rem;">
               <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Top Communities</h3>
-              <div class="communities-grid">
-                ${communityData.communities
+              <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                ${(communityData.communities || [])
                   .slice(0, 6)
-                  .map(
-                    (comm) => `
-                  <div class="community-btn" style="text-align: left; padding: 1.2rem;">
-                    <div style="font-weight: 700; margin-bottom: 0.5rem;">Community ${
-                      comm.community_id
-                    }</div>
-                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">
-                      👥 ${comm.size} members<br/>
-                      💬 ${comm.total_comments} comments<br/>
-                      😊 Sentiment: ${
-                        comm.avg_sentiment > 0 ? "👍" : "👎"
-                      } ${Math.abs(comm.avg_sentiment).toFixed(2)}
-                    </div>
-                  </div>
-                `
-                  )
+                  .map((comm, index) => {
+                    const hasEnhancedMetrics = comm.top_influencer || comm.clustering_coefficient !== undefined || comm.density !== undefined;
+                    
+                    if (hasEnhancedMetrics) {
+                      // Enhanced display with detailed metrics
+                      return `
+                        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; border-left: 4px solid ${getColor(index)};">
+                          <div style="display: grid; grid-template-columns: 1fr ${comm.top_influencer || (comm.bridge_users && comm.bridge_users.length > 0) ? '1.5fr' : '0fr'}; gap: 1.5rem;">
+                            <div>
+                              <div style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.8rem; color: ${getColor(index)};">
+                                Community ${comm.community_id}
+                              </div>
+                              <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.8; word-wrap: break-word;">
+                                👥 <strong>${comm.size}</strong> members<br/>
+                                💬 <strong>${comm.total_comments}</strong> comments<br/>
+                                ❤️ <strong>${comm.total_likes}</strong> likes<br/>
+                                ${comm.avg_sentiment !== undefined ? `😊 Sentiment: <strong style="color: ${comm.avg_sentiment > 0 ? '#4ade80' : '#f87171'}">${comm.avg_sentiment > 0 ? '+' : ''}${comm.avg_sentiment.toFixed(2)}</strong><br/>` : ''}
+                                ${comm.clustering_coefficient !== undefined ? `🔗 Cohesion: <strong>${(comm.clustering_coefficient * 100).toFixed(0)}%</strong><br/>` : ''}
+                                ${comm.density !== undefined ? `📊 Density: <strong>${(comm.density * 100).toFixed(0)}%</strong>` : ''}
+                              </div>
+                            </div>
+                            ${comm.top_influencer || (comm.bridge_users && comm.bridge_users.length > 0) ? `
+                            <div style="word-wrap: break-word; overflow-wrap: break-word;">
+                              ${comm.top_influencer ? `
+                                <div style="margin-bottom: 1rem;">
+                                  <div style="font-size: 0.85rem; color: #60a5fa; font-weight: 600; margin-bottom: 0.5rem;">⭐ Top Influencer (PageRank):</div>
+                                  <div style="font-size: 0.8rem; color: rgba(255,255,255,0.8); line-height: 1.5; word-wrap: break-word;">
+                                    ${comm.top_influencer} ${comm.top_influencer_score ? `(Score: ${comm.top_influencer_score})` : ''}
+                                  </div>
+                                </div>
+                              ` : ''}
+                              
+                              ${comm.bridge_users && comm.bridge_users.length > 0 ? `
+                                <div>
+                                  <div style="font-size: 0.85rem; color: #a78bfa; font-weight: 600; margin-bottom: 0.5rem;">🌉 Bridge Users:</div>
+                                  <div style="font-size: 0.8rem; color: rgba(255,255,255,0.8); line-height: 1.5; word-wrap: break-word;">
+                                    ${comm.bridge_users.join(', ')}
+                                  </div>
+                                </div>
+                              ` : ''}
+                            </div>
+                            ` : ''}
+                          </div>
+                        </div>
+                      `;
+                    } else {
+                      // Simple display for basic community data
+                      return `
+                        <div class="community-btn" style="text-align: left; padding: 1.2rem;">
+                          <div style="font-weight: 700; margin-bottom: 0.5rem;">Community ${comm.community_id}</div>
+                          <div style="font-size: 0.85rem; color: rgba(255,255,255,0.8); line-height: 1.6;">
+                            👥 ${comm.size} members<br/>
+                            💬 ${comm.total_comments} comments<br/>
+                            ${comm.avg_sentiment !== undefined ? `😊 Sentiment: ${comm.avg_sentiment > 0 ? "👍" : "👎"} ${Math.abs(comm.avg_sentiment).toFixed(2)}` : ''}
+                          </div>
+                        </div>
+                      `;
+                    }
+                  })
                   .join("")}
               </div>
             </div>
           `;
 
           dashboardContainer.innerHTML = summaryHtml;
+        }
+        
+        function getColor(index) {
+          const colors = ['#ff5722', '#ff7043', '#ff8a65', '#ffab91', '#ffccbc', '#fbe9e7'];
+          return colors[index % colors.length];
         }
 
         function showFallback() {
