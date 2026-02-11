@@ -1,8 +1,10 @@
 # boundary/admin_ui_boundary.py
-from flask import Blueprint, render_template, redirect, url_for, request, session, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, session, jsonify, flash
 from Controller.admin_controller.admin_edit_website_content_controller import AdminEditWebsiteContentController
+
 from entity.website_content_entity import WebsiteContentEntity
 import json
+
 
 admin_ui_bp = Blueprint("admin_ui", __name__)
 
@@ -25,6 +27,7 @@ def admin_home():
 @admin_ui_bp.get("/admin/logout")
 def admin_logout():
     session.clear()
+    flash("You have been successfully logged out.", "success")
     return redirect(url_for("landing.landing_page"))
 
 
@@ -53,6 +56,10 @@ def admin_edit_website_page():
     if page is None:
         return render_template("admin_web_editor.html", error="Page not found.", page_id=page_id)
 
+    # Convert ObjectId to string for JSON serialization
+    if page and '_id' in page:
+        page['_id'] = str(page['_id'])
+
     # Pretty-print JSON content for editor textarea if possible
     try:
         raw = page.get('content')
@@ -72,12 +79,28 @@ def admin_edit_website_submit():
 
     page_id = int(request.form.get("page_id", 1))
     updated_content = request.form.get("content", "")
+    
+    # DEBUG: Log what was received from the form
+    print(f"[ADMIN_SAVE] ========== FORM SUBMISSION ==========")
+    print(f"[ADMIN_SAVE] page_id: {page_id}")
+    print(f"[ADMIN_SAVE] content length: {len(updated_content)}")
+    print(f"[ADMIN_SAVE] content: {updated_content[:500] if updated_content else 'EMPTY'}")
+    print(f"[ADMIN_SAVE] =====================================")
 
     controller = AdminEditWebsiteContentController()
     result = controller.handle(page_id, updated_content)
 
     if result.get("ok"):
         page = result["page"]
+        
+        # Clear landing content cache so changes appear immediately
+        from entity.landing_content import LandingContent
+        LandingContent.clear_cache()
+        print("[ADMIN_SAVE] Landing content cache cleared")
+        
+        # Convert ObjectId to string for JSON serialization
+        if page and '_id' in page:
+            page['_id'] = str(page['_id'])
         try:
             raw = page.get('content')
             if isinstance(raw, str):
@@ -88,12 +111,12 @@ def admin_edit_website_submit():
         return render_template("admin_web_editor.html", success="Updated!", page=page)
 
     page = WebsiteContentEntity.get_content(page_id)
+    # Convert ObjectId to string for JSON serialization
+    if page and '_id' in page:
+        page['_id'] = str(page['_id'])
     return render_template(
         "admin_web_editor.html",
         error=result.get("error", "Content update failed."),
         page=page,
         page_id=page_id
     )
-
-
-

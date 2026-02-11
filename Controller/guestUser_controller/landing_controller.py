@@ -10,6 +10,8 @@ class LandingPageController:
         logger.info("Fetching landing page data")
         try:
             data = LandingContent.get_content()
+            print(f"[CONTROLLER] data keys: {data.keys()}")
+            print(f"[CONTROLLER] pricing from data: {data.get('pricing')}")
             contact = data.get('contact') or {}
             return {
                 'page_title': data.get('headline'),
@@ -23,7 +25,8 @@ class LandingPageController:
                 'about_us': contact.get('about_us'),
                 'has_data': True
             }
-        except Exception:
+        except Exception as e:
+            print(f"[CONTROLLER] ERROR: {e}")
             return {
                 'page_title': 'Social Network Analysis Platform',
                 'description': 'Analyze social networks, detect communities, track influencers and measure sentiment with our powerful analytics platform.',

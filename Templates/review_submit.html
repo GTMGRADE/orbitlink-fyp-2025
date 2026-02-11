@@ -243,7 +243,13 @@
     <nav class="navbar">
         <a href="{{ url_for('projects.dashboard') }}" class="logo">OrbitLink</a>
         <div class="nav-links">
-            <a href="{{ url_for('projects.dashboard') }}">Back to Dashboard</a>
+            {% if referrer == 'sna' %}
+                <a href="{{ url_for('projects.project_sna') }}">Back to SNA Page</a>
+            {% elif referrer == 'analysis' %}
+                <a href="javascript:history.back()">Back to Analysis</a>
+            {% else %}
+                <a href="{{ url_for('projects.dashboard') }}">Back to Dashboard</a>
+            {% endif %}
         </div>
     </nav>
     

@@ -11,12 +11,20 @@ import os
 from textblob import TextBlob
 import networkx as nx
 import community as community_louvain
+
+# Set matplotlib backend BEFORE importing matplotlib
+os.environ['MPLBACKEND'] = 'Agg'
+
 try:
     import matplotlib
     matplotlib.use('Agg')  # Non-interactive backend for server environments
     import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
 except Exception as e:
     print(f"[WARNING] Matplotlib import failed: {e}")
+    import traceback
+    traceback.print_exc()
+    MATPLOTLIB_AVAILABLE = False
     matplotlib = None
     plt = None
 import base64
@@ -590,6 +598,10 @@ class YouTubeAnalyzer:
     def generate_community_network_visualization(self, all_comments, reply_edges, user_to_community):
         """Generate network visualization with communities colored"""
         try:
+            if not MATPLOTLIB_AVAILABLE or plt is None:
+                print("[WARNING] Matplotlib not available for community visualization")
+                return None
+            
             if not user_to_community or len(user_to_community) == 0:
                 return None
             

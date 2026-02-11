@@ -124,7 +124,6 @@ tmp/
 *.swp   
 # Coverage reports
 .coverage
-<<<<<<< HEAD
 
 # Firebase credentials (sensitive)
 **/firebase-key.json
@@ -132,7 +131,8 @@ tmp/
 DatabaseExtract/firebase-key.json
 DatabaseExtract/firebase-keynotadmin.json
 
-# Hugging Face / model cache
-models/sentiment_bert/
-=======
->>>>>>> origin/feature/gautam
+# ML Models (downloaded at runtime via Hugging Face)
+models/
+*.msgpack
+*.safetensors
+*.h5

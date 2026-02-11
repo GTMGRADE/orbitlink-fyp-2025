@@ -1,15 +1,14 @@
-# controllers/admin_view_feedback_controller.py (UPDATE)
-from entity.review import Review
+# controllers/admin_view_feedback_controller.py
+from entity.feedback_entity import FeedbackEntity
 
 class AdminViewFeedbackController:
-    def handle(self) -> dict:
+    def handle(self) -> list[dict]:
         """
-        Return feedback statistics and list.
+        Return feedback list (empty list if none).
+
+        Boundary responsibilities:
+        - check session/admin auth
+        - decide UI message if list is empty
+        - jsonify/render the response
         """
-        reviews = Review.get_all_active_reviews()
-        stats = Review.get_review_stats()
-        
-        return {
-            'reviews': reviews,
-            'stats': stats
-        }
+        return FeedbackEntity.get_all_feedback()

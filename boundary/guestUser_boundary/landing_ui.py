@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify, make_response
 from Controller.guestUser_controller.landing_controller import LandingPageController
 from Controller.guestUser_controller.contact_controller import ContactController
 import logging
 
 logger = logging.getLogger(__name__)
 
-landing_bp = Blueprint('landing', __name__, template_folder='templates')
+landing_bp = Blueprint('landing', __name__, template_folder='../../Templates')
 
 @landing_bp.route('/')
 def landing_page():
@@ -20,7 +20,14 @@ def landing_page():
     
     # Merge data
     data = {**landing_data, **contact_data}
-    return render_template('landing.html', **data)
+    response = make_response(render_template('landing.html', **data))
+    
+    # Prevent browser caching so admin changes show immediately
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @landing_bp.route('/contact', methods=['POST'])
 def contact_submit():

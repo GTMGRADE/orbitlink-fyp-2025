@@ -23,46 +23,76 @@
       }
       .sidebar {
         background: #f24822;
-        padding: 1rem 0.8rem;
+        padding: 1.2rem 0.8rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.2rem;
+        position: relative;
       }
+      
+      /* Brand - More Compact, Aligned with Dashboard */
+      .brand-section {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.8rem;
+        margin-bottom: 0.2rem;
+      }
+      
       .brand {
-        font-weight: 800;
-        font-size: 1.4rem;
-        margin: 0.5rem 0.4rem;
+        font-size: 1.9rem;
+        font-weight: bold;
+        color: black;
+        line-height: 1;
       }
+      
+      /* Create Button - More Compact (Matching Dashboard) */
       .create-btn {
         background: #14294a;
-        color: #fff;
-        border-radius: 16px;
-        padding: 1rem;
+        color: white;
+        border-radius: 10px;
+        padding: 0.9rem 0.8rem;
         text-align: center;
-        font-weight: 800;
-      }
-      .create-btn a {
-        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
         text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
+      
+      .create-btn:hover {
+        background: #0f1c3d;
+        transform: translateY(-1px);
+      }
+      
+      /* Menu - Moved Higher (Matching Dashboard) */
       .menu {
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
+        margin-top: 0.3rem;
       }
+      
       .menu a {
         display: block;
-        padding: 0.7rem 0.8rem;
+        padding: 0.75rem 0.8rem;
         background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        color: white;
         text-decoration: none;
-        border-radius: 6px;
-        font-style: italic;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.9rem;
       }
+      
       .menu a.active {
-        background: rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      
+      .menu a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(3px);
       }
       .content {
         background: #0f1c3d;
@@ -246,6 +276,187 @@
         font-size: 0.8rem;
         font-weight: 600;
       }
+
+      /* Visuals Section */
+      .visuals-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+      }
+      .visuals-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      .visuals-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      .chart-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .chart-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.8rem;
+      }
+      .chart-description {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.4;
+        margin-bottom: 1rem;
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 3px solid rgba(168, 85, 247, 0.5);
+        border-radius: 4px;
+      }
+      .bar-row {
+        display: grid;
+        grid-template-columns: 120px 1fr 50px;
+        gap: 0.6rem;
+        align-items: center;
+        margin-bottom: 0.6rem;
+      }
+      .bar-label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .bar-track {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        height: 10px;
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ff3333, #ffa500);
+        border-radius: 10px;
+      }
+      .bar-value {
+        text-align: right;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .metric-rows {
+        display: grid;
+        gap: 0.6rem;
+      }
+      .metric-row {
+        display: grid;
+        grid-template-columns: 140px 1fr 60px;
+        gap: 0.6rem;
+        align-items: center;
+      }
+      .metrics-table {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .metrics-influencer {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        padding: 1rem;
+      }
+      .metrics-influencer-name {
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+      }
+      .metrics-bar-row {
+        display: grid;
+        grid-template-columns: 80px 1fr 60px;
+        gap: 0.6rem;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+      .metrics-bar-row:last-child {
+        margin-bottom: 0;
+      }
+      .metrics-bar-label {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 500;
+      }
+      .metrics-bar-track {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        height: 22px;
+        overflow: hidden;
+      }
+      .metrics-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #a855f7, #9333ea);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 8px;
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+        min-width: 30px;
+      }
+      .metrics-bar-value {
+        text-align: right;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-variant-numeric: tabular-nums;
+      }
+      .metric-name {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .metric-value {
+        text-align: right;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .scatter-wrap {
+        width: 100%;
+        height: 240px;
+      }
+      .scatter-wrap svg {
+        width: 100%;
+        height: 100%;
+      }
+      .axis-label {
+        fill: rgba(255, 255, 255, 0.7);
+        font-size: 11px;
+      }
+      .pie-wrap {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 1rem;
+        align-items: center;
+      }
+      .pie-legend {
+        display: grid;
+        gap: 0.4rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
       
       /* Loading State */
       .loading-state {
@@ -320,6 +531,26 @@
           align-items: center;
           gap: 0.5rem;
         }
+        .visuals-grid {
+          grid-template-columns: 1fr;
+        }
+        .bar-row {
+          grid-template-columns: 1fr;
+          gap: 0.3rem;
+        }
+        .bar-value {
+          text-align: left;
+        }
+        .metrics-header,
+        .metrics-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .metrics-header div:nth-child(3),
+        .metrics-header div:nth-child(4),
+        .metrics-row div:nth-child(3),
+        .metrics-row div:nth-child(4) {
+          display: none;
+        }
       }
       
       @media (max-width: 480px) {
@@ -337,16 +568,14 @@
   <body>
     <div class="layout">
       <aside class="sidebar">
-        <div class="brand">OrbitLink</div>
-        <!-- <div class="create-btn">
-          <a href="{{ url_for('projects.projects_create_get') }}">Create +</a>
-        </div> -->
+        <div class="brand-section">
+          <div class="brand">OrbitLink</div>
+        </div>
+        <a href="{{ url_for('projects.projects_create_get') }}" class="create-btn">Create +</a>
         <nav class="menu">
           <a href="{{ url_for('projects.dashboard') }}">Dashboard</a>
-          <!-- <a href="{{ url_for('projects.projects_list') }}">Projects</a> -->
-          <!-- <a href="{{ url_for('projects.project_sna') }}">Analysis</a> -->
-          <a href="#">Support</a>
-          <a href="#">Setting</a>
+          <a href="{{ url_for('review.review_page') }}?from=analysis">Rate Us</a>
+          <a href="{{ url_for('contact_support.contact_support_page') }}?from=analysis">Contact Support</a>
         </nav>
       </aside>
 
@@ -539,6 +768,11 @@
               </div>
             </div>
           </div>
+
+          <div id="influencerVisuals" class="visuals-section" style="display: none;">
+            <div class="visuals-title">Influencer Visuals</div>
+            <div id="visualsContent" class="visuals-grid"></div>
+          </div>
         </div>
       </main>
     </div>
@@ -635,6 +869,10 @@
                 </p>
               </div>
             `;
+            const visualsSection = document.getElementById('influencerVisuals');
+            if (visualsSection) {
+              visualsSection.style.display = 'none';
+            }
             return;
           }
           
@@ -727,6 +965,245 @@
           `;
           
           influencerList.innerHTML = html;
+
+          renderVisuals(influencers);
+        }
+
+        function renderVisuals(influencers) {
+          const visualsSection = document.getElementById('influencerVisuals');
+          const visualsContent = document.getElementById('visualsContent');
+          if (!visualsSection || !visualsContent) return;
+
+          const topTen = influencers.slice(0, 10);
+          const topFive = influencers.slice(0, 5);
+
+          const maxScore = Math.max(...topTen.map(i => i.total_score || 0), 1);
+          const maxComments = Math.max(...topTen.map(i => i.total_comments || 0), 1);
+          const maxLikes = Math.max(...topTen.map(i => i.total_likes || 0), 1);
+          const maxReplies = Math.max(...topTen.map(i => i.replies_received || i.total_replies_received || 0), 1);
+
+          const scoreBars = topTen.map(i => {
+            const value = i.total_score || 0;
+            const width = Math.round((value / maxScore) * 100);
+            return `
+              <div class="bar-row">
+                <div class="bar-label">${i.author_name || 'Unknown'}</div>
+                <div class="bar-track"><div class="bar-fill" style="width: ${width}%;"></div></div>
+                <div class="bar-value">${value.toFixed ? value.toFixed(1) : value}</div>
+              </div>
+            `;
+          }).join('');
+
+          const engagementRows = topFive.map(i => {
+            const comments = i.total_comments || 0;
+            const likes = i.total_likes || 0;
+            const replies = i.replies_received || i.total_replies_received || 0;
+            
+            const commentsWidth = maxComments ? Math.round((comments / maxComments) * 100) : 0;
+            const likesWidth = maxLikes ? Math.round((likes / maxLikes) * 100) : 0;
+            const repliesWidth = maxReplies ? Math.round((replies / maxReplies) * 100) : 0;
+            
+            return `
+              <div class="metrics-influencer">
+                <div class="metrics-influencer-name">${i.author_name || 'Unknown'}</div>
+                
+                <div class="metrics-bar-row">
+                  <div class="metrics-bar-label">Comments</div>
+                  <div class="metrics-bar-track">
+                    <div class="metrics-bar-fill" style="width: ${commentsWidth}%;"></div>
+                  </div>
+                  <div class="metrics-bar-value">${comments.toLocaleString ? comments.toLocaleString() : comments}</div>
+                </div>
+                
+                <div class="metrics-bar-row">
+                  <div class="metrics-bar-label">Likes</div>
+                  <div class="metrics-bar-track">
+                    <div class="metrics-bar-fill" style="width: ${likesWidth}%;"></div>
+                  </div>
+                  <div class="metrics-bar-value">${likes.toLocaleString ? likes.toLocaleString() : likes}</div>
+                </div>
+                
+                <div class="metrics-bar-row">
+                  <div class="metrics-bar-label">Replies</div>
+                  <div class="metrics-bar-track">
+                    <div class="metrics-bar-fill" style="width: ${repliesWidth}%;"></div>
+                  </div>
+                  <div class="metrics-bar-value">${replies.toLocaleString ? replies.toLocaleString() : replies}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          const components = [
+            { key: 'engagement_score', label: 'Engagement' },
+            { key: 'network_score', label: 'Network' },
+            { key: 'quality_score', label: 'Quality' },
+            { key: 'consistency_score', label: 'Consistency' }
+          ];
+
+          const avgScores = components.map(c => {
+            const vals = topTen.map(i => i[c.key] || 0);
+            const avg = vals.reduce((a, b) => a + b, 0) / Math.max(vals.length, 1);
+            return { label: c.label, value: avg };
+          });
+
+          const compositionPie = buildPieSvg(avgScores);
+          const scatterSvg = buildScatterSvg(topTen);
+
+          visualsContent.innerHTML = `
+            <div class="chart-card">
+              <div class="chart-title">Top 10 Influencers by Score</div>
+              <div class="chart-description">
+                Overall influence score (0-10) based on engagement quality, network reach, content consistency, and community interaction. Higher scores indicate more influential community members.
+              </div>
+              ${scoreBars}
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">Engagement Metrics (Top 5)</div>
+              <div class="chart-description">
+                Detailed engagement breakdown showing total comments posted, likes received, and replies from others. These metrics reveal each influencer's activity level and community response.
+              </div>
+              <div class="metrics-table">
+                ${engagementRows}
+              </div>
+            </div>
+            <div class="chart-card" style="grid-column: 1 / -1;">
+              <div class="chart-title">Average Score Composition</div>
+              <div class="chart-description">
+                Percentage breakdown of the four core scoring components averaged across top influencers. This shows which factors contribute most to overall influence scores.
+              </div>
+              ${compositionPie}
+              <div style="height: 1px; background: rgba(255, 255, 255, 0.08); margin: 1rem 0;"></div>
+              <div class="chart-title" style="margin-bottom: 0.6rem;">Video Participation vs Influence Score</div>
+              <div class="chart-description">
+                Scatter plot showing the relationship between how many unique videos each influencer comments on (x-axis) and their total influence score (y-axis). Colors indicate score ranges: green (8+), orange (6-8), red (<6).
+              </div>
+              <div class="scatter-wrap">${scatterSvg}</div>
+            </div>
+          `;
+
+          visualsSection.style.display = 'block';
+        }
+
+        function buildScatterSvg(influencers) {
+          const width = 800;
+          const height = 280;
+          const padLeft = 60;
+          const padBottom = 50;
+          const padTop = 20;
+          const padRight = 20;
+
+          const xs = influencers.map(i => i.unique_videos || 0);
+          const ys = influencers.map(i => i.total_score || 0);
+          const minX = 0;
+          const maxX = Math.max(...xs, 10);
+          const minY = 0;
+          const maxY = 10;
+
+          const plotW = width - padLeft - padRight;
+          const plotH = height - padTop - padBottom;
+
+          const scaleX = (v) => padLeft + ((v - minX) / (maxX - minX || 1)) * plotW;
+          const scaleY = (v) => padTop + (1 - (v - minY) / (maxY - minY || 1)) * plotH;
+
+          // Y-axis grid lines (horizontal) for influence score
+          const gridLines = [0, 2, 4, 6, 8, 10].map(t => {
+            const y = scaleY(t);
+            return `
+              <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3,3" />
+              <text x="${padLeft - 10}" y="${y + 4}" text-anchor="end" class="axis-label" style="font-size: 11px; fill: rgba(255,255,255,0.6);">${t}</text>
+            `;
+          }).join('');
+
+          // X-axis ticks - show every 2 videos for cleaner look
+          const xTickInterval = Math.ceil(maxX / 10);
+          const xTicks = [];
+          for (let i = 0; i <= maxX; i += Math.max(1, xTickInterval)) {
+            xTicks.push(i);
+          }
+          
+          const xLabels = xTicks.map(t => {
+            const x = scaleX(t);
+            return `
+              <line x1="${x}" y1="${height - padBottom}" x2="${x}" y2="${height - padBottom + 5}" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+              <text x="${x}" y="${height - padBottom + 20}" text-anchor="middle" class="axis-label" style="font-size: 11px; fill: rgba(255,255,255,0.6);">${t}</text>
+            `;
+          }).join('');
+
+          const points = influencers.map(i => {
+            const x = scaleX(i.unique_videos || 0);
+            const y = scaleY(i.total_score || 0);
+            const label = (i.author_name || 'Unknown');
+            const displayName = label.length > 15 ? label.slice(0, 15) + '...' : label;
+            const score = i.total_score || 0;
+            const color = score >= 8 ? '#00ff99' : score >= 6 ? '#ffa500' : '#ff6b6b';
+            return `
+              <circle cx="${x}" cy="${y}" r="6" fill="${color}" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" opacity="0.85">
+                <title>${label} · Videos: ${i.unique_videos || 0} · Score: ${score.toFixed(2)}</title>
+              </circle>
+              <text x="${x + 10}" y="${y + 4}" style="font-size: 10px; fill: rgba(255,255,255,0.75); font-weight: 500;">${displayName}</text>
+            `;
+          }).join('');
+
+          return `
+            <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-label="Scatter plot" style="overflow: visible;">
+              ${gridLines}
+              
+              <!-- Main axes -->
+              <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+              <line x1="${padLeft}" y1="${padTop}" x2="${padLeft}" y2="${height - padBottom}" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+              
+              ${xLabels}
+              ${points}
+              
+              <!-- Axis labels -->
+              <text x="${width / 2}" y="${height - 8}" text-anchor="middle" class="axis-label" style="font-size: 13px; font-weight: 600; fill: rgba(255,255,255,0.8);">Number of Unique Videos Commented On</text>
+              <text x="20" y="${height / 2}" text-anchor="middle" class="axis-label" style="font-size: 13px; font-weight: 600; fill: rgba(255,255,255,0.8);" transform="rotate(-90 20 ${height / 2})">Influence Score (0-10)</text>
+            </svg>
+          `;
+        }
+
+        function buildPieSvg(segments) {
+          const total = segments.reduce((s, d) => s + d.value, 0) || 1;
+          const colors = ['#ff3333', '#ffa500', '#00f2fe', '#6bff98', '#6bcbff', '#ff6b6b'];
+          let current = 0;
+
+          const arcs = segments.map((d, i) => {
+            const fraction = d.value / total;
+            const start = current * 2 * Math.PI;
+            const end = (current + fraction) * 2 * Math.PI;
+            current += fraction;
+
+            const x1 = Math.cos(start);
+            const y1 = Math.sin(start);
+            const x2 = Math.cos(end);
+            const y2 = Math.sin(end);
+            const largeArc = fraction > 0.5 ? 1 : 0;
+            const path = `M 0 0 L ${x1} ${y1} A 1 1 0 ${largeArc} 1 ${x2} ${y2} Z`;
+            return `<path d="${path}" fill="${colors[i % colors.length]}" />`;
+          }).join('');
+
+          const legend = segments.map((d, i) => {
+            const percent = (d.value / total) * 100;
+            return `
+              <div class="legend-item">
+                <span class="legend-dot" style="background: ${colors[i % colors.length]};"></span>
+                <span>${d.label} (${percent.toFixed(1)}%)</span>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="pie-wrap">
+              <svg viewBox="-1.1 -1.1 2.2 2.2" width="160" height="160" aria-label="Average score composition">
+                ${arcs}
+                <circle cx="0" cy="0" r="0.45" fill="#0f1c3d"></circle>
+              </svg>
+              <div class="pie-legend">
+                ${legend}
+              </div>
+            </div>
+          `;
         }
         
         function showDefaultContent() {

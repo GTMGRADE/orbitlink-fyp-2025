@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }}</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -179,28 +181,37 @@
         }
         
         .contact-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #ff3333 0%, #cc0000 100%);
+            width: 70px;
+            height: 70px;
+            background: #ff3333;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: white;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255, 51, 51, 0.3);
         }
         
         .contact-details h4 {
             color: white;
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
         
         .contact-details p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
-            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0.3rem 0;
+        }
+        
+        .contact-details p:first-of-type {
+            font-weight: 600;
+            color: white;
         }
         
         .contact-flash {
@@ -270,7 +281,13 @@
     <nav class="navbar">
         <a href="{{ url_for('projects.dashboard') }}" class="logo">OrbitLink</a>
         <div class="nav-links">
-            <a href="{{ url_for('projects.dashboard') }}">Back to Dashboard</a>
+            {% if referrer == 'sna' %}
+                <a href="{{ url_for('projects.project_sna') }}">Back to SNA Page</a>
+            {% elif referrer == 'analysis' %}
+                <a href="javascript:history.back()">Back to Analysis</a>
+            {% else %}
+                <a href="{{ url_for('projects.dashboard') }}">Back to Dashboard</a>
+            {% endif %}
         </div>
     </nav>
     
@@ -327,16 +344,6 @@
                             <h4>EMAIL</h4>
                             <p>{{ contact_email }}</p>
                             <p>We reply within 24 hours</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>RESPONSE TIME</h4>
-                            <p>Typically within 4 hours during business hours</p>
                         </div>
                     </div>
                 </div>

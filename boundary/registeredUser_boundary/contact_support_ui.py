@@ -14,6 +14,10 @@ def contact_support_page():
     data = controller.get_contact_data()
     data['page_title'] = 'Contact Support - OrbitLink'
     
+    # Get referrer information
+    referrer = request.args.get('from', 'dashboard')
+    data['referrer'] = referrer
+    
     return render_template("contact_support.html", **data)
 
 @contact_support_bp.route("/contact-support/submit", methods=["POST"])

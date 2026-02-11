@@ -219,6 +219,40 @@ class ProjectRepository:
             return project
         return None
 
+    def unarchive(self, pid: str) -> Optional[Project]:
+        """Unarchive a project"""
+        db = get_connection()
+        if db is None:
+            return None
+        
+        try:
+            try:
+                query_id = ObjectId(pid)
+            except:
+                query_id = pid
+            
+            # Get the archived project (bypassing the archived filter)
+            doc = db.projects.find_one({
+                "_id": query_id,
+                "user_id": self.user_id,
+                "archived": True
+            })
+            
+            if not doc:
+                return None
+            
+            # Unarchive it
+            db.projects.update_one(
+                {"_id": query_id, "user_id": self.user_id},
+                {"$set": {"archived": False, "last_opened": datetime.utcnow()}}
+            )
+            
+            return self.get(pid)
+            
+        except Exception as e:
+            print(f"Error unarchiving project: {str(e)}")
+            return None
+
     def delete(self, pid: str) -> bool:
         """Delete a project"""
         db = get_connection()

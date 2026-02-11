@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for
-from Controller.projects_controller import projects_controller
+from controller.projects_controller import projects_controller
 
 logger = logging.getLogger(__name__)
 

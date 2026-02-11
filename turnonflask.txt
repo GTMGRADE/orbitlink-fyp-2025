@@ -2,10 +2,30 @@
 cd /d e:\Users\User\Downloads\FYP\codingPortion
 python app.py
 
-log in as Business (bizreg/bizpass) and Influencer (infreg/infpass)
-admin@example.com
-adminpass
+E:/Users/User/Downloads/FYP/codingPortion/.venv/Scripts/python.exe app.py
+
+Admin Account
+Email: admin@example.com
+Password: adminpass
+Business User
+Username: bizreg
+Password: bizpass
+Influencer User
+Username: infreg
+Password: infpass
+Password Reset Test User
+Email: john@example.com
+Password: johnpass
+
+
+Business User: bizreg / bizpass ✓
+Influencer User: infreg / infpass ✓
+Admin (Database): admin@example.com / adminpass ✓
+Admin (Hardcoded): admin / admin123 ✓
 
 
 After logging in, you can change the username or password
 For password reset, use john@example.com as the email
+
+
+https://www.youtube.com/@MystFGO

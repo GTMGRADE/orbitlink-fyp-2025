@@ -90,6 +90,36 @@
             padding: 0.6rem 1.2rem;
         }
 
+        /* Flash messages */
+        .flash-alert {
+            margin: 0;
+            padding: 1rem 3%;
+            color: white;
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flash-alert.success {
+            background-color: #28a745;
+        }
+
+        .flash-alert.error {
+            background-color: #dc3545;
+        }
+
+        .flash-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
         /* Hamburger + side menu styles */
         .menu-btn {
             display: inline-flex;
@@ -202,7 +232,7 @@
         }
         
         .hero-content p {
-            font-size: 1.2rem;
+            font-size: 1.35rem;
             margin-bottom: 2rem;
             opacity: 0.9;
             color: rgb(0, 0, 0);
@@ -357,6 +387,11 @@
             flex-direction: column;
             justify-content: center;
             transition: all 0.3s ease; /* ADD THIS LINE for smooth hover */
+        }
+
+        /* Hide second pricing option (Paid Subscription) */
+        .compact-price-option:nth-child(2) {
+            display: none;
         }
 
         .compact-price-option:hover {
@@ -650,25 +685,105 @@
         .image-placeholder {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             border-radius: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dashboard-card-title {
+            color: #fff;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        
+        .chart-container {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 0.3rem;
+        }
+        
+        .bar {
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            width: 18%;
+            border-radius: 3px 3px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .pie-chart {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #667eea 0deg 120deg,
+                #764ba2 120deg 240deg,
+                #f093fb 240deg 300deg,
+                #4facfe 300deg 360deg
+            );
+            margin: auto;
+        }
+        
+        .network-viz {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .network-node {
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.6);
+        }
+        
+        .network-node.large {
+            width: 18px;
+            height: 18px;
+            background: #f093fb;
+            box-shadow: 0 0 12px rgba(240, 147, 251, 0.8);
+        }
+        
+        .metric-display {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
-            padding: 2.5rem;
-            text-align: center;
         }
         
-        .image-placeholder h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
+        .metric-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .image-placeholder p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .metric-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
         }
         
         .content-spacer {
@@ -920,18 +1035,67 @@
         </nav>
     </aside>
 
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-alert {{ category }}" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close-alert flash-close" aria-label="Close">✕</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <!-- Hero Section -->
     <div id="about" class="hero-container">
         <section class="hero-section">
             <div class="hero-content">
                 <h1>{{ page_title or 'Analyze Social Networks with Smart Analytics' }}</h1>
                 <p>{{ description or 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.' }}</p>
-                <a href="#plans" class="btn">Learn More</a>
             </div>
             <div class="hero-image">
                 <div class="image-placeholder">
-                    <h3>Analytics Dashboard Preview</h3>
-                    <p>Interactive visualization of network insights</p>
+                    <!-- Sentiment Chart -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">Sentiment Distribution</div>
+                        <div class="chart-container">
+                            <div class="bar" style="height: 65%;"></div>
+                            <div class="bar" style="height: 45%;"></div>
+                            <div class="bar" style="height: 80%;"></div>
+                            <div class="bar" style="height: 55%;"></div>
+                            <div class="bar" style="height: 35%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Community Detection -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">Community Clusters</div>
+                        <div class="pie-chart"></div>
+                    </div>
+                    
+                    <!-- Network Graph -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">Network Visualization</div>
+                        <div class="network-viz">
+                            <div class="network-node large" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                            <div class="network-node" style="top: 20%; left: 30%;"></div>
+                            <div class="network-node" style="top: 25%; left: 70%;"></div>
+                            <div class="network-node" style="top: 70%; left: 25%;"></div>
+                            <div class="network-node" style="top: 75%; left: 75%;"></div>
+                            <div class="network-node" style="top: 45%; left: 15%;"></div>
+                            <div class="network-node" style="top: 55%; left: 85%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Key Metrics -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">Influencer Score</div>
+                        <div class="metric-display">
+                            <div class="metric-number">8.7</div>
+                            <div class="metric-label">Engagement Rate</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -969,8 +1133,8 @@
             </div>
             <div class="feature-simple">
                 <div class="feature-icon-simple">⚡</div>
-                <h3>Real-time Monitoring</h3>
-                <p>Track emergent events with live dashboards and instant alert notifications</p>
+                <h3>Predictive Analysis</h3>
+                <p>Forecast trends and anticipate network behavior with advanced predictive modeling</p>
             </div>
         {% endif %}
     </div>
@@ -1243,6 +1407,18 @@
         });
       }
     })();
+    </script>
+
+    <!-- Flash Message Close Handler -->
+    <script>
+      document.querySelectorAll('.close-alert').forEach(btn => {
+        btn.addEventListener('click', function() {
+                    const alert = this.closest('.flash-alert');
+                    if (alert) {
+                        alert.style.display = 'none';
+                    }
+        });
+      });
     </script>
 </body>
 </html>

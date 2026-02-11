@@ -2,6 +2,7 @@ import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session
 import json
 from flask import jsonify
+from datetime import datetime
 from Controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
 from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 
@@ -26,18 +27,9 @@ def create_projects_controller():
 
 @projects_bp.get("/dashboard")
 def dashboard():
-    logger.info("Dashboard accessed (recent projects)")
-    
-    # Check if user is logged in
-    if not get_user_id():
-        return redirect(url_for("user.login_get"))
-    
-    controller = create_projects_controller()
-    if not controller:
-        return redirect(url_for("user.login_get"))
-    
-    data = controller.view_recent()
-    return render_template("projects_dashboard.html", **data)
+    logger.info("Dashboard accessed - redirecting to projects list")
+    # Redirect to projects list to show all projects instead of just 3 recent
+    return redirect(url_for("projects.projects_list"))
 
 
 @projects_bp.get("/projects")
@@ -110,6 +102,32 @@ def projects_archive(pid: str):
     if controller:
         controller.archive(pid)
     return redirect(url_for("projects.projects_list"))
+
+
+@projects_bp.post("/projects/unarchive/<pid>")
+def projects_unarchive(pid: str):
+    # Check if user is logged in
+    if not get_user_id():
+        return redirect(url_for("user.login_get"))
+    
+    controller = create_projects_controller()
+    if controller:
+        controller.unarchive(pid)
+    return redirect(url_for("projects.projects_archived"))
+
+
+@projects_bp.get("/projects/archived")
+def projects_archived():
+    # Check if user is logged in
+    if not get_user_id():
+        return redirect(url_for("user.login_get"))
+    
+    controller = create_projects_controller()
+    if not controller:
+        return redirect(url_for("user.login_get"))
+    
+    data = controller.view_archived()
+    return render_template("projects_archived.html", **data)
 
 
 @projects_bp.post("/projects/delete/<pid>")
@@ -197,6 +215,94 @@ def detect_communities():
     return render_template("detect_communities.html")
 
 
+@projects_bp.get("/projects/predictive-analysis")
+def predictive_analysis():
+    # Check if user is logged in
+    if not get_user_id():
+        return redirect(url_for("user.login_get"))
+    
+    logger.info("Predictive Analysis page accessed")
+    return render_template("predictive_analysis.html")
+
+
+@projects_bp.get("/projects/<project_id>/predictive-data")
+def get_predictive_data(project_id: str):
+    """Get predictive analysis data for a project"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+    
+    try:
+        from services.predictive_analysis import PredictiveAnalysisService
+        service = PredictiveAnalysisService(user_id, project_id)
+        predictions = service.get_predictions()
+        return jsonify(predictions), 200
+    except Exception as e:
+        logger.error(f"Error getting predictive data: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@projects_bp.get("/projects/<project_id>/export-pdf")
+def export_analysis_pdf(project_id: str):
+    """Export all analyses as a PDF report"""
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"success": False, "error": "Not logged in"}), 401
+    
+    try:
+        from services.pdf_export import AnalysisPDFExporter
+        from services.predictive_analysis import PredictiveAnalysisService
+        from flask import send_file
+        
+        # Get current session data
+        session_controller = AnalysisSessionController(user_id, project_id)
+        session_data = session_controller.get_current_session()
+        
+        if not session_data or not session_data.get('analysis_data'):
+            return jsonify({"success": False, "error": "No analysis data available. Please run an analysis first."}), 404
+        
+        analysis_data = session_data.get('analysis_data', {})
+        project_title = session_data.get('channel_title', 'Analysis Report')
+        
+        # Get all analysis data
+        export_data = {
+            'sentiment_analysis': analysis_data.get('sentiment_analysis'),
+            'influencers': analysis_data.get('influencers', []),
+            'community_detection': analysis_data.get('community_detection'),
+        }
+        
+        # Get predictive analysis
+        try:
+            predictive_service = PredictiveAnalysisService(user_id, project_id)
+            predictive_data = predictive_service.get_predictions()
+            if predictive_data.get('success'):
+                export_data['predictive_analysis'] = predictive_data
+        except Exception as e:
+            logger.warning(f"Could not include predictive analysis: {str(e)}")
+            export_data['predictive_analysis'] = {'has_data': False}
+        
+        # Generate PDF
+        exporter = AnalysisPDFExporter()
+        pdf_buffer = exporter.generate_report(project_title, export_data)
+        
+        # Send file
+        filename = f"{project_title.replace(' ', '_')}_Analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        return send_file(
+            pdf_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=filename
+        )
+        
+    except Exception as e:
+        logger.error(f"Error generating PDF: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @projects_bp.get("/projects/data-import")
 def data_import():
     # Check if user is logged in
@@ -273,8 +379,8 @@ def analyze_youtube():
             "error": f"Analysis error: {str(e)}"
         }), 500
 
-@projects_bp.get("/projects/<int:project_id>/youtube-analyses")
-def get_youtube_analyses(project_id):
+@projects_bp.get("/projects/<project_id>/youtube-analyses")
+def get_youtube_analyses(project_id: str):
     """Get recent YouTube analyses for a project"""
     user_id = get_user_id()
     if not user_id:
@@ -288,8 +394,8 @@ def get_youtube_analyses(project_id):
         return jsonify({"success": False, "error": str(e)}), 500
     
     
-@projects_bp.get("/projects/<int:project_id>/current-session")
-def get_current_session(project_id):
+@projects_bp.get("/projects/<project_id>/current-session")
+def get_current_session(project_id: str):
     """Get current analysis session for a project"""
     user_id = get_user_id()
     if not user_id:
@@ -302,22 +408,27 @@ def get_current_session(project_id):
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-@projects_bp.post("/projects/<int:project_id>/clear-session")
-def clear_current_session(project_id):
+@projects_bp.post("/projects/<project_id>/clear-session")
+def clear_current_session(project_id: str):
     """Clear current analysis session for a project"""
+    logger.info(f"[CLEAR SESSION] Endpoint called for project_id={project_id}")
     user_id = get_user_id()
     if not user_id:
+        logger.warning(f"[CLEAR SESSION] No user_id in session")
         return jsonify({"success": False, "error": "Not logged in"}), 401
     
     try:
+        logger.info(f"[CLEAR SESSION] Clearing session for user={user_id}, project={project_id}")
         controller = AnalysisSessionController(user_id, project_id)
         success = controller.clear_session()
-        return jsonify({"success": success}), 200
+        logger.info(f"[CLEAR SESSION] Clear result: {success}")
+        return jsonify({"success": success, "message": "Session cleared"}), 200
     except Exception as e:
+        logger.error(f"[CLEAR SESSION] Error: {str(e)}", exc_info=True)
         return jsonify({"success": False, "error": str(e)}), 500
 
-@projects_bp.get("/projects/<int:project_id>/community-data")
-def get_community_data(project_id):
+@projects_bp.get("/projects/<project_id>/community-data")
+def get_community_data(project_id: str):
     """Get community detection data for a project"""
     user_id = get_user_id()
     if not user_id:
@@ -347,4 +458,44 @@ def projects_open(pid: str):
     # Pass project_id when redirecting to project_sna
     return redirect(url_for("projects.project_sna", project_id=pid))
     
+# Add this function at the top of the file, after imports
+def check_subscription_required():
+    """Check if user needs to complete subscription before accessing dashboard"""
+    user_id = get_user_id()
     
+    if not user_id:
+        return True, redirect(url_for("user.login_get"))
+    
+    # Check if user has subscription
+    try:
+        from db_config import get_connection
+        from bson import ObjectId
+        
+        db = get_connection()
+        if db is None:
+            return False, None
+        
+        try:
+            query_id = ObjectId(user_id)
+        except:
+            query_id = user_id
+        
+        user_doc = db.users.find_one(
+            {"_id": query_id},
+            {"subscription_active": 1, "role": 1}
+        )
+        
+        # Admin users don't need subscription
+        if user_doc and user_doc.get('role') == 'admin':
+            return False, None
+        
+        # Regular users need subscription
+        if user_doc and user_doc.get('subscription_active'):
+            return False, None
+        
+        # User doesn't have subscription, redirect to payment
+        return True, redirect(url_for("payment.payment_page"))
+        
+    except Exception as e:
+        logger.error(f"Error checking subscription: {str(e)}")
+        return False, None

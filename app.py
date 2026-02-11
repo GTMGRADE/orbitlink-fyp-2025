@@ -1,3 +1,4 @@
+# print("hello world")
 from flask import Flask
 from flask_mail import Mail, Message
 import os
@@ -17,7 +18,6 @@ try:
 except Exception as e:
     print(f"[WARN] Failed to preload sentiment resources: {e}")
 
-
 # unregistered user boundaries
 from boundary.guestUser_boundary.landing_ui import landing_bp
 from boundary.guestUser_boundary.reviews_ui import reviews_bp
@@ -28,7 +28,7 @@ from boundary.registeredUser_boundary.user_ui import user_bp
 from boundary.registeredUser_boundary.projects_ui import projects_bp
 from boundary.registeredUser_boundary.review_ui import review_bp
 from boundary.registeredUser_boundary.contact_support_ui import contact_support_bp
-
+from boundary.registeredUser_boundary.payment_ui import payment_bp
 
 # admin user boundaries
 from boundary.admin_boundary.admin_api_boundary import admin_api_bp
@@ -37,7 +37,7 @@ from boundary.admin_boundary.admin_ui_boundary import admin_ui_bp
 import logging
 import sys 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 app.secret_key = 'your-secret-key-here'
 
 # Disable Jinja template caching for dynamic content
@@ -63,17 +63,27 @@ app.register_blueprint(admin_api_bp)
 app.register_blueprint(admin_ui_bp)
 app.register_blueprint(review_bp)
 app.register_blueprint(contact_support_bp)
+app.register_blueprint(payment_bp)
 
 # YouTube API configuration
 app.config['YOUTUBE_API_KEY'] = os.getenv('YOUTUBE_API_KEY')
+
 logging.basicConfig(
     filename="app.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
-
 )
 
 if __name__ == '__main__':
-    print(" * Running on http://127.0.0.1:5000")
-    app.run(debug=True)
+    # Get port from environment variable (Render sets this) or default to 5000 for local dev
+    port = int(os.environ.get('PORT', 5000))
+    # Use 0.0.0.0 on Render (allows external connections), localhost for local dev
+    host = '0.0.0.0' if os.environ.get('RENDER') else 'localhost'
+    
+    if host == 'localhost':
+        print(f" * Running on http://localhost:{port}")
+    else:
+        print(f" * Running on port {port} (accessible via Render URL)")
+    
+    app.run(debug=True, host=host, port=port)
     logging.info("Application started")
