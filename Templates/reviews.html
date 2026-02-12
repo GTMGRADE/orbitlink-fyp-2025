@@ -91,6 +91,42 @@
             color: white;
         }
         
+        /* Statistics Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #F24822;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+        
         .reviews-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -214,6 +250,14 @@
         }
         
         @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
             .navbar {
                 padding: 1rem 5%;
             }
@@ -308,6 +352,24 @@
             <!-- Page Title INSIDE red container -->
             <h1 class="page-title">{{ page_title }}</h1>
             
+            <!-- Statistics Section -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value" id="avgRating">0</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="totalReviews">0</div>
+                    <div class="stat-label">Total Reviews</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="positivePercentage">0%</div>
+                    <div class="stat-label">Positive Feedback</div>
+                </div>
+            </div>
+            
             <!-- Reviews Grid -->
             <div class="reviews-grid" id="reviewsGrid">
                 <!-- Reviews will be loaded dynamically -->
@@ -361,6 +423,23 @@
 
                         reviewsGrid.appendChild(reviewCard);
                     });
+                    
+                    // Update statistics if provided
+                    if (data.stats) {
+                        document.getElementById('avgRating').textContent = data.stats.average_rating || '0';
+                        document.getElementById('totalReviews').textContent = data.stats.total_reviews || '0';
+                        document.getElementById('positivePercentage').textContent = (data.stats.positive_percentage || '0') + '%';
+                    } else if (data.average_rating !== undefined && data.total_reviews !== undefined) {
+                        // Fallback to old format
+                        document.getElementById('avgRating').textContent = data.average_rating || '0';
+                        document.getElementById('totalReviews').textContent = data.total_reviews || '0';
+                        // Calculate positive percentage if not provided
+                        if (data.reviews && data.reviews.length > 0) {
+                            const positiveCount = data.reviews.filter(r => r.rating >= 4).length;
+                            const percentage = Math.round((positiveCount / data.reviews.length) * 100);
+                            document.getElementById('positivePercentage').textContent = percentage + '%';
+                        }
+                    }
                 } else {
                     document.getElementById('reviewsGrid').innerHTML = `
                         <div class="empty-state">

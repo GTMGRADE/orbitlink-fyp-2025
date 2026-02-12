@@ -493,11 +493,52 @@
           
           <!-- REMOVED: Danger Zone title, kept only the Delete Account button -->
           <div class="delete-account-section">
-            <button class="delete-btn" onclick="return confirmDelete();">
+            <button class="delete-btn" onclick="showDeleteModal(); return false;">
               <i class="fas fa-trash"></i>
               Delete Account
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000; align-items: center; justify-content: center;">
+      <div style="background: #1e3a52; padding: 2.5rem; border-radius: 16px; max-width: 500px; width: 90%; border: 2px solid rgba(255, 51, 51, 0.5); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);">
+        <h2 style="color: #ff3333; margin-bottom: 1.5rem; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-exclamation-triangle"></i>
+          Delete Account
+        </h2>
+        
+        <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 1.5rem; line-height: 1.6;">
+          Are you sure you want to delete your account? This action <strong>cannot be undone</strong>.
+        </p>
+        
+        {% if user_has_reviews %}
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 3px solid #ffa500;">
+          <p style="color: rgba(255, 255, 255, 0.85); font-size: 0.95rem; margin-bottom: 1rem;">
+            <strong>What happens to your reviews?</strong>
+          </p>
+          
+          <label style="display: flex; align-items: flex-start; gap: 0.8rem; cursor: pointer; color: rgba(255, 255, 255, 0.9);">
+            <input type="checkbox" id="deleteReviewsCheckbox" style="margin-top: 0.2rem; width: 18px; height: 18px; cursor: pointer;">
+            <span style="font-size: 0.9rem; line-height: 1.5;">
+              Also delete my reviews<br>
+              <small style="color: rgba(255, 255, 255, 0.6);">
+                If unchecked, your reviews will remain visible but shown as "Anonymous User"
+              </small>
+            </span>
+          </label>
+        </div>
+        {% endif %}
+        
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button onclick="hideDeleteModal()" style="flex: 1; padding: 0.8rem; border: 2px solid rgba(255, 255, 255, 0.3); background: transparent; color: white; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='transparent'">
+            Cancel
+          </button>
+          <button onclick="confirmDelete()" style="flex: 1; padding: 0.8rem; background: #ff3333; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff3333'">
+            <i class="fas fa-trash"></i> Delete Account
+          </button>
         </div>
       </div>
     </div>
@@ -509,21 +550,50 @@
     </footer>
 
     <script>
+      function showDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'flex';
+      }
+      
+      function hideDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'none';
+      }
+      
       function confirmDelete() {
-        const result = confirm('⚠️ Are you sure you want to delete your account?\n\nThis action cannot be undone. All your data will be permanently removed.');
+        const checkbox = document.getElementById('deleteReviewsCheckbox');
+        const deleteReviews = checkbox ? checkbox.checked : false;
         
-        if (result) {
-          // Create a hidden form to submit the delete request
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = '{{ url_for("user.delete_account") }}';
-          document.body.appendChild(form);
-          form.submit();
-          return false;
-        }
+        // Create a hidden form to submit the delete request
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("user.delete_account") }}';
         
+        // Add hidden input for delete_reviews option
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'delete_reviews';
+        input.value = deleteReviews ? 'true' : 'false';
+        form.appendChild(input);
+        
+        document.body.appendChild(form);
+        form.submit();
         return false;
       }
+      
+      // Close modal on escape key
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          hideDeleteModal();
+        }
+      });
+      
+      // Close modal on background click
+      document.getElementById('deleteModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+          hideDeleteModal();
+        }
+      });
 
       // Add subtle hover animations
       document.querySelectorAll('.management-btn').forEach(btn => {

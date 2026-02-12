@@ -105,8 +105,10 @@
         margin-bottom: 2rem;
       }
       .title {
-        font-size: 1.8rem;
-        font-weight: 800;
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.95);
       }
       .header-buttons {
         display: flex;
@@ -127,17 +129,23 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
       .container {
-        background: linear-gradient(135deg, #1a3a52 0%, #14294a 100%);
-        padding: 2rem;
-        border-radius: 16px;
+        background: rgba(30, 58, 82, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2.5rem;
+        border-radius: 20px;
         max-width: 1200px;
         margin: 0 auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       }
       .page-title {
-        font-size: 2rem;
-        font-weight: 900;
+        font-size: 1.5rem;
+        font-weight: 600;
         margin-bottom: 2rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.9);
+        border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+        padding-bottom: 0.8rem;
       }
 
       /* Loading State */
@@ -175,17 +183,35 @@
         margin-bottom: 2rem;
       }
       .card {
-        background: #1e3a52;
-        border-radius: 12px;
+        background: rgba(30, 58, 82, 0.5);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
         padding: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(168, 85, 247, 0.2);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(168, 85, 247, 0.2);
+        border-color: rgba(168, 85, 247, 0.4);
+        background: rgba(30, 58, 82, 0.6);
       }
       .algorithm-card {
-        background: #1e3a52;
-        border-radius: 12px;
+        background: rgba(30, 58, 82, 0.5);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
         padding: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(168, 85, 247, 0.2);
         text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      .algorithm-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(168, 85, 247, 0.2);
+        border-color: rgba(168, 85, 247, 0.4);
+        background: rgba(30, 58, 82, 0.6);
       }
       .algorithm-title {
         font-weight: 700;
@@ -212,12 +238,21 @@
         color: #b0c4de;
       }
       .metric-card {
-        background: #1e3a52;
-        border-radius: 12px;
+        background: rgba(30, 58, 82, 0.5);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
         padding: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(168, 85, 247, 0.2);
         text-align: center;
         margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(168, 85, 247, 0.2);
+        border-color: rgba(168, 85, 247, 0.4);
+        background: rgba(30, 58, 82, 0.6);
       }
       .metric-label {
         font-size: 0.9rem;
