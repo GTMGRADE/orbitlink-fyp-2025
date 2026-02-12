@@ -149,6 +149,40 @@
       .profile-btn:active {
         transform: translateY(0);
       }
+      
+      /* Flash Messages */
+      .flash-message {
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        animation: slideDown 0.3s ease;
+      }
+      
+      .flash-message.error {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+      }
+      
+      .flash-message.success {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #6ee7b7;
+      }
+      
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
       /* Search Bar - More Compact */
       .search-container {
@@ -711,8 +745,13 @@
         <!-- Header - Now properly aligned with OrbitLink logo -->
         <div class="header">
           <div class="title">{{ page_title }}</div>
-          <a href="{{ url_for('user.profile') }}" class="profile-btn">Profile</a>
+          <a href="{{ url_for('user.profile') }}" class="profile-btn">
+            {% if username %}Profile: {{ username }}{% else %}Profile{% endif %}
+          </a>
         </div>
+
+        <!-- Debug: Remove this after testing -->
+        <!-- Username value: {{ username }} -->
 
         <!-- Welcome Message (only shown after registration + payment) -->
         {% if welcome_message %}
@@ -735,6 +774,18 @@
           </div>
         </div>
         {% endif %}
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+              <span>{% if category == 'error' %}❌{% elif category == 'success' %}✓{% endif %}</span>
+              <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
         <!-- Search -->
         <div class="search-container">
@@ -771,6 +822,11 @@
                 No description provided
               </p>
               {% endif %}
+              
+              <!-- Analysis Info -->
+              <div class="analysis-info" id="analysis-info-{{ p.id }}" style="display: none; margin-top: 0.5rem; padding: 0.5rem; background: rgba(242, 72, 34, 0.1); border-radius: 6px; border-left: 3px solid #f24822;">
+                <span class="analysis-text" style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.9);"></span>
+              </div>
               
               <!-- Project Metadata -->
               <div class="project-meta">
@@ -903,6 +959,40 @@
           button.addEventListener('mouseleave', function() {
             this.parentElement.style.transform = 'translateX(0)';
           });
+        });
+        
+        // Load and display analysis info for each project
+        projectCards.forEach(card => {
+          const analysisInfoDiv = card.querySelector('[id^="analysis-info-"]');
+          if (analysisInfoDiv) {
+            const projectId = analysisInfoDiv.id.replace('analysis-info-', '');
+            const storageKey = `youtubeAnalysis_${projectId}`;
+            const analysisData = sessionStorage.getItem(storageKey);
+            
+            console.log(`Checking project ${projectId}:`, analysisData ? 'Found data' : 'No data');
+            
+            if (analysisData) {
+              try {
+                const data = JSON.parse(analysisData);
+                const analysisType = data.analysis_type || 'channel';
+                const analysisText = card.querySelector('.analysis-text');
+                
+                console.log(`Project ${projectId} - Type: ${analysisType}`, data);
+                
+                if (analysisType === 'video' && data.video_metadata) {
+                  analysisText.textContent = `Video: ${data.video_metadata.title || 'Unknown Video'}`;
+                  analysisInfoDiv.style.display = 'block';
+                  console.log(`Showing video info for project ${projectId}`);
+                } else if (analysisType === 'channel' && data.channel_metadata) {
+                  analysisText.textContent = `Channel: ${data.channel_metadata.title || 'Unknown Channel'}`;
+                  analysisInfoDiv.style.display = 'block';
+                  console.log(`Showing channel info for project ${projectId}`);
+                }
+              } catch (e) {
+                console.error('Could not parse analysis data for project', projectId, e);
+              }
+            }
+          }
         });
       });
     </script

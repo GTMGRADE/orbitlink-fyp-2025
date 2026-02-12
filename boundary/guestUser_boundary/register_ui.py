@@ -75,12 +75,12 @@
 # boundary/guestUser_boundary/register_ui.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 import logging
-from controller.guestUser_controller.register_controller import RegisterController
-from controller.guestUser_controller.contact_controller import ContactController
+from Controller.guestUser_controller.register_controller import RegisterController
+from Controller.guestUser_controller.contact_controller import ContactController
 
 logger = logging.getLogger(__name__)
 
-register_bp = Blueprint('register', __name__, template_folder='templates')
+register_bp = Blueprint('register', __name__, template_folder='../../Templates')
 
 @register_bp.route('/register', methods=['GET', 'POST'])
 def register_page():

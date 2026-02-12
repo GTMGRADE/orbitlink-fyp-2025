@@ -1,10 +1,10 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import json
 from flask import jsonify
 from datetime import datetime
-from controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
-from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+from Controller.registeredUser_controller.youtube_analysis_controller import YouTubeAnalysisController
+from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
 
 logger = logging.getLogger(__name__)
 
@@ -16,9 +16,15 @@ def get_user_id():
     return session.get("user_id")
 
 
+def get_current_user():
+    """Get current user object from session"""
+    from Controller.registeredUser_controller.user_controller import user_controller
+    return user_controller.get_user(session.get("user_type"), session.get("user_id"))
+
+
 def create_projects_controller():
     """Create a projects controller for the current user"""
-    from controller.registeredUser_controller.projects_controller import ProjectsController
+    from Controller.registeredUser_controller.projects_controller import ProjectsController
     user_id = get_user_id()
     if not user_id:
         return None
@@ -46,6 +52,21 @@ def projects_list():
         return redirect(url_for("user.login_get"))
     
     data = controller.view_all(query)
+    
+    # Get current user for username display
+    logger.info("Session data: user_type=%s, user_id=%s", session.get("user_type"), session.get("user_id"))
+    user = get_current_user()
+    logger.info("User object retrieved: %s", user)
+    if user:
+        logger.info("User has username attribute: %s", hasattr(user, 'username'))
+        if hasattr(user, 'username'):
+            data['username'] = user.username
+            logger.info("Username passed to template: %s", user.username)
+        else:
+            logger.warning("User object exists but has no username attribute")
+    else:
+        logger.warning("Could not get current user for username display")
+    
     return render_template("projects_dashboard.html", **data)
 
 
@@ -68,6 +89,8 @@ def projects_create_post():
     name = request.form.get("name", "").strip()
     description = request.form.get("description", "").strip()
     
+    logger.info(f"[CREATE PROJECT] Attempting to create project: name='{name}', user_id={get_user_id()}")
+    
     if not name:
         return render_template("projects_create.html", error="Project name is required.")
     
@@ -75,7 +98,15 @@ def projects_create_post():
     if not controller:
         return redirect(url_for("user.login_get"))
     
-    controller.create(name, description)
+    project = controller.create(name, description)
+    if not project:
+        logger.warning(f"[CREATE PROJECT] Failed - duplicate name '{name}' for user {get_user_id()}")
+        return render_template("projects_create.html", 
+                             error=f"A project named '{name}' already exists. Please choose a different name.",
+                             name=name,
+                             description=description)
+    
+    logger.info(f"[CREATE PROJECT] Success - created project '{name}' with id {project.id}")
     return redirect(url_for("projects.projects_list"))
 
 @projects_bp.post("/projects/rename/<pid>")
@@ -88,7 +119,11 @@ def projects_rename(pid: str):
     if new_name:
         controller = create_projects_controller()
         if controller:
-            controller.rename(pid, new_name)
+            result = controller.rename(pid, new_name)
+            if not result:
+                flash(f"A project named '{new_name}' already exists. Please choose a different name.", "error")
+            else:
+                flash(f"Project renamed to '{new_name}' successfully.", "success")
     return redirect(url_for("projects.projects_list"))
 
 
@@ -127,6 +162,21 @@ def projects_archived():
         return redirect(url_for("user.login_get"))
     
     data = controller.view_archived()
+    
+    # Get current user for username display
+    logger.info("Archived page - Session data: user_type=%s, user_id=%s", session.get("user_type"), session.get("user_id"))
+    user = get_current_user()
+    logger.info("Archived page - User object retrieved: %s", user)
+    if user:
+        logger.info("Archived page - User has username attribute: %s", hasattr(user, 'username'))
+        if hasattr(user, 'username'):
+            data['username'] = user.username
+            logger.info("Username passed to archived template: %s", user.username)
+        else:
+            logger.warning("Archived page - User object exists but has no username attribute")
+    else:
+        logger.warning("Could not get current user for username display in archived")
+    
     return render_template("projects_archived.html", **data)
 
 

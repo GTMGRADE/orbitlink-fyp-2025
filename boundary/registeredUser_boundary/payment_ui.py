@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
-from controller.guestUser_controller.mock_payment_controller import MockPaymentController
-from controller.guestUser_controller.contact_controller import ContactController
+from Controller.guestUser_controller.mock_payment_controller import MockPaymentController
+from Controller.guestUser_controller.contact_controller import ContactController
 
 logger = logging.getLogger(__name__)
 

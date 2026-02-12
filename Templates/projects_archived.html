@@ -110,18 +110,23 @@
       }
 
       .profile-btn {
-        background: rgba(242, 72, 34, 0.1);
-        color: #f24822;
-        padding: 0.6rem 1.5rem;
-        border-radius: 8px;
         text-decoration: none;
-        font-weight: 600;
+        color: black;
+        font-weight: 700;
+        padding: 0.7rem 1.5rem;
+        background: #ff3333;
+        border-radius: 6px;
         transition: all 0.2s;
-        border: 1px solid rgba(242, 72, 34, 0.2);
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        line-height: 1;
+        height: fit-content;
+        margin-top: 0.2rem;
       }
 
       .profile-btn:hover {
-        background: rgba(242, 72, 34, 0.2);
+        background: #cc0000;
+        color: white;
         transform: translateY(-2px);
       }
 
@@ -323,9 +328,9 @@
       <main class="content">
         <div class="header">
           <div class="title">📦 Archived Projects</div>
-          <a href="{{ url_for('user.profile') }}" class="profile-btn"
-            >Profile</a
-          >
+          <a href="{{ url_for('user.profile') }}" class="profile-btn">
+            {% if username %}Profile: {{ username }}{% else %}Profile{% endif %}
+          </a>
         </div>
 
         <div class="info-banner">
@@ -351,6 +356,11 @@
                 No description provided
               </p>
               {% endif %}
+              
+              <!-- Analysis Info -->
+              <div class="analysis-info" id="analysis-info-{{ p.id }}" style="display: none; margin-top: 0.5rem; padding: 0.5rem; background: rgba(242, 72, 34, 0.1); border-radius: 6px; border-left: 3px solid #f24822;">
+                <span class="analysis-text" style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.9);"></span>
+              </div>
 
               <div class="project-meta">
                 <div class="meta-item">
@@ -437,6 +447,40 @@
           card.addEventListener("mouseleave", function () {
             this.style.transform = "translateY(0)";
           });
+        });
+        
+        // Load and display analysis info for each project
+        projectCards.forEach(card => {
+          const analysisInfoDiv = card.querySelector('[id^="analysis-info-"]');
+          if (analysisInfoDiv) {
+            const projectId = analysisInfoDiv.id.replace('analysis-info-', '');
+            const storageKey = `youtubeAnalysis_${projectId}`;
+            const analysisData = sessionStorage.getItem(storageKey);
+            
+            console.log(`[ARCHIVED] Checking project ${projectId}:`, analysisData ? 'Found data' : 'No data');
+            
+            if (analysisData) {
+              try {
+                const data = JSON.parse(analysisData);
+                const analysisType = data.analysis_type || 'channel';
+                const analysisText = card.querySelector('.analysis-text');
+                
+                console.log(`[ARCHIVED] Project ${projectId} - Type: ${analysisType}`, data);
+                
+                if (analysisType === 'video' && data.video_metadata) {
+                  analysisText.textContent = `Video: ${data.video_metadata.title || 'Unknown Video'}`;
+                  analysisInfoDiv.style.display = 'block';
+                  console.log(`[ARCHIVED] Showing video info for project ${projectId}`);
+                } else if (analysisType === 'channel' && data.channel_metadata) {
+                  analysisText.textContent = `Channel: ${data.channel_metadata.title || 'Unknown Channel'}`;
+                  analysisInfoDiv.style.display = 'block';
+                  console.log(`[ARCHIVED] Showing channel info for project ${projectId}`);
+                }
+              } catch (e) {
+                console.error('[ARCHIVED] Could not parse analysis data for project', projectId, e);
+              }
+            }
+          }
         });
       });
     </script>

@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
-from controller.registeredUser_controller.review_controller import ReviewController
-from controller.registeredUser_controller.user_controller import user_controller
+from Controller.registeredUser_controller.review_controller import ReviewController
+from Controller.registeredUser_controller.user_controller import user_controller
 
 logger = logging.getLogger(__name__)
 

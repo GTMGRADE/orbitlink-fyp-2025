@@ -1,15 +1,15 @@
 from flask import Blueprint, render_template
 from flask import jsonify
 # <<<<<<< HEAD
-from controller.guestUser_controller.reviews_controller import ReviewsController
+# from controller.guestUser_controller.reviews_controller import ReviewsController
 # =======
-from controller.guestUser_controller.reviews_controller import ReviewsController
+from Controller.guestUser_controller.reviews_controller import ReviewsController
 # >>>>>>> development
 import logging
 
 logger = logging.getLogger(__name__)
 
-reviews_bp = Blueprint('reviews', __name__, template_folder='templates')
+reviews_bp = Blueprint('reviews', __name__, template_folder='../../Templates')
 
 @reviews_bp.route('/reviews')
 def show_reviews():

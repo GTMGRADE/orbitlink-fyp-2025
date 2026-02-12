@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from controller.registeredUser_controller.user_controller import user_controller
+from Controller.registeredUser_controller.user_controller import user_controller
 
 logger = logging.getLogger(__name__)
 

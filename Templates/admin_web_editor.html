@@ -308,10 +308,68 @@
         font-size: 1rem;
       }
 
+      /* Font size controls */
+      .font-controls {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .font-label {
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .font-size-select {
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .font-size-select:focus {
+        outline: none;
+        border-color: var(--orange);
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      .font-size-select option {
+        background: var(--navy);
+        color: white;
+      }
+
+      /* Simple input styles */
+      .editor-input {
+        width: 100%;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        color: white;
+        font-size: 1rem;
+        line-height: 1.6;
+        transition: all 0.3s;
+        font-family: inherit;
+      }
+
+      .editor-input:focus {
+        outline: none;
+        border-color: var(--orange);
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 0 2px rgba(242, 72, 34, 0.2);
+      }
+
       .editor-textarea {
         width: 100%;
-        min-height: 300px;
-        padding: 1.2rem;
+        min-height: 150px;
+        padding: 1rem;
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 10px;
@@ -320,7 +378,7 @@
         line-height: 1.6;
         resize: vertical;
         transition: all 0.3s;
-        font-family: monospace;
+        font-family: inherit;
       }
 
       .editor-textarea:focus {
@@ -373,6 +431,24 @@
       .btn-secondary:hover {
         background: rgba(255, 255, 255, 0.15);
         transform: translateY(-2px);
+      }
+
+      .btn-secondary.active {
+        background: var(--orange);
+        color: black;
+        border-color: var(--orange);
+      }
+
+      /* Editor Form Layout */
+      .editor-form-wrapper {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .editor-form-column {
+        display: flex;
+        flex-direction: column;
       }
 
       /* Help Text */
@@ -624,25 +700,200 @@
           <form class="editor-form" method="POST" action="{{ url_for('admin_ui.admin_edit_website_submit') }}">
             <input type="hidden" name="page_id" value="{{ page.page_id }}" />
 
-            <div class="form-group">
-              <label class="form-label">
-                {% if page.page_id == 1 %} 
-                  Hero Section Content
-                {% elif page.page_id == 2 %} 
-                  Key Features Content
-                {% elif page.page_id == 3 %} 
-                  Contact Section Content
-                {% else %} 
-                  Page Content
-                {% endif %}
-              </label>
-              <textarea 
-                name="content" 
-                class="editor-textarea"
-                placeholder="Enter content here... (HTML supported)"
-                required
-              >{{ page.content|safe }}</textarea>
-            </div>
+            <div class="editor-form-wrapper">
+              <div class="editor-form-column">
+                <!-- Dynamic form fields based on page_id -->
+            {% if page.page_id == 1 %}
+              <!-- Hero Section (Page 1) -->
+              <div class="form-group">
+                <label class="form-label">📌 Headline</label>
+                <input 
+                  type="text" 
+                  class="editor-input" 
+                  name="headline"
+                  id="headlineInput"
+                  value="{{ page.headline or '' }}"
+                  placeholder="e.g., Analyze Social Networks with Smart Analytics"
+                  maxlength="200"
+                >
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">📄 Description</label>
+                <textarea 
+                  class="editor-textarea" 
+                  name="description"
+                  id="descriptionInput"
+                  placeholder="e.g., Uncover hidden patterns in social networks..."
+                  maxlength="1000"
+                >{{ page.description or '' }}</textarea>
+              </div>
+
+              <textarea name="content" style="display: none;">{}</textarea>
+
+            {% elif page.page_id == 2 %}
+              <!-- Features Section (Page 2) -->
+              <div class="form-group">
+                <label class="form-label">⭐ Key Features</label>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                  Format: Feature Name on first line, Description on second line, blank line between features
+                </div>
+                <textarea 
+                  class="editor-textarea" 
+                  name="features_list"
+                  id="featuresInput"
+                  style="min-height: 300px;"
+                  placeholder="Sentiment Analysis&#10;Analyze opinions and track sentiment shifts over time&#10;&#10;Influencer Detection&#10;Identify key influencers and high-impact accounts"
+                  maxlength="3000"
+                >{% if page.features %}{% for feature in page.features %}{{ feature.name }}&#10;{{ feature.description }}{% if not loop.last %}&#10;&#10;{% endif %}{% endfor %}{% endif %}</textarea>
+              </div>
+
+              <textarea name="content" style="display: none;">{}</textarea>
+
+            {% elif page.page_id == 4 %}
+              <!-- Contact Section (Page 4) -->
+              <div class="form-group">
+                <label class="form-label">📧 Email</label>
+                <input 
+                  type="text" 
+                  class="editor-input" 
+                  name="contact_email"
+                  id="emailInput"
+                  value="{{ page.email or '' }}"
+                  placeholder="support@example.com"
+                >
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">📞 Phone</label>
+                <input 
+                  type="text" 
+                  class="editor-input" 
+                  name="contact_phone"
+                  id="phoneInput"
+                  value="{{ page.phone or '' }}"
+                  placeholder="+1 (555) 123-4567"
+                >
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">🕐 Business Hours</label>
+                <input 
+                  type="text" 
+                  class="editor-input" 
+                  name="contact_hours"
+                  id="hoursInput"
+                  value="{{ page.phone_hours or '' }}"
+                  placeholder="Mon-Fri from 12pm to 6pm"
+                >
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">⏱️ Response Time</label>
+                <input 
+                  type="text" 
+                  class="editor-input" 
+                  name="contact_response"
+                  id="responseInput"
+                  value="{{ page.response_time or '' }}"
+                  placeholder="We reply within 24 hours"
+                >
+              </div>
+
+              <textarea name="content" style="display: none;">{}</textarea>
+              <script>
+                // Debug: verify hidden textarea has content
+                const hiddenTA = document.querySelector('textarea[name="content"]');
+                console.log('[PAGE1] Hidden textarea content length:', hiddenTA ? hiddenTA.value.length : 0);
+              </script>
+
+            {% elif page.page_id == 3 %}
+              <!-- Pricing Section (Page 3) -->
+              <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.1);">
+                <h3 style="color: white; margin-bottom: 1.2rem; font-size: 1.1rem;">📦 Pricing Plan</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label">Plan Name</label>
+                    <input 
+                      type="text" 
+                      class="editor-input" 
+                      name="plan_name"
+                      id="planNameInput"
+                      value="{{ page.plan_name or 'Free Trial' }}"
+                      placeholder="e.g., Free Trial"
+                      maxlength="100"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Price</label>
+                    <input 
+                      type="text" 
+                      class="editor-input" 
+                      name="plan_price"
+                      id="planPriceInput"
+                      value="{{ page.plan_price or '0' }}"
+                      placeholder="e.g., 0 or 49"
+                      maxlength="50"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Period</label>
+                    <input 
+                      type="text" 
+                      class="editor-input" 
+                      name="plan_period"
+                      id="planPeriodInput"
+                      value="{{ page.plan_period or '/member/month' }}"
+                      placeholder="e.g., /member/month"
+                      maxlength="100"
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">✅ What's Included (one per line)</label>
+                <textarea 
+                  class="editor-textarea" 
+                  name="included_features"
+                  id="includedInput"
+                  placeholder="Full access to all features for 30 days&#10;Upload your own datasets&#10;Run sentiment analysis&#10;Create network visualizations"
+                  maxlength="2000"
+                >{% if page.features %}{% for feature in page.features %}{{ feature }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea>
+                <div style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.5rem;">
+                  💡 Tip: Enter one feature per line
+                </div>
+              </div>
+
+              <!-- Hidden textarea - JavaScript will fill this on submit -->
+              <textarea name="content" style="display: none;">{}</textarea>
+
+            {% else %}
+              <!-- Default (Page 3 and others) -->
+              <div class="form-group">
+                <label class="form-label">
+                  {% if page.page_id == 3 %} 
+                    💰 Pricing Content
+                  {% else %} 
+                    📝 Page Content
+                  {% endif %}
+                </label>
+                <textarea 
+                  name="content" 
+                  class="editor-textarea"
+                  id="defaultInput"
+                  placeholder="Type your content here..."
+                  required
+                >{{ page.content|safe }}</textarea>
+              </div>
+            {% endif %}
+
+              </div><!-- End editor-form-column -->
+
+            </div><!-- End editor-form-wrapper -->
 
             <div class="action-buttons">
               <button type="submit" class="btn-primary">
@@ -651,16 +902,10 @@
               <button type="button" class="btn-secondary" id="resetBtn">
                 <span>↺</span> Reset
               </button>
-              <button type="button" class="btn-secondary" id="validateBtn" title="Validate JSON">
-                🔍 Validate JSON
-              </button>
-              <button type="button" class="btn-secondary" id="formatBtn" title="Format JSON">
-                🧾 Format JSON
-              </button>
             </div>
 
-            <div class="help-text">
-              <strong>Note:</strong> Content is stored temporarily. For permanent storage, connect to a database. HTML tags are supported for formatting.
+            <div class="help-text" id="helpText">
+              <strong>✅ Ready to save!</strong> Just type normally - no JSON needed.
             </div>
           </form>
           {% else %}
@@ -682,123 +927,269 @@
       <p>Contact: support@orbitlink.com</p>
     </footer>
 
+    <!-- Safe JSON Data -->
+    <script type="application/json" id="page-data">
+      {{ page | tojson | safe }}
+    </script>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Capture initial content for reset (prevents double-escaping issues)
-        const textarea = document.querySelector('.editor-textarea');
-        let _initialContent = '';
-        if (textarea) {
-          _initialContent = textarea.value;
+        // Safe function to get page data from JSON script tag
+        function getPageData() {
+          try {
+            const script = document.getElementById('page-data');
+            return script ? JSON.parse(script.textContent) : null;
+          } catch (e) {
+            console.error('[FORM_INIT] Error parsing page data:', e);
+            return null;
+          }
+        }
+        // Font size control
+        const fontSizeSelect = document.getElementById('fontSizeSelect');
+        const textareas = document.querySelectorAll('.editor-textarea');
+        const inputs = document.querySelectorAll('.editor-input');
+
+        if (fontSizeSelect) {
+          fontSizeSelect.addEventListener('change', function() {
+            const fontSize = this.value;
+            textareas.forEach(ta => ta.style.fontSize = fontSize);
+            inputs.forEach(inp => inp.style.fontSize = fontSize);
+          });
+        }
+
+        // Initial font size
+        const initialFontSize = fontSizeSelect ? fontSizeSelect.value : '16px';
+        textareas.forEach(ta => ta.style.fontSize = initialFontSize);
+        inputs.forEach(inp => inp.style.fontSize = initialFontSize);
+
+        // Capture initial content for reset
+        const formInputs = {};
+        const pageIdInput = document.querySelector('input[name="page_id"]');
+        const pageId = pageIdInput ? Number(pageIdInput.value) : null;
+        
+        // DEBUG: Log initialization
+        const hiddenTA = document.querySelector('textarea[name="content"]');
+        console.log('[FORM_INIT] PageID:', pageId, 'Hidden TA length:', hiddenTA ? hiddenTA.value.length : 'NOT_FOUND');
+        if (hiddenTA && hiddenTA.value.length > 0) {
+          console.log('[FORM_INIT] TA content preview:', hiddenTA.value.substring(0, 100));
+        }
+
+        if (pageId === 1) {
+          const headlineInput = document.getElementById('headlineInput');
+          const descriptionInput = document.getElementById('descriptionInput');
+          if (headlineInput && descriptionInput) {
+            // Template already sets the value from {{ page.headline }}
+            // Just capture for reset functionality - don't overwrite!
+            console.log('[FORM_INIT] Page 1 - Using template values');
+            console.log('[FORM_INIT] Headline:', headlineInput.value);
+            console.log('[FORM_INIT] Description:', descriptionInput.value.substring(0, 50) + '...');
+            formInputs.headline = headlineInput.value;
+            formInputs.description = descriptionInput.value;
+          }
+        } else if (pageId === 2) {
+          const featuresInput = document.getElementById('featuresInput');
+          if (featuresInput) {
+            // Template already sets the value - just capture for reset
+            console.log('[FORM_INIT] Page 2 - Using template values');
+            formInputs.features = featuresInput.value;
+          }
+        } else if (pageId === 4) {
+          const emailInput = document.getElementById('emailInput');
+          const phoneInput = document.getElementById('phoneInput');
+          const hoursInput = document.getElementById('hoursInput');
+          const responseInput = document.getElementById('responseInput');
+          
+          if (emailInput) {
+            // Template already sets values - just capture for reset
+            console.log('[FORM_INIT] Page 4 - Using template values');
+            formInputs.email = emailInput.value;
+            formInputs.phone = phoneInput ? phoneInput.value : '';
+            formInputs.hours = hoursInput ? hoursInput.value : '';
+            formInputs.response = responseInput ? responseInput.value : '';
+          }
+        } else if (pageId === 3) {
+          const planNameInput = document.getElementById('planNameInput');
+          const planPriceInput = document.getElementById('planPriceInput');
+          const planPeriodInput = document.getElementById('planPeriodInput');
+          const includedInput = document.getElementById('includedInput');
+          
+          if (planNameInput) {
+            // Template already sets values - just capture for reset
+            console.log('[FORM_INIT] Page 3 - Using template values');
+            formInputs.planName = planNameInput.value;
+            formInputs.planPrice = planPriceInput ? planPriceInput.value : '';
+            formInputs.planPeriod = planPeriodInput ? planPeriodInput.value : '';
+            formInputs.included = includedInput ? includedInput.value : '';
+          }
         }
 
         window.resetForm = function() {
-          const form = document.querySelector('.editor-form');
-          if (form) {
-            const ta = form.querySelector('textarea');
-            if (ta) {
-              ta.value = _initialContent;
-            }
+          if (pageId === 1) {
+            document.getElementById('headlineInput').value = formInputs.headline || '';
+            document.getElementById('descriptionInput').value = formInputs.description || '';
+          } else if (pageId === 2) {
+            document.getElementById('featuresInput').value = formInputs.features || '';
+          } else if (pageId === 4) {
+            document.getElementById('emailInput').value = formInputs.email || '';
+            document.getElementById('phoneInput').value = formInputs.phone || '';
+            document.getElementById('hoursInput').value = formInputs.hours || '';
+            document.getElementById('responseInput').value = formInputs.response || '';
+          } else if (pageId === 3) {
+            document.getElementById('planNameInput').value = formInputs.planName || '';
+            document.getElementById('planPriceInput').value = formInputs.planPrice || '';
+            document.getElementById('planPeriodInput').value = formInputs.planPeriod || '';
+            document.getElementById('includedInput').value = formInputs.included || '';
           }
         };
 
-        // Auto-save indicator (optional feature)
-        if (textarea) {
-          let saveTimer;
-          let isSaved = true;
-          
-          textarea.addEventListener('input', function() {
-            isSaved = false;
-            clearTimeout(saveTimer);
-            
-            // Show auto-saving indicator
-            const saveIndicator = document.getElementById('saveIndicator') || 
-              (function() {
-                const div = document.createElement('div');
-                div.id = 'saveIndicator';
-                div.style.cssText = `
-                  position: fixed;
-                  bottom: 20px;
-                  right: 20px;
-                  background: rgba(242, 72, 34, 0.9);
-                  color: white;
-                  padding: 10px 15px;
-                  border-radius: 8px;
-                  font-size: 0.9rem;
-                  display: none;
-                  z-index: 1000;
-                `;
-                document.body.appendChild(div);
-                return div;
-              })();
-            
-            saveIndicator.textContent = 'Unsaved changes...';
-            saveIndicator.style.display = 'block';
-            
-            // Simulate auto-save after 2 seconds of inactivity
-            saveTimer = setTimeout(() => {
-              isSaved = true;
-              saveIndicator.textContent = 'Changes saved!';
-              setTimeout(() => {
-                saveIndicator.style.display = 'none';
-              }, 2000);
-            }, 2000);
-          });
-        }
-
-        // JSON validate/format helpers
-        const validateBtn = document.getElementById('validateBtn');
-        const formatBtn = document.getElementById('formatBtn');
-        const resetBtn = document.getElementById('resetBtn');
-
-        function showAlert(msg) {
-          alert(msg);
-        }
-
-        if (validateBtn) {
-          validateBtn.addEventListener('click', function() {
-            if (!textarea) return showAlert('No editor available');
-            try {
-              JSON.parse(textarea.value);
-              showAlert('Valid JSON');
-            } catch (e) {
-              showAlert('Invalid JSON: ' + e.message);
-            }
-          });
-        }
-
-        if (formatBtn) {
-          formatBtn.addEventListener('click', function() {
-            if (!textarea) return showAlert('No editor available');
-            try {
-              const parsed = JSON.parse(textarea.value);
-              textarea.value = JSON.stringify(parsed, null, 2);
-            } catch (e) {
-              showAlert('Cannot format: invalid JSON');
-            }
-          });
-        }
-
-        if (resetBtn) {
-          resetBtn.addEventListener('click', resetForm);
-        }
-
-        // Validate JSON on submit for structured pages (features/pricing)
+        // Handle form submission
         const editorForm = document.querySelector('.editor-form');
         if (editorForm) {
           editorForm.addEventListener('submit', function(e) {
-            const pageIdInput = editorForm.querySelector('input[name="page_id"]');
-            const pageId = pageIdInput ? Number(pageIdInput.value) : null;
-            if (pageId === 2 || pageId === 3) {
-              // expect JSON
-              try {
-                JSON.parse(textarea.value);
-              } catch (err) {
-                e.preventDefault();
-                const ok = confirm('The content does not look like valid JSON. Save anyway?');
-                if (ok) editorForm.submit();
+            e.preventDefault();
+            
+            // Build the content properly based on page_id
+            let contentToSave = '';
+            
+            if (pageId === 1) {
+              const headline = document.getElementById('headlineInput').value.trim();
+              const description = document.getElementById('descriptionInput').value.trim();
+              
+              // Collect all empty fields
+              const emptyFields = [];
+              if (headline.length === 0) emptyFields.push('Headline');
+              if (description.length === 0) emptyFields.push('Description');
+              
+              if (emptyFields.length > 0) {
+                alert('The following fields cannot be left blank:\n\n- ' + emptyFields.join('\n- '));
+                return;
               }
+              
+              // CORRUPTION PREVENTION: Client-side validation
+              if (headline.length > 200) {
+                alert('Headline is too long! Please keep it under 200 characters.');
+                return;
+              }
+              
+              // Check for corrupted content (headline containing description)
+              if (headline.toLowerCase().includes('graph analysis') && headline.length > 100) {
+                alert('Headline appears to contain description content. Please separate them properly.');
+                return;
+              }
+              
+              console.log('[FORM_SUBMIT_PAGE1] Validation passed - headline length:', headline.length, 'description length:', description.length);
+              
+              // Send as proper JSON for separate fields
+              const heroData = {
+                headline: headline,
+                description: description
+              };
+              contentToSave = JSON.stringify(heroData);
+              console.log('[FORM_SUBMIT_PAGE1] Sending separate fields:', heroData);
+            } else if (pageId === 2) {
+              // Parse features: name on line 1, description on line 2, blank line separates features
+              const featuresText = document.getElementById('featuresInput').value.trim();
+              
+              // Validation: cannot be empty
+              if (featuresText.length === 0) {
+                alert('The following fields cannot be left blank:\n\n- Features');
+                return;
+              }
+              
+              const blocks = featuresText.split(/\n\s*\n/);  // Split by blank lines
+              const featuresArray = [];
+              
+              for (const block of blocks) {
+                const lines = block.trim().split('\n').map(l => l.trim()).filter(l => l);
+                if (lines.length >= 1) {
+                  featuresArray.push({
+                    name: lines[0],
+                    description: lines.slice(1).join(' ') || ''
+                  });
+                }
+              }
+              
+              contentToSave = JSON.stringify({ features: featuresArray });
+              console.log('[FORM_SUBMIT_PAGE2] Sending features array:', featuresArray);
+            } else if (pageId === 4) {
+              const email = document.getElementById('emailInput').value.trim();
+              const phone = document.getElementById('phoneInput').value.trim();
+              const hours = document.getElementById('hoursInput').value.trim();
+              const response = document.getElementById('responseInput').value.trim();
+              
+              // Collect all empty fields
+              const emptyFields = [];
+              if (email.length === 0) emptyFields.push('Email');
+              if (phone.length === 0) emptyFields.push('Phone Number');
+              if (hours.length === 0) emptyFields.push('Business Hours');
+              if (response.length === 0) emptyFields.push('Response Time');
+              
+              if (emptyFields.length > 0) {
+                alert('The following fields cannot be left blank:\n\n- ' + emptyFields.join('\n- '));
+                return;
+              }
+              
+              const contactData = {
+                email: email,
+                phone: phone,
+                phone_hours: hours,
+                response_time: response
+              };
+              contentToSave = JSON.stringify(contactData);
+              console.log('[FORM_SUBMIT_PAGE4] Sending contact data:', contactData);
+            } else if (pageId === 3) {
+              const planName = document.getElementById('planNameInput').value.trim();
+              const planPrice = document.getElementById('planPriceInput').value.trim();
+              const planPeriod = document.getElementById('planPeriodInput').value.trim();
+              const includedFeatures = document.getElementById('includedInput').value.split('\n').filter(f => f.trim());
+              
+              // Collect all empty fields
+              const emptyFields = [];
+              if (planName.length === 0) emptyFields.push('Plan Name');
+              if (planPrice.length === 0) emptyFields.push('Price');
+              if (planPeriod.length === 0) emptyFields.push('Period');
+              if (includedFeatures.length === 0) emptyFields.push('Included Features');
+              
+              if (emptyFields.length > 0) {
+                alert('The following fields cannot be left blank:\n\n- ' + emptyFields.join('\n- '));
+                return;
+              }
+              
+              console.log('[FORM_SUBMIT_PAGE3] planName:', planName, 'price:', planPrice, 'period:', planPeriod);
+              console.log('[FORM_SUBMIT_PAGE3] included:', includedFeatures);
+              
+              const pricingData = {
+                plans: {
+                  'free': {
+                    name: planName,
+                    price: planPrice,
+                    period: planPeriod
+                  }
+                },
+                included: includedFeatures
+              };
+              contentToSave = JSON.stringify(pricingData);
+              console.log('[FORM_SUBMIT_PAGE3] JSON length:', contentToSave.length);
+              console.log('[FORM_SUBMIT_PAGE3] JSON:', contentToSave);
+            } else {
+              contentToSave = document.getElementById('defaultInput').value;
             }
+
+            // Set the hidden textarea with content
+            const contentTextarea = document.querySelector('textarea[name="content"]');
+            if (contentTextarea) {
+              contentTextarea.value = contentToSave;
+            }
+
+            // Submit the form
+            this.submit();
           });
+        }
+
+        // Reset button
+        const resetBtn = document.getElementById('resetBtn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', resetForm);
         }
 
         // Add keyboard shortcuts

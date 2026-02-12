@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -139,6 +139,7 @@
               <input
                 name="name"
                 placeholder="Project Name : Project SNA"
+                value="{{ name if name else '' }}"
                 required
               />
             </div>
@@ -146,7 +147,9 @@
               <textarea
                 name="description"
                 placeholder="Description of the Project (Viewable to all users this project is shared with. Helpful in explaining)..."
-              ></textarea>
+              >
+{{ description if description else '' }}</textarea
+              >
             </div>
             <button class="btn" type="submit">Create</button>
           </form>

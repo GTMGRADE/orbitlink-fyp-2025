@@ -34,7 +34,7 @@ def get_connection():
             # Test connection
             _mongo_client.admin.command('ping')
             _mongo_db = _mongo_client[db_name]
-            print(f"✓ Connected to MongoDB/Firestore: {db_name}")
+            print(f"[OK] Connected to MongoDB/Firestore: {db_name}")
         
         return _mongo_db
         
@@ -89,6 +89,7 @@ def init_db():
     except Exception as e:
         print(f"❌ Error initializing database: {e}")
         return False
+
 
 
 def check_database_status():

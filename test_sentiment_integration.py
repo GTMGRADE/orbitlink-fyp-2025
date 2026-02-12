@@ -220,7 +220,7 @@ def test_6_controller_integration():
     print("="*70)
     
     try:
-        from controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+        from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
         print("[OK] AnalysisSessionController imported")
         
         # Check that it has the required methods

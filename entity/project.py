@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
+import re
 from db_config import get_connection
 from bson import ObjectId
 
@@ -127,10 +128,26 @@ class ProjectRepository:
             return None
         
         try:
+            name_stripped = name.strip()
+            
+            # Check for duplicate project name (case-insensitive)
+            existing = db.projects.find_one({
+                "user_id": self.user_id,
+                "archived": {"$ne": True},  # Only check non-archived projects
+                "name": {"$regex": f"^{re.escape(name_stripped)}$", "$options": "i"}
+            })
+            
+            if existing:
+                print(f"[DUPLICATE CHECK] Project with name '{name_stripped}' already exists for user {self.user_id}")
+                print(f"[DUPLICATE CHECK] Existing project: {existing}")
+                return None
+            else:
+                print(f"[DUPLICATE CHECK] No duplicate found for '{name_stripped}', creating new project")
+            
             now = datetime.utcnow()
             project_doc = {
                 "user_id": self.user_id,
-                "name": name.strip(),
+                "name": name_stripped,
                 "description": description.strip(),
                 "last_opened": now,
                 "archived": False,
@@ -203,10 +220,40 @@ class ProjectRepository:
         if not project:
             return None
         
-        project.name = new_name.strip()
-        if self.update(project):
-            return project
-        return None
+        db = get_connection()
+        if db is None:
+            return None
+        
+        try:
+            new_name_stripped = new_name.strip()
+            
+            # Check for duplicate project name (case-insensitive), excluding current project
+            try:
+                query_id = ObjectId(pid)
+            except:
+                query_id = pid
+            
+            existing = db.projects.find_one({
+                "user_id": self.user_id,
+                "_id": {"$ne": query_id},
+                "archived": {"$ne": True},  # Only check non-archived projects
+                "name": {"$regex": f"^{re.escape(new_name_stripped)}$", "$options": "i"}
+            })
+            
+            if existing:
+                print(f"[RENAME DUPLICATE] Project with name '{new_name_stripped}' already exists for user {self.user_id}")
+                print(f"[RENAME DUPLICATE] Existing project: {existing}")
+                return None
+            else:
+                print(f"[RENAME DUPLICATE] No duplicate found for '{new_name_stripped}', renaming project")
+            
+            project.name = new_name_stripped
+            if self.update(project):
+                return project
+            return None
+        except Exception as e:
+            print(f"Error renaming project: {str(e)}")
+            return None
 
     def archive(self, pid: str) -> Optional[Project]:
         """Archive a project"""
