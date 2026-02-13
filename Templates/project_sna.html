@@ -770,12 +770,6 @@
                   × Clear
                 </button>
               </div>
-              <!-- Video Link Display -->
-              <div id="videoLinkDisplay" class="video-link-display" style="display: none; margin-top: 1rem; padding: 0.8rem; background: rgba(242, 72, 34, 0.1); border-radius: 8px; border-left: 3px solid #f24822;">
-                <a id="videoLink" href="#" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #f24822; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
-                  <span>🎬</span> <span id="videoLinkText">Watch analyzed video on YouTube</span>
-                </a>
-              </div>
               <!-- REMOVED: session-actions div -->
             </div>
 
@@ -792,6 +786,14 @@
                 <button type="button" class="confirm-btn" id="confirmBtn">
                   Analyze
                 </button>
+              </div>
+
+              <!-- Data source tabs -->
+              <div class="data-source-tabs">
+                <button class="tab-btn active" data-source="youtube">
+                  YouTube
+                </button>
+                <button class="tab-btn" data-source="csv">CSV Upload</button>
               </div>
             </div>
 
@@ -838,10 +840,9 @@
 
               <!-- Influencer Detection Card -->
               <div class="analysis-card disabled" id="influencersCard">
-                <h3 class="analysis-name">Identify Influencers</h3>
+                <h3 class="analysis-name">Engagement Detection</h3>
                 <p class="analysis-desc">
-                  Identify key influencers and high-impact accounts driving
-                  conversations
+                  Identify engagement and high-impact accounts driving conversations in your network
                 </p>
                 <a
                   href="{{ url_for('projects.identify_influencers') }}"
@@ -976,15 +977,10 @@
             }, 800);
 
             // Store analysis results WITH PROJECT ID
-            const storageKey = `youtubeAnalysis_${projectId}`;
-            sessionStorage.setItem(storageKey, JSON.stringify(result.data));
-            console.log(`[STORAGE] Saved analysis to ${storageKey}`);
-            console.log(`[STORAGE] Analysis type: ${result.data.analysis_type}`);
-            console.log(`[STORAGE] Data structure:`, result.data);
-            
-            // Verify storage
-            const stored = sessionStorage.getItem(storageKey);
-            console.log(`[STORAGE] Verification - Data stored successfully:`, stored !== null);
+            sessionStorage.setItem(
+              `youtubeAnalysis_${projectId}`,
+              JSON.stringify(result.data),
+            );
 
             // Enable all analysis cards
             enableAnalysisCards(projectId);
@@ -1124,21 +1120,6 @@
         document.getElementById("sessionChannel").textContent =
           `Currently analyzing: ${displayName}`;
 
-        // Show video link if it's a video analysis
-        const videoLinkDisplay = document.getElementById("videoLinkDisplay");
-        const videoLink = document.getElementById("videoLink");
-        const videoLinkText = document.getElementById("videoLinkText");
-        
-        if (analysisType === "video" && analysisData.video_metadata?.video_id) {
-          const videoId = analysisData.video_metadata.video_id;
-          const videoTitle = analysisData.video_metadata.title || "Video";
-          videoLink.href = `https://www.youtube.com/watch?v=${videoId}`;
-          videoLinkText.textContent = `Watch "${videoTitle}" on YouTube`;
-          videoLinkDisplay.style.display = "block";
-        } else {
-          videoLinkDisplay.style.display = "none";
-        }
-
         sessionDisplay.style.display = "block";
         urlInputSection.style.display = "none";
 
@@ -1180,21 +1161,6 @@
           document.getElementById("sessionChannel").textContent =
             `Currently analyzing: ${displayName}`;
 
-          // Show video link if it's a video analysis
-          const videoLinkDisplay = document.getElementById("videoLinkDisplay");
-          const videoLink = document.getElementById("videoLink");
-          const videoLinkText = document.getElementById("videoLinkText");
-          
-          if (analysisType === "video" && data.video_metadata?.video_id) {
-            const videoId = data.video_metadata.video_id;
-            const videoTitle = data.video_metadata.title || "Video";
-            videoLink.href = `https://www.youtube.com/watch?v=${videoId}`;
-            videoLinkText.textContent = `Watch "${videoTitle}" on YouTube`;
-            videoLinkDisplay.style.display = "block";
-          } else {
-            videoLinkDisplay.style.display = "none";
-          }
-
           sessionDisplay.style.display = "block";
           urlInputSection.style.display = "none";
 
@@ -1234,13 +1200,9 @@
         const desc = document.getElementById("currentAnalysisDesc");
         const confirmBtn = document.getElementById("confirmBtn");
         const urlInput = document.getElementById("youtubeUrl");
-        const videoLinkDisplay = document.getElementById("videoLinkDisplay");
 
         sessionDisplay.style.display = "none";
         urlInputSection.style.display = "block";
-        if (videoLinkDisplay) {
-          videoLinkDisplay.style.display = "none";
-        }
 
         title.textContent = "Enter Data Source";
         desc.textContent =
@@ -1427,6 +1389,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         const urlInput = document.getElementById("youtubeUrl");
         const confirmBtn = document.getElementById("confirmBtn");
+        const tabBtns = document.querySelectorAll(".tab-btn");
         const analysisLinks = document.querySelectorAll(".analysis-link");
         const analysisCards = document.querySelectorAll(".analysis-card");
         const clearSessionBtn = document.getElementById("clearSessionBtn");
@@ -1487,8 +1450,47 @@
 
         // Add event listener for confirm button - now using analyzeYouTubeChannel
         confirmBtn.addEventListener("click", function () {
-          analyzeYouTubeChannel();
+          const activeTab =
+            document.querySelector(".tab-btn.active").dataset.source;
+
+          if (activeTab === "youtube") {
+            analyzeYouTubeChannel();
+          } else {
+            // Handle CSV upload (simulate processing for now)
+            showStatus("CSV upload functionality coming soon!", "error");
+          }
         });
+
+        // Tab selection
+        tabBtns.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            tabBtns.forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+
+            const source = this.dataset.source;
+            updatePlaceholder(source);
+
+            // Clear status and reset button when changing tabs
+            const statusMessage = document.getElementById("statusMessage");
+            statusMessage.style.display = "none";
+            confirmBtn.textContent = "Analyze";
+            confirmBtn.classList.remove("confirmed");
+            confirmBtn.disabled = false;
+          });
+        });
+
+        function updatePlaceholder(source) {
+          switch (source) {
+            case "youtube":
+              urlInput.placeholder =
+                "https://www.youtube.com/@ChannelName or https://www.youtube.com/watch?v=...";
+              break;
+            case "csv":
+              urlInput.placeholder =
+                "Drag and drop CSV file or paste file path";
+              break;
+          }
+        }
 
         // Clear status when user starts typing
         urlInput.addEventListener("input", function () {
@@ -1507,7 +1509,10 @@
         });
 
         // Initialize with YouTube placeholder
-        updlysisCards.forEach((card) => {
+        updatePlaceholder("youtube");
+
+        // Add click handler for analysis cards (for visual feedback)
+        analysisCards.forEach((card) => {
           card.addEventListener("click", function (e) {
             // Only trigger if not disabled and not clicking on the link itself
             if (

@@ -18,6 +18,7 @@ class ReviewsController:
         return {
             'page_title': 'Customer Reviews - OrbitLink',
             'reviews': reviews_data,
+            'stats': stats,
             'average_rating': stats['average_rating'],
             'total_reviews': stats['total_reviews']
         }

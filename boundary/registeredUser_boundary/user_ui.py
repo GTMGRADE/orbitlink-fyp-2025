@@ -87,9 +87,12 @@ def profile():
             'status': user_doc.get('status', 'active')
         }
         
+        # Check if user has any reviews
+        user_has_reviews = db.reviews.count_documents({"user_id": str(user_data['id'])}) > 0
+        
         message = request.args.get("message")
         logger.info("Profile page accessed by user: %s", user_data['username'])
-        return render_template("profile.html", user=user_data, message=message)
+        return render_template("profile.html", user=user_data, message=message, user_has_reviews=user_has_reviews)
         
     except Exception as e:
         logger.error(f"Error fetching profile: {str(e)}")
@@ -181,12 +184,15 @@ def delete_account():
         return redirect(url_for("user.login_get"))
     
     try:
-        result = user_controller.delete_account(user)
+        # Get the delete_reviews preference from form data
+        delete_reviews = request.form.get('delete_reviews', 'false') == 'true'
+        
+        result = user_controller.delete_account(user, delete_reviews=delete_reviews)
         
         if result["status"] == "success":
             # Clear session after successful deletion
             session.clear()
-            logger.info("Account deleted for user: %s", user.username)
+            logger.info("Account deleted for user: %s (delete_reviews=%s)", user.username, delete_reviews)
             # Flash success message
             flash('Your account has been successfully deleted. We hope to see you again!', 'success')
             # Redirect to landing page

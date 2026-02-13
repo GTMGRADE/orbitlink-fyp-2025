@@ -316,8 +316,13 @@ class UserController:
             "message": "Password reset link sent.",
         }
 
-    def delete_account(self, user: RegisteredUser) -> dict:
-        """Delete a user account from the database"""
+    def delete_account(self, user: RegisteredUser, delete_reviews: bool = False) -> dict:
+        """Delete a user account from the database
+        
+        Args:
+            user: The RegisteredUser object to delete
+            delete_reviews: If True, delete all reviews. If False, anonymize them (default)
+        """
         # Can't delete hardcoded admin account
         if user.id == "0" or user.id == 0:
             return {"status": "failure", "message": "Cannot delete admin account."}
@@ -332,6 +337,24 @@ class UserController:
                 query_id = ObjectId(user.id)
             except:
                 query_id = user.id
+            
+            # Handle reviews based on user preference
+            if delete_reviews:
+                # Delete all reviews by this user
+                review_result = db.reviews.delete_many({"user_id": user.id})
+                logger.info("Deleted %d reviews for user: %s", review_result.deleted_count, user.username)
+            else:
+                # Anonymize reviews (keep them but remove user identification)
+                review_result = db.reviews.update_many(
+                    {"user_id": user.id},
+                    {
+                        "$set": {
+                            "username": "Anonymous User",
+                            "user_id": None
+                        }
+                    }
+                )
+                logger.info("Anonymized %d reviews for user: %s", review_result.modified_count, user.username)
             
             # Delete the user document from the database
             result = db.users.delete_one({"_id": query_id})

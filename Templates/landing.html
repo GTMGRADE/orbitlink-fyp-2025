@@ -374,15 +374,15 @@
         .compact-price-options {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem; /* Reduced gap */
+            gap: 1.5rem; /* Increased gap to maintain button position */
         }
         
         .compact-price-option {
             background: rgba(255, 255, 255, 0.07);
             border-radius: 10px;
-            padding: 1.5rem; /* Reduced padding */
+            padding: 1.5rem 1.5rem; /* Reduced vertical padding */
             border: 1px solid rgba(255, 255, 255, 0.12);
-            min-height: 175px; /* Set fixed height */
+            min-height: 210px; /* Reduced panel height */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -1090,10 +1090,10 @@
                     
                     <!-- Key Metrics -->
                     <div class="dashboard-card">
-                        <div class="dashboard-card-title">Influencer Score</div>
+                        <div class="dashboard-card-title">Engagement Score</div>
                         <div class="metric-display">
                             <div class="metric-number">8.7</div>
-                            <div class="metric-label">Engagement Rate</div>
+                            <div class="metric-label">Involvement Rate</div>
                         </div>
                     </div>
                 </div>
@@ -1149,7 +1149,7 @@
         
         <!-- Compact Plan Content -->
         <div class="compact-plan-content">
-            <!-- Left Column: Price Options -->
+            <!-- Left Column: Price Options and Button -->
             <div class="compact-price-options">
                 {% if pricing and pricing.plans %}
                     {% for plan_key, plan_details in pricing.plans.items() %}
@@ -1163,18 +1163,15 @@
                     <div class="compact-price-option">
                         <h3>Free Trial</h3>
                         <div class="compact-price-amount">$0</div>
-                        <div class="compact-price-period">/member for first month</div>
-                    </div>
-                    
-                    <div class="compact-price-option">
-                        <h3>Paid Subscription</h3>
-                        <div class="compact-price-amount">$49</div>
-                        <div class="compact-price-period">/member/month</div>
+                        <div class="compact-price-period">After 30 days, users will be charged $49 per month to continue using the features</div>
                     </div>
                 {% endif %}
+                
+                <!-- "Start Free Trial" Button moved here -->
+                <a href="{{ url_for('register.register_page') }}" class="compact-trial-btn">Start Free Trial</a>
             </div>
             
-            <!-- Right Column: Features and Button -->
+            <!-- Right Column: Features Only -->
             <div class="compact-plan-cta">
                 <div class="compact-plan-included">
                     <h3>What's Included:</h3>
@@ -1184,19 +1181,15 @@
                             <li>{{ item }}</li>
                             {% endfor %}
                         {% else %}
-                            <li>Full access to all features for 30 days</li>
-                            <li>Upload your own datasets</li>
-                            <li>Run sentiment analysis, influencer detection</li>
-                            <li>Create network visualizations</li>
-                            <li>Export results (CSV, PNG, PDF)</li>
-                            <li>Everything in Free Trial continues</li>
-                            <li>Data backup & enhanced security</li>
+                            <li>Unlimited YouTube channel/video analysis</li>
+                            <li>4 advanced SNA tools (Sentiment, Engagement, Community, Predictive)</li>
+                            <li>Comprehensive network graphs & visualizations</li>
+                            <li>Export professional PDF reports</li>
+                            <li>Secure cloud storage for all projects</li>
+                            <li>Full analysis history access</li>
                         {% endif %}
                     </ul>
                 </div>
-                
-                <!-- Single "Start Free Trial" Button -->
-                <a href="{{ url_for('register.register_page') }}" class="compact-trial-btn">Start Free Trial</a>
             </div>
         </div>
     </section>

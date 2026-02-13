@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from controller.reviews_controller import ReviewsController
+from Controller.reviews_controller import ReviewsController
 import logging
 
 logger = logging.getLogger(__name__)

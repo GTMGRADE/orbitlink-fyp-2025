@@ -86,3 +86,32 @@ class MockPaymentController:
         except Exception as e:
             logger.error(f"Error checking subscription status: {str(e)}")
             return False
+    
+    def get_user_data(self):
+        """Get user data for email sending"""
+        try:
+            db = get_connection()
+            if db is None:
+                return None
+            
+            # Convert user_id to ObjectId
+            try:
+                query_id = ObjectId(self.user_id)
+            except:
+                query_id = self.user_id
+            
+            user = db.users.find_one(
+                {"_id": query_id},
+                {"username": 1, "email": 1}
+            )
+            
+            if user:
+                return {
+                    'username': user.get('username'),
+                    'email': user.get('email')
+                }
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting user data: {str(e)}")
+            return None
