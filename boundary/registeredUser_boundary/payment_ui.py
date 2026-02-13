@@ -2,6 +2,7 @@ import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
 from Controller.guestUser_controller.mock_payment_controller import MockPaymentController
 from Controller.guestUser_controller.contact_controller import ContactController
+from services.email_service import send_welcome_email
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +72,22 @@ def activate_subscription():
     success, message = controller.activate_subscription()
     
     if success:
+        # Send welcome email to the user
+        try:
+            user_data = controller.get_user_data()
+            if user_data:
+                email_sent, email_msg = send_welcome_email(
+                    user_email=user_data.get('email'),
+                    username=user_data.get('username')
+                )
+                if email_sent:
+                    logger.info(f"Welcome email sent to {user_data.get('email')}")
+                else:
+                    logger.warning(f"Failed to send welcome email: {email_msg}")
+        except Exception as e:
+            logger.error(f"Error sending welcome email: {str(e)}")
+            # Don't fail the subscription activation if email fails
+        
         # Set session flag to show welcome message
         session['show_welcome_message'] = True
         return jsonify({
