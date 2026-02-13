@@ -30,7 +30,7 @@ def search_users():
     return jsonify(users), 200
 
 
-@admin_api_bp.post("/api/admin/users/<int:user_id>/toggle-suspend")
+@admin_api_bp.post("/api/admin/users/<user_id>/toggle-suspend")
 def toggle_suspend(user_id):
     if not require_admin():
         return jsonify({"error": "Unauthorized"}), 401

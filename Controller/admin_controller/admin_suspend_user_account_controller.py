@@ -2,7 +2,7 @@
 from entity.account_entity import AccountEntity
 
 class AdminSuspendUserAccountController:
-    def handle(self, user_id: int) -> dict:
+    def handle(self, user_id: str) -> dict:
         """
         Toggle a user's status between Active <-> Suspended.
 

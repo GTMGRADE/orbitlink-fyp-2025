@@ -458,8 +458,8 @@ class YouTubeAnalyzer:
             user_metrics[edge['to']]['indegree'] += 1
             user_metrics[edge['from']]['outdegree'] += 1
         
-        # Calculate final scores
-        influencers = []
+        # First pass: Calculate raw scores for all users
+        raw_scores_list = []
         for author_id, metrics in user_metrics.items():
             if metrics['total_comments'] < min_comments:
                 continue
@@ -468,17 +468,78 @@ class YouTubeAnalyzer:
             avg_comment_length = np.mean(metrics['comment_lengths']) if metrics['comment_lengths'] else 0
             video_participation = len(metrics['unique_videos'])
             
-            # Calculate individual component scores (0-10 scale)
-            scores = {
-                'engagement_score': min(10, (metrics['total_likes'] + metrics['total_replies_received'] * 2) / 100),
-                'consistency_score': min(10, video_participation * 2),
-                'network_score': min(10, (metrics['indegree'] + metrics['channel_owner_replies_to'] * 2) / 5),
-                'quality_score': min(10, (avg_comment_length / 50) + abs(metrics['avg_sentiment']) * 5),
-                'activity_score': min(10, (metrics['total_comments'] + metrics['thread_starts']) / 5),
-                'responsiveness_score': min(10, metrics['outdegree'] / 3)
+            # Calculate raw component scores (unnormalized)
+            raw_scores = {
+                'engagement_raw': metrics['total_likes'] + (metrics['total_replies_received'] * 2),
+                'consistency_raw': video_participation,
+                'network_raw': metrics['indegree'] + (metrics['channel_owner_replies_to'] * 2),
+                'quality_raw': avg_comment_length + (abs(metrics['avg_sentiment']) * 20),
+                'activity_raw': metrics['total_comments'] + (metrics['thread_starts'] * 2),
+                'responsiveness_raw': metrics['outdegree']
             }
             
-            # Weighted total score (0-10 scale)
+            raw_scores_list.append({
+                'author_id': author_id,
+                'author_name': metrics['author_name'],
+                'raw_scores': raw_scores,
+                'metrics': metrics,
+                'video_participation': video_participation
+            })
+        
+        if not raw_scores_list:
+            return []
+        
+        # Helper function for min-max normalization to 1-10 scale
+        def normalize_to_scale(values, min_score=1, max_score=10):
+            """Normalize values to min_score-max_score range"""
+            if not values or len(values) == 0:
+                return [min_score] * len(values)
+            
+            min_val = min(values)
+            max_val = max(values)
+            
+            if max_val == min_val:
+                # All values are the same, return middle of range
+                return [(min_score + max_score) / 2] * len(values)
+            
+            normalized = []
+            for val in values:
+                # Min-max normalization formula
+                norm_val = min_score + ((val - min_val) / (max_val - min_val)) * (max_score - min_score)
+                normalized.append(norm_val)
+            
+            return normalized
+        
+        # Extract all raw scores for normalization
+        engagement_raws = [item['raw_scores']['engagement_raw'] for item in raw_scores_list]
+        consistency_raws = [item['raw_scores']['consistency_raw'] for item in raw_scores_list]
+        network_raws = [item['raw_scores']['network_raw'] for item in raw_scores_list]
+        quality_raws = [item['raw_scores']['quality_raw'] for item in raw_scores_list]
+        activity_raws = [item['raw_scores']['activity_raw'] for item in raw_scores_list]
+        responsiveness_raws = [item['raw_scores']['responsiveness_raw'] for item in raw_scores_list]
+        
+        # Normalize each component to 1-10 scale
+        engagement_normalized = normalize_to_scale(engagement_raws)
+        consistency_normalized = normalize_to_scale(consistency_raws)
+        network_normalized = normalize_to_scale(network_raws)
+        quality_normalized = normalize_to_scale(quality_raws)
+        activity_normalized = normalize_to_scale(activity_raws)
+        responsiveness_normalized = normalize_to_scale(responsiveness_raws)
+        
+        # Second pass: Create final influencer list with normalized scores
+        influencers = []
+        for idx, item in enumerate(raw_scores_list):
+            # Get normalized scores
+            scores = {
+                'engagement_score': round(engagement_normalized[idx], 2),
+                'consistency_score': round(consistency_normalized[idx], 2),
+                'network_score': round(network_normalized[idx], 2),
+                'quality_score': round(quality_normalized[idx], 2),
+                'activity_score': round(activity_normalized[idx], 2),
+                'responsiveness_score': round(responsiveness_normalized[idx], 2)
+            }
+            
+            # Weighted total score (1-10 scale)
             weights = {
                 'engagement_score': 0.25,
                 'consistency_score': 0.20,
@@ -490,15 +551,16 @@ class YouTubeAnalyzer:
             
             total_score = sum(scores[key] * weights[key] for key in scores)
             
+            metrics = item['metrics']
             influencers.append({
-                'author_id': author_id,
-                'author_name': metrics['author_name'],
+                'author_id': item['author_id'],
+                'author_name': item['author_name'],
                 'total_score': round(total_score, 2),
                 **scores,
                 'total_comments': metrics['total_comments'],
                 'total_likes': metrics['total_likes'],
                 'total_replies_received': metrics['total_replies_received'],
-                'unique_videos': video_participation,
+                'unique_videos': item['video_participation'],
                 'indegree': metrics['indegree'],
                 'outdegree': metrics['outdegree'],
                 'avg_sentiment': round(metrics['avg_sentiment'], 3),

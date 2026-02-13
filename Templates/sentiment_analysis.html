@@ -250,6 +250,16 @@
         color: #888;
         white-space: nowrap;
       }
+      .chart-description {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.4;
+        margin-top: 1rem;
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 3px solid rgba(168, 85, 247, 0.5);
+        border-radius: 4px;
+      }
       @media (max-width: 768px) {
         .layout {
           grid-template-columns: 1fr;
@@ -296,6 +306,9 @@
               {% else %}
               <div class="score-value">N/A</div>
               {% endif %}
+              <div class="chart-description" style="text-align: left; margin-top: 1.5rem;">
+               ​To calculate the Net Sentiment Score, the system first takes the star rating (1 to 5) predicted by the BERT model for each individual comment. It multiplies this rating by 2 to convert it to a 10-point scale. Finally, it calculates the average (mean) of these converted scores across all comments to determine the overall sentiment.
+              </div>
             </div>
 
             <div class="card">
@@ -305,6 +318,9 @@
                 {% else %}
                   <div>Pie Chart<br />(Sentiment Distribution)</div>
                 {% endif %}
+              </div>
+              <div class="chart-description">
+                Percentage breakdown of positive, neutral, and negative comments across all analyzed data. Each slice represents the proportion of comments classified into each sentiment category using AI-powered natural language processing. Larger slices indicate more comments with that sentiment.
               </div>
             </div>
           </div>
@@ -317,6 +333,9 @@
                 {% else %}
                   Word Cloud<br />(Topic Analysis)
                 {% endif %}
+              </div>
+              <div class="chart-description">
+                Visualizes the most frequently used words across all analyzed comments. Larger words appear more frequently in the dataset. Helps quickly identify key topics, themes, and recurring terms that dominate the conversation. Common words reveal what users are talking about most.
               </div>
             </div>
           </div>

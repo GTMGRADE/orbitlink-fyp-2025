@@ -790,10 +790,8 @@
 
               <!-- Data source tabs -->
               <div class="data-source-tabs">
-                <button class="tab-btn active" data-source="youtube">
-                  YouTube
-                </button>
-                <button class="tab-btn" data-source="csv">CSV Upload</button>
+                <button class="tab-btn active" data-source="youtube">YouTube</button>
+                <!-- <button class="tab-btn" data-source="csv">CSV Upload</button> -->
               </div>
             </div>
 
@@ -1188,6 +1186,22 @@
         }
 
         const projectId = getCurrentProjectId();
+
+        // Clear backend session first
+        try {
+          const response = await fetch(`/projects/${projectId}/clear-session`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+
+          if (!response.ok) {
+            console.error('Failed to clear backend session');
+          }
+        } catch (error) {
+          console.error('Error clearing backend session:', error);
+        }
 
         // Clear frontend storage
         sessionStorage.removeItem(`youtubeAnalysis_${projectId}`);
