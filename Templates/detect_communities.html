@@ -299,6 +299,16 @@
         color: #b0c4de;
         margin-top: 1.5rem;
       }
+      .chart-description {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.4;
+        margin-top: 1rem;
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 3px solid rgba(168, 85, 247, 0.5);
+        border-radius: 4px;
+      }
       @media (max-width: 768px) {
         .layout {
           grid-template-columns: 1fr;
@@ -497,6 +507,9 @@
           const summaryHtml = `
             <div class="card" style="margin-bottom: 2rem;">
               <h2 style="margin-bottom: 1rem; font-size: 1.5rem;">Community Detection Results</h2>
+              <div class="chart-description" style="margin-bottom: 1.5rem;">
+                Identifies distinct groups (communities) of users who interact more frequently with each other than with outsiders. The Modularity Score (0-1) measures how well-defined these communities are: higher scores indicate stronger community structure. Communities reveal natural social circles, interest groups, or discussion topics within your channel's audience.
+              </div>
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                 <div class="metric-card">
                   <div class="metric-label">Total Communities</div>
@@ -526,7 +539,10 @@
             
             ${communityData.network_visualization ? `
               <div class="card" style="margin-bottom: 2rem;">
-                <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Community Network Visualization</h3>
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Community Network Visualization</h3>
+                <div class="chart-description" style="margin-bottom: 1.5rem;">
+                  Visual representation of user interactions as a network graph. Each node represents a user, and edges (lines) show comment-reply relationships. Colors indicate different communities: users within the same color group interact more with each other. Node size may reflect influence or activity level. Helps identify key connectors, isolated groups, and overall network structure.
+                </div>
                 <img src="data:image/png;base64,${communityData.network_visualization}" 
                      style="width: 100%; border-radius: 8px; background: white;" 
                      alt="Community Network Graph" />

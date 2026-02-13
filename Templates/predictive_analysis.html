@@ -532,12 +532,20 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const projectId = new URLSearchParams(window.location.search).get(
+        // Try URL parameter first, then localStorage fallback
+        let projectId = new URLSearchParams(window.location.search).get(
           "project_id",
         );
+        
+        if (!projectId) {
+          projectId = localStorage.getItem("currentProjectId");
+          console.log("No project_id in URL, using localStorage:", projectId);
+        }
+        
         console.log("Predictive Analysis page loaded for project:", projectId);
 
         if (!projectId) {
+          console.error("No project_id found");
           showNoDataMessage();
           return;
         }

@@ -11,7 +11,7 @@ class PredictiveAnalysisService:
         self.project_id = project_id
     
     def get_predictions(self):
-        """Generate predictions based on historical YouTube analysis data"""
+        """Generate predictions based on current session and historical YouTube analysis data"""
         print(f"[PREDICTIVE] Getting predictions for user={self.user_id}, project={self.project_id}")
         db = get_connection()
         if db is None:
@@ -19,18 +19,20 @@ class PredictiveAnalysisService:
             return self._get_default_predictions()
         
         try:
-            # Fetch all analyses for this project, sorted by date
+            # First check current analysis session
+            from Controller.registeredUser_controller.analysis_session_controller import AnalysisSessionController
+            session_controller = AnalysisSessionController(self.user_id, self.project_id)
+            current_session = session_controller.get_current_session()
+            
+            # Fetch all historical analyses for this project, sorted by date
             analyses = list(db.youtube_analysis.find(
                 {"user_id": self.user_id, "project_id": self.project_id}
             ).sort("created_at", 1))  # Ascending order (oldest first)
             
-            print(f"[PREDICTIVE] Found {len(analyses)} analyses for project {self.project_id}")
+            print(f"[PREDICTIVE] Found {len(analyses)} historical analyses")
+            print(f"[PREDICTIVE] Current session exists: {current_session is not None}")
             
-            if len(analyses) < 1:
-                print(f"[PREDICTIVE] No analyses found, returning default predictions")
-                return self._get_default_predictions()
-            
-            # Extract metrics from analyses
+            # Extract metrics from historical analyses
             metrics = []
             for analysis in analyses:
                 data = analysis.get('analysis_data', {})
@@ -44,7 +46,25 @@ class PredictiveAnalysisService:
                     'analysis_type': data.get('analysis_type', 'unknown')
                 })
             
-            print(f"[PREDICTIVE] Extracted metrics from {len(metrics)} analyses")
+            # Add current session data if exists
+            if current_session and current_session.get('analysis_data'):
+                data = current_session['analysis_data']
+                metrics.append({
+                    'date': datetime.utcnow(),
+                    'total_comments': data.get('total_comments', 0),
+                    'videos_analyzed': data.get('videos_analyzed', 0),
+                    'sentiment_score': data.get('sentiment_analysis', {}).get('overall_score', 0),
+                    'influencers_count': len(data.get('influencers', [])),
+                    'communities_count': data.get('community_detection', {}).get('num_communities', 0),
+                    'analysis_type': data.get('analysis_type', 'unknown')
+                })
+                print(f"[PREDICTIVE] Added current session data to metrics")
+            
+            print(f"[PREDICTIVE] Total metrics extracted: {len(metrics)}")
+            
+            if len(metrics) < 1:
+                print(f"[PREDICTIVE] No data available, returning default predictions")
+                return self._get_default_predictions()
             
             # Calculate trends and predictions
             engagement_trend = self._calculate_engagement_trend(metrics)
