@@ -5,6 +5,8 @@ from pathlib import Path
 from io import BytesIO
 from typing import Optional, Dict, List
 
+import numpy as np
+
 # Suppress tokenizer regex warnings
 warnings.filterwarnings("ignore", message=".*incorrect regex pattern.*")
 warnings.filterwarnings("ignore", message=".*fix_mistral_regex.*")
@@ -165,7 +167,8 @@ def _build_wordcloud(texts):
         wc = _get_wordcloud()
         wc.generate(" ".join(texts))
         fig, ax = plt.subplots(figsize=(8, 4))
-        ax.imshow(wc, interpolation="bilinear")
+        # Convert via to_image() to avoid wordcloud's __array__ (NumPy 2+ removed asarray(copy=))
+        ax.imshow(np.array(wc.to_image()), interpolation="bilinear")
         ax.axis("off")
         buffer = BytesIO()
         plt.tight_layout()

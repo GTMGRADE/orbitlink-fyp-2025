@@ -1241,6 +1241,9 @@
           link.classList.add("disabled");
         });
 
+        const predictiveLink = document.getElementById("predictiveLink");
+        if (predictiveLink) predictiveLink.textContent = "Open Analysis";
+
         showStatus(
           "✓ Session cleared. Enter a new channel or video URL to analyze.",
           "success",
@@ -1287,11 +1290,18 @@
       // Function to enable analysis cards - Check for PROJECT-SPECIFIC data
       function enableAnalysisCards(projectId) {
         const currentProjectId = projectId || getCurrentProjectId();
-        const hasAnalysisData =
-          sessionStorage.getItem(`youtubeAnalysis_${currentProjectId}`) !==
-          null;
+        const stored = sessionStorage.getItem(`youtubeAnalysis_${currentProjectId}`);
+        const hasAnalysisData = stored !== null;
 
         if (hasAnalysisData) {
+          let analysisType = "channel";
+          try {
+            const data = JSON.parse(stored);
+            analysisType = data.analysis_type || "channel";
+          } catch (e) {
+            console.warn("Could not parse analysis data for type", e);
+          }
+
           const analysisCards = document.querySelectorAll(".analysis-card");
           const analysisLinks = document.querySelectorAll(".analysis-link");
 
@@ -1306,6 +1316,19 @@
               return addProjectIdToLink(this, currentProjectId);
             };
           });
+
+          // Keep Predictive Analysis disabled when analysis is for a video (channel only)
+          const predictiveCard = document.getElementById("predictiveCard");
+          const predictiveLink = document.getElementById("predictiveLink");
+          if (analysisType === "video" && predictiveCard && predictiveLink) {
+            predictiveCard.classList.add("disabled");
+            predictiveLink.classList.add("disabled");
+            predictiveLink.textContent = "Only available for Channel analysis";
+            predictiveCard.title = "Predictive Analysis is only available for channel analysis. Analyze a YouTube channel to enable.";
+          } else if (predictiveCard && predictiveLink) {
+            predictiveCard.title = "";
+            predictiveLink.textContent = "Open Analysis";
+          }
 
           // Show export PDF button
           const exportSection = document.getElementById("exportSection");
