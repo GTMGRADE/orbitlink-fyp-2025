@@ -770,6 +770,40 @@
                   × Clear
                 </button>
               </div>
+              <!-- Video Link Display -->
+              <div
+                id="videoLinkDisplay"
+                class="video-link-display"
+                style="
+                  display: none;
+                  margin-top: 1rem;
+                  padding: 0.8rem;
+                  background: rgba(242, 72, 34, 0.1);
+                  border-radius: 8px;
+                  border-left: 3px solid #f24822;
+                "
+              >
+                <a
+                  id="videoLink"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    color: #f24822;
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                  "
+                >
+                  <span>🎬</span>
+                  <span id="videoLinkText"
+                    >Watch analyzed video on YouTube</span
+                  >
+                </a>
+              </div>
               <!-- REMOVED: session-actions div -->
             </div>
 
@@ -790,7 +824,9 @@
 
               <!-- Data source tabs -->
               <div class="data-source-tabs">
-                <button class="tab-btn active" data-source="youtube">YouTube</button>
+                <button class="tab-btn active" data-source="youtube">
+                  YouTube
+                </button>
                 <!-- <button class="tab-btn" data-source="csv">CSV Upload</button> -->
               </div>
             </div>
@@ -840,7 +876,8 @@
               <div class="analysis-card disabled" id="influencersCard">
                 <h3 class="analysis-name">Engagement Detection</h3>
                 <p class="analysis-desc">
-                  Identify engagement and high-impact accounts driving conversations in your network
+                  Identify engagement and high-impact accounts driving
+                  conversations in your network
                 </p>
                 <a
                   href="{{ url_for('projects.identify_influencers') }}"
@@ -1118,6 +1155,21 @@
         document.getElementById("sessionChannel").textContent =
           `Currently analyzing: ${displayName}`;
 
+        // Show video link if it's a video analysis
+        const videoLinkDisplay = document.getElementById("videoLinkDisplay");
+        const videoLink = document.getElementById("videoLink");
+        const videoLinkText = document.getElementById("videoLinkText");
+
+        if (analysisType === "video" && analysisData.video_metadata?.video_id) {
+          const videoId = analysisData.video_metadata.video_id;
+          const videoTitle = analysisData.video_metadata.title || "Video";
+          videoLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+          videoLinkText.textContent = `Watch "${videoTitle}" on YouTube`;
+          videoLinkDisplay.style.display = "block";
+        } else {
+          videoLinkDisplay.style.display = "none";
+        }
+
         sessionDisplay.style.display = "block";
         urlInputSection.style.display = "none";
 
@@ -1159,6 +1211,21 @@
           document.getElementById("sessionChannel").textContent =
             `Currently analyzing: ${displayName}`;
 
+          // Show video link if it's a video analysis
+          const videoLinkDisplay = document.getElementById("videoLinkDisplay");
+          const videoLink = document.getElementById("videoLink");
+          const videoLinkText = document.getElementById("videoLinkText");
+
+          if (analysisType === "video" && data.video_metadata?.video_id) {
+            const videoId = data.video_metadata.video_id;
+            const videoTitle = data.video_metadata.title || "Video";
+            videoLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+            videoLinkText.textContent = `Watch "${videoTitle}" on YouTube`;
+            videoLinkDisplay.style.display = "block";
+          } else {
+            videoLinkDisplay.style.display = "none";
+          }
+
           sessionDisplay.style.display = "block";
           urlInputSection.style.display = "none";
 
@@ -1190,17 +1257,17 @@
         // Clear backend session first
         try {
           const response = await fetch(`/projects/${projectId}/clear-session`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-            }
+              "Content-Type": "application/json",
+            },
           });
 
           if (!response.ok) {
-            console.error('Failed to clear backend session');
+            console.error("Failed to clear backend session");
           }
         } catch (error) {
-          console.error('Error clearing backend session:', error);
+          console.error("Error clearing backend session:", error);
         }
 
         // Clear frontend storage
@@ -1214,9 +1281,13 @@
         const desc = document.getElementById("currentAnalysisDesc");
         const confirmBtn = document.getElementById("confirmBtn");
         const urlInput = document.getElementById("youtubeUrl");
+        const videoLinkDisplay = document.getElementById("videoLinkDisplay");
 
         sessionDisplay.style.display = "none";
         urlInputSection.style.display = "block";
+        if (videoLinkDisplay) {
+          videoLinkDisplay.style.display = "none";
+        }
 
         title.textContent = "Enter Data Source";
         desc.textContent =
