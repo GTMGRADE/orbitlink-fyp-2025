@@ -534,6 +534,12 @@
             </div>
             {% endif %}
 
+            {% if info %}
+            <div class="success">
+              {{ info }}
+            </div>
+            {% endif %}
+
             <form method="post" action="{{ url_for('user.login_post') }}">
               <div class="form-group">
                 <label for="username">Username or Email</label>

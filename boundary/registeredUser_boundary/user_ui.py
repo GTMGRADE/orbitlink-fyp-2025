@@ -15,7 +15,9 @@ def _get_current_user():
 @user_bp.get("/login")
 def login_get():
     logger.info("Login page accessed")
-    return render_template("login.html")
+    registered = request.args.get("registered")
+    info_message = "Registration complete. Please log in." if registered else None
+    return render_template("login.html", info=info_message)
 
 
 @user_bp.post("/login")

@@ -88,12 +88,15 @@ def activate_subscription():
             logger.error(f"Error sending welcome email: {str(e)}")
             # Don't fail the subscription activation if email fails
         
-        # Set session flag to show welcome message
-        session['show_welcome_message'] = True
+        # Clear session to require fresh login after activation
+        session.pop("show_welcome_message", None)
+        session.pop("registration_complete", None)
+        session.pop("user_id", None)
+        session.pop("user_type", None)
         return jsonify({
             "success": True,
             "message": "Subscription activated successfully!",
-            "redirect": url_for("projects.projects_list")
+            "redirect": url_for("user.login_get", registered=1)
         })
     else:
         return jsonify({
